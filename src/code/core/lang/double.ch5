@@ -1,0 +1,3 @@
+class Double{
+	var value double
+}

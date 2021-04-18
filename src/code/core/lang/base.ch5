@@ -1,0 +1,7 @@
+type byte
+type word
+type dword
+type qword{
+    var left dword
+    var right dword
+}

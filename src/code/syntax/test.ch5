@@ -1,0 +1,14 @@
+var a,b,c,d int=4 getint
+fun get4int:(int,int,int,int){//返回元组
+
+}
+fun getint{
+
+}
+fun getint n int:int{
+    var a ArrayList<int>
+    for i in 0 until n{
+        .getint a.add
+    }
+    =.a.toArray
+}

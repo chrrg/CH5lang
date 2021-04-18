@@ -1,0 +1,13 @@
+//ch5 core code
+//内置内核源码
+//ch.lang
+//from "win32" import *
+import win32
+import lang.*
+interface System{
+	fun println str string{
+		str print
+		"\n" print
+	}
+	fun print str string:int// from "msvcrt.dll:printf"
+}

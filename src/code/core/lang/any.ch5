@@ -1,0 +1,6 @@
+type any{
+    var address dword//32位系统中是dword 64位系统中是qword
+}
+class Any{
+
+}

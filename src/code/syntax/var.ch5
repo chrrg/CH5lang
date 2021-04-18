@@ -1,0 +1,11 @@
+
+var a=10
+var a=10 int
+var a int
+var a int=10
+var a,b=1,20
+val a int,b dword=10,20.567
+val a int,b=10,""
+
+
+

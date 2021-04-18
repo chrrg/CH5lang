@@ -1,0 +1,6 @@
+fun a{}
+//fun a=void
+//fun a p1 int=void
+//fun a:int=void
+//fun a p1 int,p2 int=void
+//fun a pp int,pp2 int:void=void

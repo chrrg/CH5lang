@@ -1,0 +1,36 @@
+/*
+operator<> +i int{//+ - * / += -= *= /= ^= != == === & && | || &= |= < > <= >= % ^
+
+}
+operator<me> +i int{//+ - * / += -= *= /= ^= != == === & && | || &= |= < > <= >= % ^
+
+}
+operator<me> ++me{//++a
+
+}
+operator<me> me++{//me++
+
+}
+operator<me> [i int]{
+
+}
+operator<me> !me{
+
+}*/
+//上面会出现二义性
+//下面不会
+operator(me) + i int{//me+i
+
+}
+operator(int) [] i int{//me+i
+
+}
+operator(int) ++{//me++
+
+}
+operator(int) ++me{//++me
+
+}
+operator(int) !me{//!me
+
+}

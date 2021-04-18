@@ -1,0 +1,20 @@
+hex xor eax,i byte{
+    83 F0 $i
+}
+hex mov eax,i byte{
+    83 F0 $i
+}
+
+operator<byte> ^= ref i byte{
+    asm{
+
+        xor eax,i
+        mov eax
+    }
+}
+operator<byte> ^=i word{
+
+}
+operator<byte> ^=i dword{
+
+}

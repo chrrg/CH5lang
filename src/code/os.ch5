@@ -1,0 +1,13 @@
+static os{
+    from "msvcrt.dll:printf" import printf
+    from "user32.dll:MessageBoxA" import MessageBox
+    fun msgbox hWnd uint,lpText uint,lpCaption uint,uType uint:int=MessageBox
+    fun printf a int:int=printf
+    fun printStr str string="%s",str printf
+    static os2{
+        var a="123213"
+    }
+    fun print{
+
+    }
+}

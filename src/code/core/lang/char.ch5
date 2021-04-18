@@ -1,0 +1,10 @@
+type char{
+	var value byte
+	fun char str string{
+        value=str[0]
+    }
+}
+class Char{
+	var value char
+	fun Char v char=value=v
+}
