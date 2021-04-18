@@ -1,7 +1,0 @@
-from "user32.dll" import *
-from "user32.dll" import int,long
-from "user32.dll" import (int,long)
-
-import os
-import "os"
-

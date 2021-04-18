@@ -1,0 +1,23 @@
+//import os
+val a = 1
+init{
+    if a+a==123 && b==bb{
+        "p" print
+    }else if 1==1{
+      "p" print
+    }
+    var i=0
+    for  {
+        i++
+        if i>10
+            break
+    }
+
+
+//    val a = 1, 2, 3
+//    val c,d = a * (2 + 3) * 4, asd
+//    "hello world" print
+}
+fun print str string{
+
+}

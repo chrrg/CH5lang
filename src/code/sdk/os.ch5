@@ -1,0 +1,7 @@
+fun print str string{
+    //todo 实现输出
+}
+fun println str string{
+    str print
+    "\n" print
+}
