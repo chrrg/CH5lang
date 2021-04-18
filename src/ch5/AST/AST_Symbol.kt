@@ -350,7 +350,6 @@ class ast_if(val condition: ast_expr, val trueBranch: ast_expr?, val falseBrach:
         falseBrach?.let {
             buffer.append(" else ")
             buffer.append(it.toString())
-            buffer.append("\n")
         }
         return buffer.toString()
     }
