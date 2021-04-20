@@ -3,7 +3,7 @@ val a = 1
 init {
 val b = 3
 val bb = 43
-    if a+a == 123 && b == bb{
+    if a + a == 123 && b == bb{
         "p" print
     }else if 1 == 1{
         "p" print
