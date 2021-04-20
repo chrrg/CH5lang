@@ -3,9 +3,9 @@ val a = 1
 init {
     val b = 3
     val bb = 43
-    if a + a == 123 && b == bb{
+    if a + a == 123 && b == bb {
         "ok" print
-    }else if 1 == 1{
+    } else if 1 == 1 {
         "ok2" print
     }
     var i = 0
