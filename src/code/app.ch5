@@ -17,5 +17,5 @@ init {
     "ok" + i print
 }
 fun print str string{
-
+    // todo sys call
 }
