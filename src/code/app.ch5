@@ -3,7 +3,8 @@ val a = 1
 init {
     val b = 3
     val bb = 43
-    if a + a == 123 && b == bb {
+    const var a = 123
+    if 120 + 3 == 123 && b == bb {
         "ok" print
     } else if 1 == 1 {
         "ok2" print
@@ -14,8 +15,86 @@ init {
         if i > 10
             break
     }
-    "ok" + i print
+    for i = 0 .. 5 { // 0 1 2 3 4
+        i + "" print
+    }
+    "ok" + i print // ok10
+    var a = fun{
+
+    }
+
 }
-fun print str string{
+fun print str string:string{
     // todo sys call
+    // use os
+    = str
 }
+fun end{
+    "end" print print print
+    for i = 0..5 {
+        "end" print
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+init{
+
+val a=1
+a,b,c=.a
+
+    val a string="1"
+    data fetchData1 fetch12,sys out
+
+}
+free{
+
+}
+fun a{
+}
+
+//import os
+//use os
+//fun a str string{
+//    a print
+//}
+//
+/////
+//
+//import app
+//
+//"123" app.a
+//
+//.a
+//
+//a,b=b,a
+//
+//fun a{
+//    =1,2,3
+//}
+//
+//
+fun add a int,b int:int=a+b
+fun add a int,b int:int{
+    =a+b
+}
+fun log xx any{
+
+
+}
+
+fun a b int,c int{
+    //.....
+
+}
+

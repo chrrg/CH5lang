@@ -37,7 +37,7 @@ object AST {
             "&" -> 8
             "==", "!=" -> 7
             ">", ">=", "<", "<=" -> 6
-            "<<", ">>" -> 5
+            "<<", ">>", "..", "..." -> 5
             "+", "-" -> 4
             "*", "/", "%" -> 3
             "!" -> 2
@@ -48,7 +48,7 @@ object AST {
 
     fun OperateType(node: Token_Operator): Int {
         when (node.operator.word) {
-            "+", "-", "*", "/", "%", ".", ",", "=", "/=", "*=", "%=", "+=", "-=", "<<=", ">>=", "&=", "^=", "|=", "=>", "/=>", "*=>", "%=>", "+=>", "-=>", "<<=>", ">>=>", "&=>", "^=>", "|=>", "||", "&&", "|", "&", "==", "!=", "^", ">", "<", ">=", "<=", ">>", "<<" -> return 2 //双目运算符
+            "+", "-", "*", "/", "%", ".", ",", "=", "/=", "*=", "%=", "+=", "-=", "<<=", ">>=", "&=", "^=", "|=", "=>", "/=>", "*=>", "%=>", "+=>", "-=>", "<<=>", ">>=>", "&=>", "^=>", "|=>", "||", "&&", "|", "&", "==", "!=", "^", ">", "<", ">=", "<=", ">>", "<<", "..", "..." -> return 2 //双目运算符
             "++", "--" -> return 4 //两边都可以的单目运算符
             "!" -> return 5 //单目运算符仅右目
 //                "?" -> return 3 //三目运算符
@@ -246,6 +246,7 @@ object AST {
 
             return ast_if(condition, trueBranch, falseBrach)
         }
+
         fun parseFor(): ast_for {
             if (getOperator(op_bigbracket1)) {//死循环
                 /**
@@ -440,15 +441,15 @@ object AST {
             val token = tokens.next()
             token ?: return null
             var result: ast_expr
-            if(token is Token_Word) {
-                if (token.value=="var" || token.value=="val") {
+            if (token is Token_Word) {
+                if (token.value == "var" || token.value == "val") {
                     tokens.prev()
                     return parseDefine()
                 }
-                if (token.value=="if") {
+                if (token.value == "if") {
                     return parseIf()
                 }
-                if (token.value=="for") {
+                if (token.value == "for") {
                     return parseFor()
                 }
             }
@@ -574,6 +575,9 @@ object AST {
                     is Token_Crlf -> {
                         tokens.prev()
                         return result
+                    }
+                    is Token_Comment -> {
+
                     }
                     else -> {
                         throw Exception("不支持的符号！" + next::class.simpleName)
