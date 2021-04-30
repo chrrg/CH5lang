@@ -1,0 +1,3225 @@
+本文件为设计草案：
+20200713开始
+
+完全自定义语法--?
+
+可写作一行，可省略分号
+
+自动和手动GC
+
+可返回多个类型
+
+String,Int a(){
+	
+}
+
+if(){
+
+}else{
+
+}
+for(i,1,10){
+
+}
+for i 1 10{
+
+}
+for(i=range(1,10)){
+
+}
+i from 10 to 100{
+	
+}
+var a=1;
+
+语法解析片段：Syntax Parse Fragment
+//variable 指单词word 关键字 不一定是变量
+#spd variable{//Syntax Parse Define
+
+	
+}
+#spf(){//每一条语句进入时执行
+	
+
+}
+
+#spf "var"+variable+"="+expression (){
+	
+}
+#spf variable+"from"+expression+"to"+expression+block (){
+	
+}
+#spf "for"+"("+expression+","+expression+","+expression+")"+block (){
+	
+}
+
+编译器要写的：
+#spf
+#define
+#ifdef
+#else
+#endif
+
+#spf作用域
+每个文件可以使用不同spf
+
+变量作用域选择
+
+可以使用nodejs，那么使用js语法进行解释即可
+
+var spf=SPF({
+	const:"",
+	
+})
+
+非固定语法编程语言
+///////////////////////
+现有语法
+if()代码行
+
+if(){//代码块 多行代码
+	
+}
+if(){
+	
+}else 
+	if(){
+		
+	}else{
+		
+	}
+//需要提供的功能 不是else就结束语句
+
+for(i=0;i<10;i++){//语法较为复杂 使用简单的替代
+	
+}
+while(i<10){
+	i++;
+
+}
+while{//死循环 可用break跳出
+	
+}
+switch(1){
+	case 2:
+	default://标签? 不是 有区别
+}
+
+单词匹配解析方式
+复杂语法不实现
+spf支持编译成二进制
+
+语法解析器 exe 将代码转为伪代码 如java的字节码
+编译器 将字节码转目标文件
+
+参考java字节码方式
+
+
+spf编译为二进制
+
+解析器使用spf对代码进行语法解析
+生成字节码 字节码只有一个文件 代码可以有很多文件
+
+使用编译器将字节码转成对应平台的二进制可执行文件
+
+spf转二进制后必须程序可读性强，解析速度快
+
+单词解析引擎
+
+
+
+a.a=1;
+
+字节型 8位 为了拓展可以用两字节
+
+using spf;
+
+js:
+
+a+1
+
+
+a=a+1
+
+
+spf a//使用a这个spf
+
+
+a to leave
+我 去 学习
+
+
+所有函数都是指针
+面向对象
+class{
+	+
+}
+
+var a=1
+a+2
+//函数指针给b
+b=int(){
+	a=b
+}
+
+import 1.ch  //导入文件
+import 2.ch  //引用文件
+
+class main{
+	int,string +a(...){//类型必须要实现
+		=4,"g"
+	}
+	int,int a()=1,2
+	a()=nop
+	int[] a;//未开辟空间
+
+
+
+
+
+
+}
+
+
+
+
+表：
+1.ch
+
+全部传引用
+or
+1字节的传值
+多字节传引用
+
+NULL空指针？
+
+堆栈
+
+
+常量
+变量
+
+常量区
+常量区长度
+
+magic
+常量表
+3abc2ch5caoho6abcdef
+0x03abc0x02
+0x3abc0x0323
+0111 1111
+7个字节
+1111 1111
+abcd efg
+
+1111
+0xff 255个长度字节
+0xff 0x12*255 组成的就是数据的长度
+
+
+0x1 1 a
+1个长度数组 长度为1字节 a
+0x3 1 01 a*257
+0xff ff*255
+数组长度一个字节就行
+长度范围：1152921504606846975
+0xf f*15 
+
+边长数据存储法：
+a
+0x1 f a*15
+
+仅存储常量数据
+
+变量名方法名等
+
+json的二进制表示法：
+json存在内存里
+json:结束符0
+值类型 1 字符串 2数值 3数组 4二进制 5子引用(数值字符串数组、引用、字符串实体等均可) 6子json实体
+------------------------
+chon标识符
+1 版本号
+
+0x6 值类型 json实体
+0x1 0x22 实体大小
+	0x1 2 ab 键
+	0x1 值类型 普通字符串
+	0x1 2 ac 值
+
+	0x1 2 ab 键
+	0x6 值类型 json实体开始
+	0x1 0x45 值大小
+		0x1 2 ch 键
+		0x2 值类型 数值
+		0x1 2 0x0101 值 数值257
+
+		0x1 3 arr 键
+		0x3 值类型 数组
+		0x1 表示数量的字节个数
+		0x2 2个元素
+		0x1 值类型 字符串
+		0x1 5 abcde 数组第一个值
+		0x2 值类型 数值
+		0x1 2 0x0101 值 数值257
+
+
+	0x0 json结束符
+0x0 json结束符 至此解析完毕
+
+底层语言和高级语言
+高级语言和底层语言无缝感
+
+面向内存编程
+
+
+a,b=b,a 交换
+a+10=1 a地址+10进行赋值
+a,2 sin x 
+
+
+hot修饰函数 代表热函数 热方法 hot method 调用频繁的函数即热函数 运行时更快
+dword c;
+void a(){
+	c=0
+}
+void main(){
+	a()
+	a()
+}
+
+普通：
+call a
+call a
+ret 0
+a:
+mov c,0
+ret 0
+
+热函数：
+mov c,0
+mov c,0
+ret 0
+
+
+数据段：
+常量、常量字符串存储的地方
+代码段：
+编译器将字节码转对应机器的机器码
+
+中间码或中间结构
+
+a="123";
+
+a=1+1+"1"+0;//210 字符串常量引用类型
+//操作符重载
+
+面向数据编程：
+
+数据流：
+a->b->c
+
+题：a+b
+"io.ch" import//导入标准输入输出io
+ch use//使用命名空间
+a,b number//定义ab变量 类型为number
+a,b in//输入ab
+a+b out//输出a+b
+
+(a nunber in+b nunber in) out
+
+//程序结束
+
+使用
+
+{
+	byte:auto(){
+
+	},
+	print:auto(){
+
+	}
+}=io
+全局对象 global
+防止污染 必须指定global才可访问，应用程序内任意地方均能访问global
+this 指向最近的对象
+a object
+{
+	b:(){
+		this//指向a
+	}
+}=a use
+a use
+b//指向a.b
+this 指向a
+
+//////////////////////
+常量表：
+长度 "字符串内容" 
+
+in in;//第一个in是变量名 第二个是方法名
+number number;//第一个number是变量名 第二个是类型名
+
+
+
+1 (3 fn) fn
+
+//
+
+
+a unsigned byte;//定义无符号字节a
+
+1 2 3 4 fn
+==
+1,2,3,4 fn
+1,2 fn,3 fn fn
+((1,2 fn),3 fn)fn 
+
+byte{
+	
+} type;
+
+global{
+//在global下的作用域
+this临时指向global	
+}
+
+作用域嵌套 永远找最近的
+
+
+//所有类型名 首字母
+
+int int;
+
+变量名
+命名空间名
+方法名
+类型名/结构名
+标签名
+
+变量名
+a byte
+a input+2 output
+
+auto 类型名
+auto in ...{
+	for k,v in args {
+
+	}else{//没有循环一次，则
+
+	}
+}
+保留字：for else if auto byte word dword qword unsigned true false null object point
+point 是 未确定长度的指针 object是有具体类型的确定长度的指针 
+
+类型开头的均为函数定义如：
+auto ...{
+	
+}=abc
+
+for开头均为循环定义如：
+for a in 1,10 range{
+	
+}
+for key,value in 1,2,3{
+	key,value print
+	key,value print
+	key,value print
+}
+if开头的均为判断如：
+if true{
+	"ok" print//will running
+}else{
+	"no" print
+}
+
+关键字可以作为函数使用
+1.5 int=a //取整 a=1
+
+19,5 new int=a//赋值前必须要确定类型
+
+//分词 整理 常量提取 归类
+
+
+
+
+var 3 int=a
+var 4 double=b
+//3 int=a,4 double=b
+
+
+class a{
+	s
+}
+
+
+
+
+namespace global{
+	void.{
+
+	}=main
+	
+
+}
+
+
+---
+
+
+var 0 byte=a;
+var b;
+var{
+	0 byte=a
+	0 byte=b
+}
+{
+	a:1 byte,
+	b:2 byte,
+} var
+
+
+---
+
+//import os
+//use os
+//global os
+"os" import use global=os
+
+
+
+var a
+var 3 byte=b
+"hello world"=a
+1 print
+
+
+-------
+var (123)=a;
+
+var,if等开头是大语句
+表达式为小语句
+
+123+3*3,(12+44) sin abs 为小语句
+
+
+1,3=a,7=b 赋值语句
+
+
+if(){
+	
+}
+
+
+
+
+----------------
+方法定义
+byte word dword qword
+
+//dsl
+
+{
+	Object1 a=new Object1
+	fun{
+		//me 指a
+		me.
+		parent.
+		top.
+
+	}=load
+
+	Object1.load=load
+
+	a.load()
+
+}
+////
+
+--
+true?1 msgbox:2 msgbox
+true?1:2 msgbox
+true?"ok" msgbox
+
+
+//top scope顶级作用域
+
+a{
+	//top.a作用域
+}
+b{
+	//top.b作用域
+	b{
+		//top.b.b作用域
+		parent//top.b作用域
+		top//top作用域
+		me//top.b.b当前作用域
+
+	}
+}
+
+//设计时应该注意预防全局变量污染 变量 方法 类 类型 作用域名等
+
+tool{
+	fun a int,b int{
+		var result
+		a+b=result
+		if result==0{
+			=void
+		}else{
+			=a+b
+		}
+	}=add
+	fun{
+
+	}=load
+	fun{
+
+	}=unload
+ 
+}
+class tool2 + tool{//和上面的区别 没有class不允许实例化 + 代表extends继承
+	var add//默认只有当前作用域和子作用域能够访问
+	var +add2//public任何作用域都能够访问
+	var -add3//private只能当前作用域访问
+}
+top==me print//true
+parent==me//true
+tool==me.tool//true
+10,20 tool.add==30//true
+tool.add==tool add
+
+
+if result==0{
+	=void
+}else{
+	=a+b
+}
+相等于
+=result==0?void:a+b
+或
+result==0?=void:=a+b
+或
+result==0?=void
+=a+b
+或result==0&&=void
+=a+b
+=result==0,void,a+b iif
+错误示例：
+result==0,=void,=a+b iif
+
+
+=1,2,3
+=1,2 add,3
+=1,(2 add),3
+
+
+
+a+++ ++a
+解构：
+var fun{
+	1,2,3=
+}=test
+var a,b,c
+a,b,c=test
+
+--a=1 b=2 c=3
+
+[1,2,3]+4 print
+[1,2,3,4]
+
+
+1.5 int int=b=c
+1.5 tool.a
+
+
+
+[b,a]=[a,b]
+
+
+
+------20200927新特性
+支持重载运算符
+重载返回
+
+重载返回例子：
+class tool{
+	fun x int,y int{
+		fun{
+			a+b=
+		}=
+	}=add
+}
+var tool
+var a
+tool.add(1,2)=a//普通是返回 int//返回状态，需要值时才计算
+
+print(a)
+
+自动
+
+自动例子:
+
+
+
+1+2 auto print
+print需要字符串
+auto函数 自动检查并转换字符串
+
+var a
+2=a
+//a只能为int 类型不可变
+
+{
+	use parent;//使用父级作用域
+	unuse parent;
+
+
+}
+
+匿名函数：
+fun{
+	1+2=
+} print//<fun>
+
+fun a<T>{
+	if "__str" in a{
+		.a["__str"]=
+	}else{
+		"" throw
+	}
+}=print
+
+try{
+	throw //关键字
+}catch e RunTimeException{
+	
+}catch e<T>{
+	
+}finally{
+	
+}
+
+宏定义
+
+接口：
+interface table{//实名接口 非匿名
+	var __get fun
+	var __set fun
+	var __str fun
+	var key string
+	var value string
+	var hasKey fun key string//单参数可省略括号
+	var get fun(key string,value string)//多参数必须有括号
+}
+
+class KeyTable+table{//实名类 继承接口
+	
+}
+
+汇编器：
+asm{
+	add EAX,EBX
+	mov EAX,[y]
+
+
+
+}
+编译时状态
+
+
+-------尝试 类型使用asm进行处理，而不是程序写死
+compiler{
+	interface int{
+		
+	}
+	interface string{
+		
+	}
+}
+class string+compiler.string{
+	var enterPoint pointer
+	var length int
+	operator+ string1,string2{//重载+
+
+	}
+	operator= str byte[]{//赋值重载
+		str=enterPoint
+		this=
+	}
+}
+class int+compiler.int{
+	var value dword
+	fun v dword{
+		value=
+	}
+	operator + a int,b int{
+		asm{
+			mov eax,a
+			add eax,b
+			push eax
+		}
+	}
+	operator - a int,b int{
+		asm{
+			mov eax,a
+			sub eax,b
+			push eax
+		}
+	}
+
+
+}
+
+var a=new String("")
+
+
+fun String.a{
+	this.length=
+}
+
+
+class String{
+	
+}
+typedef int 4{
+
+	operator + a,b{
+		asm{
+
+		}
+	}
+}
+typedef float 4{
+	operator + a int,b{
+		var c
+		a float=c
+		c+b=
+	}
+	operator + a,b{
+		asm{
+
+		}
+	}
+}
+
+
+
+/*
+class double+compiler.qword{
+
+	operator + a,b{
+		asm{
+			mov eax,a
+			add eax,b
+			push eax
+		}
+	}
+	operator - a,b{
+		asm{
+			mov eax,a
+			sub eax,b
+			push eax
+		}
+	}
+}
+*/
+
+
+var s string
+""=s
+
+----
+
+type bool,boolean{
+	
+}
+
+1=compiler.flag.error
+
+
+//win32编译器
+
+
+
+(123)=a
+
+123+456
+
+----
+var byte{
+	a,b,c,d
+}//全部定义为byte类型
+var{
+	a byte,
+	b byte,
+	c byte,
+	d byte
+}//可换行
+-------
+
+var a[][] = new int[10][10]
+var a dword[]
+
+
+------寄存器EAX、EBX、ECX、EDX
+//https://www.cnblogs.com/qq78292959/archive/2012/07/20/2600865.html
+
+内置类型
+byte word dword fun object
+
+object win32为32位 win64为64位 object只是存地址
+
+
+
+----泛型 20200929
+
+class test<T>{
+	
+}
+
+
+locals 编译器内置函数实现
+获取最近一个作用域的变量 作为一个{} 如：
+{
+	var a=1
+	var b=2
+	.locals print//{a:1,b:2}
+}//是不是可以作为反射的基础
+
+------20201007
+var a
+a=1+2 //右边全部赋值到左边
+1+2=>a//左边全部赋值到右边
+a+=1//a=a+1
+1+=>a//a+1=>a
+
+a=.locals
+.locals=>a
+a+++=>a
+
+autoto:自动转类型
+
+var s="hello world"//byte[]类型
+var s String="hello world"//String类型
+class String{
+	var str byte[]
+	var length dword
+	func __load{
+
+	}
+	func __load str byte[]{
+		self.str=str
+	}
+	autoto a char[]{
+		a new self=>
+	}
+	func size{
+		=size
+	}
+}
+
+-----20201008
+import AllocConsole from "KERNEL32.DLL:AllocConsole"
+import AllocConsole from "KERNEL32.DLL"
+
+var AllocConsole=api "KERNEL32.DLL:AllocConsole"//变量 间接取值
+val AllocConsole=api "KERNEL32.DLL:AllocConsole"//常量 直接写入立即数
+
+
+----20201012
+编译后所有作用域初使变量都在一起
+函数使用内存复制?或动态分配内存然后代码进行设置
+
+最终的文件是分段的，而且需要地址修复
+作用域分开编译 最终合在一起
+
+class global{
+	class a{//作用域
+		fun b{
+			var c=10
+
+		}
+
+	}
+	class b{
+
+	}
+}
+
+目标：
+实现自举，并使用自举的编译器实现一个web服务器框架
+
+/*
+class a{
+	var b=100
+	var c=200
+
+}
+a.b=1000
+d=new a
+if a==100 && b==20{
+	
+}
+for(var i=0;i<10;i++){
+	
+}
+while xxx{
+	
+}
+var a fun
+fun b int,c int{
+	
+}=>a
+
+10,20 sum,30 sum
+
+//1+2,(10,40 sum) sum
+sum(sum(1,20),40)
+a,b top.sum=>c,b sum
+
+data=new data
+
+data a b c d=>f
+class n{
+	var a[][]=new int[10][20]{
+		{2,2},{22,22}
+	}
+	int a[]={10,20,30}
+	var a[]=[10,20,30,40]
+
+	
+
+
+}
+
+import os
+"hello world!" os.print
+
+*/
+
+
+组装的时候机器码给平台自行组装
+平台需要实现所有接口 如jump等
+
+基本类型都是值传递
+
+-----20201014
+var a=100
+func b a int{
+	a+a=
+}
+a<=b
+相当于
+a=a b
+或
+a b=>a
+
+
+
+若一个变量未赋值且未使用则警告
+
+
+
+a sum
+func sum{
+	this//a
+
+}
+
+instanceOfSwitch语法 不能一次计算 所以这种不行：
+switchtype object{
+	case Class1:
+		xxx
+		break;
+	case Class2:
+		xxx
+		break;
+}//废弃语法
+
+
+class global{
+	func main{
+		"hello world" os.print
+	}
+}
+class String{
+	var str string
+
+	"str" str.fn
+
+}
+class global{
+	func main{
+
+	}
+}
+type a 4;
+func a{
+	
+}
+var a a=5 a;
+new op put a var named "a" then "a" will go die
+dsl a string b Class1{
+	b.str=a
+	=b
+}
+
+基本类型和复杂类型
+只有在定义了之后才能使用
+
+
+
+
+dsl 作用域问题
+
+
+{
+	var a=new int[]
+	with i{
+		new i have 3 times to give me 3 tool
+	}
+	
+
+	
+}
+class i{
+	func have{
+		=this
+	}
+	dsl have a int{//i have 3
+		=a this.have
+	}
+}
+
+-----20201017
+全局变量在数据段内 mov eax,[0x601024]
+局部变量在栈内 lea eax,[esp+index]
+
+class a{
+	var b=0;//这是一个静态变量 在数据段内 但只能a.b来访问的
+	func c{
+		var b//这是一个局部变量 在栈内
+		//里面不能有函数或class
+
+	}
+	class b{
+
+	}
+
+}
+a.b print
+
+------20201018 21:00
+第一个Hello world诞生
+
+------20201019
+
+
+todo{
+	表达式解析
+	操作符重载
+	函数定义
+	类实例化
+	mov eax,0 \n push eax优化为push 0
+
+}
+
+
+------实习结束
+
+------20201028
+面向数据编程：
+class User{
+	var expr=0
+	fun add10:expr+=10
+	fun addExpr a int:expr+=a
+	fun printExpr:expr print
+}
+var user=.User
+user addExpr 10 printExpr
+
+class I{
+	fun have num int{
+		=num Item
+	}
+}
+class Item{
+	fun apple{
+
+	}
+	fun banana{
+
+	}
+}
+.I have 6 apple
+//这里设计需要拿到之前的对象就没法了
+
+//所以需要状态机todo
+class I{
+	var set Set=.Set<Item,int>
+	fun have num int,item Item{
+		set[item]=num
+	}
+	fun then;
+	fun eat num int,item Item{
+		set[item]-=num
+	}
+	fun numOf item Item{
+		=set[item]
+	}
+}
+class Item{
+	class apple;
+	class banana;
+}
+
+.I have 6 apple then eat 4 apple then numOf apple print//输出2
+
+
+-------20201029
+类型自动推断：实现泛型
+func autoDo a type,b type{
+	=a+b
+}
+
+1,2 autoDo//返回int
+
+10.5,0.5 autoDo//返回double
+
+由于少写很多代码，所以需要ide进行类型提醒等辅助操作，如上面自动提示返回类型
+
+
+//20201102
+with语法
+
+class a{
+	func toString str string{//这里将由ide提示函数的返回类型是元组(int,string,byte)
+		=(1,str string,3 byte)
+	}
+}
+with a{//a 如果是类名 下面是静态调用 如果是实例那么是实例方法
+	
+	"" toString
+
+}
+---var 语句 modified
+
+var a=1
+var a,b=1,2
+
+a,b="test" a.toString//可以忽略一些值 具体忽略哪个可以看编码的时候哪种方便
+
+
+----预编译语法
+preprocess param go func{
+	
+}
+func myFunc a int,b int{
+	
+}
+1,2 go myFunc//创建一个协程？
+----json语法
+class studentInfo{
+	var tel string;
+	var qq string;
+}
+class a{
+	var name string;
+	var sex int;
+	var info studentInfo;
+	var money[] moneyRecord;
+}
+class c{
+	var time string
+	var money[] double
+}
+var myinfo={
+	name:"caohong",
+	sex:1,
+	info:{
+		tel:"17674740051",
+		qq:"877562884"
+	},
+	money:[{
+		time:"2020-11-08 17:42:10",
+		money:[10.57,12.75,13.68]
+	}]
+} a
+
+------类型自动转换语法：
+
+class student{
+	var a,b,c=123,124,124
+	var {
+		name="as"
+		sex=""
+		hhg=214
+		dv=12312
+	}
+}
+class stuName{
+	var &str string
+	func auto stu student{
+		=.stuName
+	}
+	func auto str stuName{
+		={str:str.str} stuName
+	}
+	func auto str string{
+		={str:str} stuName
+	}
+}
+var s={
+	name:"CH",
+	sex:"男",
+} student
+var s student={
+	name:"CH",
+	sex:"男",
+}
+
+var str stuName=s stuName//student 类型转name类型
+
+var s Int=14.5//double
+
+
+class a{
+	var name string
+}
+
+func ab{
+	var n a={name:"ss"}
+	n=null
+}
+
+
+
+var n a={name:"ss"}
+n=null
+
+
+
+for{
+	.ab
+}
+
+--------
+class Int{
+	var number int
+	func Int num double{
+		this.number=num|0
+	}
+	func Int num Double{
+		this.number=num.number|0
+	}
+	func Int num Int{
+		this.number=num.number
+	}
+	func Int num int{
+		number=num
+	}
+}
+
+var number Int=10
+var s=number Int
+
+var s=10.5 Double Int
+var f Double=10.9
+var s Int=f
+
+var a int=f
+
+var b int=10.5
+
+100.a
+var ss int
+ss=100
+
+100 ss.a
+
+
+type int 4;
+
+func int::a num int{
+	.nop
+	=me+num
+}
+
+func int::auto num double{
+	=num|0
+}
+
+var a int=100.6
+
+
+
+var i Int=10
+
+.i.add
+
+i.add=123
+
+
+
+1 i.add
+
+
+
+
+
+------------20201114
+数组是个特殊的东西
+
+c++中是指向第一个元素的指针
+
+List<int> 
+var a=[10,20] int[] //int[]可以省略 因为编译器知道是int[]
+type zero{//0字节类型 所有类型不能上转型
+	operator []{//这个不是数组的重写是值的重写
+		=0
+	}
+}
+type long{//8字节
+	var value dword
+	var value2 dword
+	operator []{
+		=
+	}
+}
+var s=.zero
+s[1000]//0
+var ands=.zero[1000]//开辟1000个zero，占用0字节
+
+var l=.long[100]//开辟100个long，占用800字节
+l[99]//第100个long的地址
+var l2=.long[100][100]//开辟100个long[100]，占用80000字节
+l2[99][50]
+
+
+
+--重载运算符不能影响其它包的行为
+所以重载运算符有作用域
+
+--内核库：
+basicType.ch5
+
+
+type bool{
+	var value byte
+}
+type short{
+	var value word
+}
+type int{
+	var value dword
+}
+type float{
+	var value dword
+}
+type double{
+	var value dword
+	var value2 dword
+}
+type char{
+	var value byte
+}
+type zero{
+	
+}
+
+//type是否需要改成struct
+
+--数组
+数组是定长，不可改变长度的内置数据结构
+var a=[]
+//不允许上面这种写法
+
+//下面是可以的
+var a=[]int[]//长度为0的int基本类型数组
+var a=[] int[]//和上面一样
+var a=[1] int[3]//长度为3的，实际长度小于指定长度的会作为null，基本类型则为0，则值为1,0,0的数组
+var a=[1,2,3,66] int[]//长度为4的值为1,2,3,66的数组
+var a,b=.int[3],.char[100]//长度为3的int值为0,0,0的数组，b为长度为100，类型为char，值为0,0,...的数组
+
+var a=.Int[10]//实例化了10个无参构造Int包装类型实例并放入数组
+var b=[] Int[3]//不会出错的写法，会强转，如果null则自动实例化
+var b=[] Int?[3]//创建一个Int包装类可空长度3的数组 值为null,null,null 不会自动调用构造方法实例化
+var b=[3 Int,4 Int,5 Int] Int[]///(Int[]可以省略)，创建一个Int类型的长度为3的数组
+上面还可以写出下面的
+var b=[3,4,5] Int[]  //(Int[]不能省略！)，会自动调用构造方法实例化，创建一个Int类型的长度为3的数组
+
+//二维数组及多维数组：基本用法同上
+var a=[] Int[][]//长度为[0][0]的二维数组
+var a=[] int[10][]//长度为[10][0]的二维数组
+var a=[[1,2],[2,3],[3,4]] Int[][]//大小为[3][2]的二维数组
+var a=[] Int[5][2]//大小为[5][2]的二维数组
+var a=[1,2] Int[][]//报错：期待1是一个数组
+var a=[,] Int[][]//长度为[2][0]的
+var a=.Int[10][10]//实例化多维数组
+
+var a=[1,2,3] int[2]//报错，长度太多！
+
+//以上数组长度为0时无意义或意义不大，可报错！
+
+---
+json类型：(前面有class的形式，所以这种意义不大)
+jsontype myType{
+	"name":string,
+	"sex":int,
+	"age":int,
+	"time":Date,
+	"list":char[][],
+}
+
+var a myType
+a={
+	"name":"CH",
+	"sex":1,
+	"age":21,
+	"time":"2020-11-14" Date,
+	"list":[
+		['a','b','c']
+	]
+}
+
+
+
+//代码块
+class j{
+	var{
+		name string
+		age int
+	}
+}
+var myj j={
+	name:"CH",
+	age:21
+}//这里的大括号不是代码块，因为前面有东西所以是表达式
+
+var myj j={//代码块不允许出现在表达式中
+	=.j
+}
+
+
+{   //使用{开始的语句是代码块
+	"name":"CH",
+	age:21
+	
+	
+}//代码块后面不能接任何语句 否则视为表达式
+class myClass{
+	func toString{
+		="print ok!"	
+	}
+}
+{                  //使用{开始的语句是代码块
+	"name":"CH",
+	age:21//键的引号可有可无
+} myClass print
+
+
+{//前面没东西或为分号
+	var a=123
+	//这里是代码块
+	//这里定义的变量不会污染外面的但能访问外面的
+}//后边也没东西或为分号才能是代码块
+
+----------20201115
+编译时多态、运行时多态
+
+class father{
+	var age=30
+	func getAge{
+		=age
+	}
+}
+class son+father{
+	var age=20
+	var studentId=3172060814237
+	func getAge{
+		=age
+	}
+}
+var o=.son
+o.age print
+.o.getAge print
+var o2 parent=o parent
+o2.age print
+.o2.getAge print
+
+---20201117
+use
+with
+use(var a=.context){
+	
+}
+
+--
+按需编译
+hello world 真就2kb，文件不会大得离谱
+
+--20201118
+
+--20201119
+0开销
+那么object不能有属性
+
+运行时多态：需要开销4字节，且动态运行需要查表
+class object{
+	var instanceClass=null
+}
+class a+object{
+	
+}
+class b+a{
+	
+}
+
+type myStruct{
+	var s dword
+	var i int
+
+}
+struct a{
+	
+}
+class user_api{
+	var Id int
+	var Name string
+
+	func getId
+	func setId id int
+	func getName
+	func setName name string
+	//读写分离
+}
+class user:user_api{
+	func getId{
+		=Id
+	}
+	func setId id int{
+		Id=id
+	}
+	func getName{
+		=Name
+	}
+	func setName name string{
+		Name=name
+	}
+
+}
+
+//下面简化读写分离：
+class user_api{
+	var Id int
+	var Name string
+}
+class user:user_api{
+	set Id{
+		Id=value
+	}
+	get Id{//可以省略是默认值
+		=Id
+	}
+	set -Name//private设置
+	get -Name//private读取
+}
+var a=.user
+
+//最小作用域关键字 me指向方法作用域或轻作用域
+//this指向当前类
+
+
+访问控制
+class user{
+	var -Id int
+	var -Name string
+	func +getId//public
+	func setId
+	func getName
+	func -setName//private
+}
+
+设置只读变量：
+class user{
+	var variable int
+	set -variable
+
+}
+
+--运行时多态:
+class a{
+	func get{
+		"base" print
+	}
+}
+class b:a{
+	func get{
+		"child" print
+	}
+}
+var data a=.b
+.data.get
+正常情况是运行时多态输出base
+这里输出child
+
+
+
+class a{
+	vfunc get{
+		"base" print
+	}
+}
+class b:a{
+	func get{
+		"child" print
+	}
+}
+var data a=.b
+.data.get
+
+虚函数表 每个实例会有一个虚函数表 开销4byte
+
+--函数作为参数
+func print s string{
+	
+}
+func main{
+	{
+		var fn=func f func(string){//函数里面的函数没有函数名称，f是参数
+			"hello" f
+		}
+		print fn
+
+		"hello ch5" func s string{
+			s print
+		}
+	}
+}
+
+func fn func string:{
+	
+}
+
+
+--类型：
+基本类型
+	传值
+	type
+
+引用类型
+	传地址
+	class
+
+数组array
+元组tuple
+void类型 大小为0
+所有类型必须有大小
+
+class ch5_type
+class ch5_basicType:ch5_type
+class ch5_referenceType:ch5_type
+
+数组类型：array<int>===int[]
+元组类型：tuple<int,string>===int,string
+
+泛型类型：ArrayList<int>
+
+--泛型：
+
+class ArrayList<T>{
+	var -elem=.T[10]
+	var -index int=0
+	func put s T{
+		elem[index++]=s
+	}
+	func set i int,s T{
+		elem[i]=s
+	}
+	func get i int{
+		=elem[i]
+	}
+}
+
+泛型可以用于基本类型吗
+var s=.ArrayList<int>
+s.put(100)
+s.get(0)
+
+函数强制指定类型
+func getMoney userid int:double
+func getMoney userid Int:Double?
+
+
+a=func
+
+class isBasicType<T>{
+	auto bool{
+		=.T===.T
+	}
+	
+}
+
+.isBasicType<int> bool
+
+
+--函数如果就一行return代码则：
+func getAdd x int,y int{
+	=x+y
+}
+
+func getAdd x int,y int=x+y
+
+func getAdd x int,y int:int=x+y//指定返回类型，返回类型可以省略 自动推导
+
+func test=//返回void
+func test:Int=//返回调用Int无参构造方法
+
+
+没有方法体的方法必须指定返回类型：
+class interface_tool{
+	func getTime:int
+}
+interface Iterator<T>{
+	func hasNext:bool
+	func next:T
+}
+
+class a:Iterator<int>{
+	func hasNext=true
+	func next=10
+}
+
+for i in a{
+	
+}
+
+--20201120
+=if a is object;666;else;0
+=when a{
+	>=10=true
+	else=false
+}
+
+try{
+	
+}catch(Exception e)when e.msg=="err1"{
+	
+}catch(Exception e)when e.msg=="err1"{
+	
+}catch(Exception e){
+	
+}finally{
+	
+}
+
+
+"hello "+.getPersonName print
+"hello "+person.name print
+"hello "+(person getName) print
+
+try a++; catch e Exception when e.msg=="err1";=100;finally .end
+
+
+try a(a++) catch e Exception when e.msg=="err1" =100 finally end()
+try
+	a++
+catch e Exception when e.msg=="err1"
+	=100
+finally
+	.end
+
+
+for i in a{
+	
+}
+for i in a{
+	
+}
+for i in a a
+	a++
+
+标记：
+[]代表取表达式和正确取表达式的结果
+if [a==1]
+	[a++]
+if [a==1];[a++]
+
+if [a==1][{a++}]
+var a=a
+ref b=a
+var a int,b dword=2,3
+
+
+ref a,b=b,a//定义变量别名
+var a,b=b,a//定义变量
+
+func swap ref a int,ref b int:=a,b=b,a
+
+ref a int=1
+ref a=1//warn
+ref a=1+pi//warn
+
+toBool
+iterator
+
+type bool{
+	var value byte
+}
+class a:bool{//继承类型？No，这里意思是类可以转bool数据类型，或者省略？
+	auto bool{
+		=true
+	}
+}
+var s bool=.a
+省略：
+class a{
+	var b bool=false
+	auto bool=b
+	
+}
+多态问题：
+改良后语法：
+class a{
+	var b bool
+	vfunc :bool=b//虚函数
+}
+class b:a{
+	func :bool=b//这里func和vfunc都是vfunc
+}
+var obj bool=.b a
+obj print
+
+内联函数编译器自动优化 无需指定
+
+@raw//注解 注解下一条语句 raw为禁止自动优化
+func a ref str string{
+	=1
+}
+
+别名方案：
+ref关键字
+
+ref a,b=c,d
+用&修饰
+var &a,&b=&c,&d
+
+或：
+var a,b=&c,&d
+
+或：
+var a,b=ref c,ref d
+
+
+基本类型的ref
+var a int=100
+ref b=a//不占用空间
+
+引用类型的ref
+var a Int=100
+ref b=a//不占用空间 对b的操作编译变成了对a的操作
+
+
+--20201121
+class static_test{
+	static{
+		var s=123
+		var d=456
+		init{
+			var s=789
+			var d=999
+		}
+		func s{
+			s print
+		}
+	}
+}
+static_test.s print//123
+
+static{
+
+	init{
+
+	}
+}
+var s=100
+func s{
+	"hello world" print
+}
+func calc s func:{
+	.s
+}
+init{
+	s calc
+}
+
+//主入口文件
+
+var s=100
+init{
+	s=1000
+}
+
+其实这个整个内容是一个类似static块包着的
+
+
+关键字var val
+val a=100 代表只读/常量
+class static_test{
+	var variable=0
+	val constant=1
+	static{
+		var variable=2
+		val constant=3
+		ref variable_ref=variable//变量
+		ref constant_ref=constant//常量
+		init{
+
+		}
+	}
+	init{
+
+	}
+}
+关键字 self this me
+
+static a{
+	var a=100
+	init{
+		self.a=120
+	}
+	func a{
+		"ok" print
+	}
+}
+.a.a//ok
+
+class a{
+	init{
+		var a=1
+	}
+	static c{
+
+	}
+}
+
+class a b int,c int:b,c o;
+
+static a=1,2 c
+
+var v=1,2,3
+v print//3
+class myclass<T>{
+	func load{//构造方法
+		
+	}
+	func unload{//析构方法
+		
+	}
+	func set:this<T> =a=1//返回类型this，如果不是this自动返回自己
+}
+
+func output elem T:type<T>=//body返回为void类型
+
+var a=import "ch.ch5:a"//待定 编译型语言这样写就看起来动态加载了
+import a from "ch.ch5:a"
+import * from "ch.ch5"//相对路径
+
+func使用fun替代？
+class a{
+	fun a{
+		
+	}
+	vfun a2{
+		
+	}
+	static{
+		init{
+
+		}
+	}
+	init{
+
+	}
+	static ab{
+		init{
+
+		}
+	}
+}
+
+
+字符类型：
+var a="f"
+var s='c'
+var s2='\'
+var s3="\0"
+字符串类型：
+var a="ff"
+var s="cc"
+var s2="f\0"
+var s3=""
+
+fun doOperate type int=100,number int=100:=
+fun doOperate type int:void=100
+fun doOperate type int=100
+fun doGet request ch.network.http.request.httpRequest=null,response ch.network.http.response.httpResponse=null=0
+
+敲定：
+fun doGet request=.ch.network.http.request.httpRequest,response=.ch.network.http.response.httpResponse=0
+
+不定参：需要吗？
+fun doGet type=0,...request ch.network.http.request.httpRequest{
+	
+}
+100,req1,req2,req3 doGet
+替代方法：
+fun doGet type int,request Array<ch.network.http.request.httpRequest>{
+	
+}
+100,[req1,req2,req3] doGet
+
+fun doGet avg tuple<int,Array<ch.network.http.request.httpRequest> >{
+	avg[0] print
+	for i in avg[1]{
+		i handleGet
+	}
+	
+}
+(100,[req1,req2,req3]) doGet
+
+
+/*fun doGet avg tuple(int,array(ch.network.http.request.httpRequest)){
+	
+}*/
+
+fun doGet avg tuple<int,Array<ch.network.http.request.httpRequest>>{
+	
+}
+类型有哪些：
+int//基本类型
+Int//类
+int[10]=array<int>
+Array可以有length array没有
+var s array=[1,2,3]//默认
+var s Array=[1,2,3]
+var s=(1,2,3,4)
+s=(1,)//元组(int)
+s=(1)//int
+
+--20201122
+var a Int?=100
+
+var s Int=a!!
+
+a??void a
+
+
+a??void的返回为a如果为null，那么返回void，如果不是a类型则构造a 即:void a
+
+最终返回一定是a类型，那如果a没有无参构造方法呢，只接受一参构造 二参用元组代替
+a??(1,2) 
+(1,2) a
+
+
+调用函数或实例化的方法：
+.a
+void a
+0 a//deprecated
+() a//deprecated
+null a//deprecated
+
+
+
+
+3+()//err
+
+所有语法：
+test.ch5:
+from "1.dll" import printf ..int:int
+from "1.ch5" import(
+	printf ..int:int
+	scanf ..int:int
+)
+
+
+var a=100
+fun print ..ref t int:void=..t printf //参数展开
+from "./1.ch5" import *
+class a{
+	var n=100
+	static{
+		var n:Int=200
+		fun staticfun{
+			"i am static fun"+n print
+		}
+		init{
+
+		}
+	}
+	static c{
+		var n:int=200
+	}
+	fun a{//construct
+
+	}
+	fun myfunc{
+
+	}
+	auto this{
+		var tmp=.a
+		tmp.n=this.n
+		=tmp
+	}
+	auto int{
+
+	}
+	init{
+
+	}
+}
+init{
+	self.a===a print
+	1+2*3+4,6,8 sum
+	a.n//200
+	.a.n//100
+}
+
+文件分析的结果：
+文件根对象列表：
+如上面的就是：
+int a
+fun print
+class a
+
+var a bool
+for{
+	for{
+		break 2
+	}
+}
+for{
+	break
+}
+for a{
+	a=1
+}
+while a++{
+	
+}
+for a=1;a<10;a++{
+	
+}
+each ref a in [1,2,3]{
+	
+}
+each a in 1..2{
+	
+}
+//..被int重载 1..2就是range(1,2)
+
+1==1//比较值 这个==需要被重载
+1===1//比较地址 这个===不需要被重载 当没有重载==时会自动为===
+重载和自动类型转换可以有作用域
+
+api:
+从当前位置获取一个表达式 =结束{结束;结束
+从当前位置获取一个表达式 ,结束;结束{结束
+从当前位置获取一个表达式 ;结束{结束
+从当前位置获取一个类型   ;结束=结束
+从当前位置获取一个方法体 ;结束{}结束
+
+初始化规则：
+实例化会导致静态init->类init
+调用静态方法导致静态init
+
+或 一开始就全部初始化? 只要被用过就提前初始化?
+
+//dsl类似操作符重载
+class int{
+	operator .. a int{
+
+	}
+}
+
+动态设置操作符重载和作用域：
+
+operator<int> .. a int{
+	=me,a range
+}
+
+operator<int> until a int{//先判断有无运算符重载，没有就为链式调用
+	=me,a range
+}
+
+scope c=
+
+//int这个类的对象  Type<int>
+//Int这个类的对象 Class<Int>
+//？ 这个标识表示待定
+class class{
+	
+}
+type void=
+--20201123
+字面量 重载 灵活
+literal int{
+	
+}
+1 2 3
+
+字面量修饰符：可作用域重载
+
+class a{
+	
+}
+
+1f
+
+0.4f
+0.66d
+3e+7
+0.5double
+
+可作用域重载的：
+
+auto：
+auto int string{
+	
+}
+operator + a int{
+	
+}
+
+todo "待解决的问题！"
+
+class a{
+	operator<ch.lang.int> + d double{
+
+	}
+	operator<self> todo str string{
+		
+	}
+	operator<this> todo str string{
+		
+	}
+	operator<void> todo str string{
+		
+	}
+	auto a{
+
+	}
+	literal int{
+
+	}
+}
+
+class a{
+	vfunc:string{
+		=""
+	}
+}
+
+--编译时替换 类似宏，但有比宏灵活
+
+字面量解析时会被修饰符重载
+
+class mutex{
+	literal<char> f{
+		=me.
+	}
+}
+todo tokenizer需要解析：
+//"a"f 修饰词
+//1.2 1.2
+//1.f 1 . f
+//1..a//1 .. a
+//1..a操作符重载
+
+//features:
+
+
+
+
+
+class a{}
+var s=new a()
+s(100)//将参数传入实例？unsupport
+
+
+--asm
+asm{
+	mov eax,10
+}
+
+
+--char string
+var a="123"//string
+var a="1"//string 字面量是string 类型就是string
+var a char="1"//char 字面量是string 需要char 则调用char构造方法
+var a="1" char//char
+
+var a char[]="123"
+
+
+--20201125
+
+array基本类型
+Array包装类型
+
+
+
+auto<byte> char{//在这个作用域下byte类型可以自动转为char类型
+	
+}
+方案一：
+
+using关键字为使用一个作用域
+
+type a{
+	
+}
+方案二：
+默认继承使用
+方案三：
+导入时使用
+from "chcore" import *
+
+
+--type继承
+type int:dword{
+	var value dword
+
+}
+--class继承
+class opj(var a int)
+class obj(a int):opd(a)
+
+class parent(var a=0 int){
+	fun parent{
+
+	}
+	fun parent b int{
+
+	}
+}
+10 parent
+//先不实现以上
+
+--20201126
+instanceof的底层实现？
+
+class object{
+	fun unused{
+
+	}
+}
+class a:object{
+	
+}
+
+class Object{
+	var clazz dword
+}
+
+
+class a{
+	
+}
+
+class Human{
+	
+}
+
+
+
+
+class Human:Object{
+	
+}
+class Parent:Human{
+	vfun a{
+		"parent" print
+	}
+}
+class Child:Parent{
+
+	fun a{
+		"child" print
+	}
+}
+
+fun getParent{
+	if .rnd>0.5{
+		=.Parent
+	}else{
+		=.Child
+	}
+}
+
+init{
+	var a Parent=.getParent
+	a is Child print
+}
+var a Parent=.Child
+.a.a
+
+
+/////////////////
+
+.Child
+
+1000
+
+
+
+clazz:class Child
+
+
+
+/*
+
+class a
+fun a
+fun b
+fun c
+class b
+fun a
+class Parent
+parent
+fun a
+class Child
+parent
+fun a
+
+
+
+*/
+
+
+
+
+
+class Parent:object{
+	var aa=100
+}
+class Child:Parent{
+	var aab=100
+}
+var a Parent=.Parent//safe
+
+var b Child=a//unsafe
+
+
+0字节的空间
+xxxxxx
+
+
+class a{
+	var a int8
+	var b int8
+}
+class b:a{
+	var a int8
+}
+if .b is a{
+	
+}
+fun a:double
+var a=.a
+
+
+
+for a in arr{
+	
+}
+var arr=array<child>
+for a:arr parent{
+	
+}
+死循环
+for{
+	
+}
+while：
+for i<0{
+	
+}
+for三段式：
+for var i=0;i<10;i++{
+	
+}
+foreach语法：
+for i:arr{
+	
+}
+
+--修复：
+死循环：
+for{
+	
+}
+while:
+var i=0
+for i<10
+	i++
+for三段式：
+for(var i=0;i<10;i++){
+	
+}
+foreach：
+for [varname] in [expr]:[type]{
+	
+}
+
+
+
+type int{
+	var value dword
+}
+
+class myobj<T>{
+	T i
+}
+class Array<T>{
+	var arr T[]
+
+}
+.myobj<int>
+
+int is type//true
+
+--20201127
+
+type语法：
+基本数据类型：
+byte word dword qword
+定义一个数据类型
+
+
+type int{
+	var value dword
+	operator + a int{
+
+	}
+}
+type long{
+	var value dword
+	var value2 dword
+	operator + a me{
+		
+	}
+}
+type uint{
+	
+}
+type double{
+	var 
+}
+--20201130
+--20201201
+
+static对象仅存在一次
+所以static对象的方法不传this，直接使用静态地址指向实例空间
+
+[data]
+..string 字符串常量池
+..static_list 静态实例对象地址池 若不实例化则为0
+
+
+[code]
+call static.init
+..fun 函数区
+
+[import_table]
+--20201202
+amt abstract meaning tree抽象语义树
+
+每个应用对应一个amt
+amt_application
+
+class、type
+
+amt_class、amt_type
+fun、vfun
+
+
+
+--20201205
+创建对象 附加引用
+
+class application top{
+	var stringPool
+	var arr tree
+	init{
+		this b
+	}
+}
+
+class b top{
+	fun init{
+		"" top.stringPool.add
+	}
+}
+
+
+--20201206
+解析语义时的互相依赖问题
+
+-main.ch5
+
+from "1.ch5" import use
+init{
+	.test
+}
+fun test{
+	.use
+}
+
+-1.ch5
+from "main.ch5" import test
+
+
+fun use{
+	if .rnd<.5;.test
+	"hello" print
+}
+--20201210
+编码
+parse 将表达式的结果输出到eax？
+输入为元组？
+面向通用？
+语义树体现元组？
+语法树的解析
+
+1 print
+1,1 print 
+
+有一个元组类型
+
+
+
+
+--20201212
+容器：
+class和static
+
+容器下可以有方法
+方法绑定容器
+
+区别：class可以有很多个实例 static只有1个
+
+方法可以分为：
+导入方法。
+1.import导入dll方法
+2.其它文件定义的方法体
+普通方法。fun
+1.方法下直接定义函数体的方法
+虚方法。vfun
+1.可以被继承的方法
+
+
+1,2,(5,6,7 add),4 add
+
+--20201221
+后置if
+1==1 if{
+	
+}else{
+	
+}
+
+1==1?{
+		
+}:{
+	
+}
+
+后置for
+[1,2,3] each{
+	it
+}
+1==1 while{//待商榷
+	
+}
+
+
+匿名函数
+var a=fun{
+	
+}
+fun{
+	
+}=a
+
+-----
+定义函数：
+fun a{
+	=1,1//return int,int
+}
+fun a:{
+	=1,1//return nothing
+}
+fun a{
+	1,1//return nothing
+}
+fun a:int,int{
+	1,1//return int,int
+}
+fun a=1//return int
+fun a:=1//return nothing
+
+//函数参数
+fun a v int{
+	
+}
+fun a v int,v2 int{
+	
+}
+fun a v int,v2 int:int{
+	
+}
+fun a v int:int,int{
+	
+}
+fun a v=100,v2=200,v3=this.a,v4 int,v5=v4:int<int>[]{
+	
+}
+--20201222
+fun ExitProcess value int:int from "kernel32.dll"
+fun exit value int:int from "kernel32.dll:ExitProcess"
+
+规则：
+type不会出现空格截断 类型
+如：
+int
+int[]
+int []
+int <>
+
+int int//不合法
+int,int//元组
+
+int[]
+
+数组类型：
+int[10]//10个元素
+int[10,10]//不合法 里面的表达式只能是返回数值型
+
+val a=.object<int>[0]
+
+class a{
+	
+}
+class a<T>{
+	
+}
+//import
+import exit from "kernel32.dll:ExitProcess"
+fun exit code=0 int
+fun exit code=0 from
+fun from<T> code T:T=code
+
+-部分关键字在函数体内写不起作用
+下列不起作用：
+from import 
+不能作为变量的关键字：
+fun if for while 
+
+import import from "xxx.dll"
+fun from<from> from from:from=from
+
+
+关键字分类：
+类关键字：
+from
+import
+var
+val
+fun
+init
+free
+
+体关键字：
+var
+val
+fun
+if
+for
+while
+
+
+不能作为变量名的是体关键字
+
+
+-操作符重载
+
+operator me+n me{
+	
+}
+operator !me{
+	
+}
+operator ++me{
+	
+}
+operator ++me{
+	
+}
+operator me+n dword{
+	
+}
+
+type在传参时总是值复制 object在传参时总是传引用
+
+字长类型：
+any
+any是任何数据类型的基类
+
+并且长度跟随系统。
+值仅有一个就是地址
+
+拓展类？分布类
+关键字候选词：
+extend
+ext
+append
+partial
+
+type a{
+	int a(){
+
+	}
+}
+extend a{
+	int b(){
+
+	}
+	extend this{
+
+	}
+}
+append a{
+	
+}
+
+
+ 重构语法树 语义树
+遵循以下规则重构语法树：
+语法树需体现元组 注解
+错误指示体现到位置
+支持fun可选参特性
+语义树需体现类型
+返回值是否被使用
+
+--20201223
+注解语法
+候选语法：
+[raw]
+[default]
+val a=100
+
+
+@raw
+fun a{
+	@significant
+	val expr=.todo
+}
+@message
+val i=0
+@platform="win32"
+
+@platform=1,2,3
+
+#compiler=win32
+#platform=win32
+#raw
+#ignore
+#ifdef 
+
+$raw
+!raw
+
+(raw)
+[raw]
+
+\raw
+
+'raw'
+
+;raw
+:raw
+?raw
+.raw
+,raw
+*raw
+^raw
+%raw
+{raw}
+
+-
+fun a.a{
+	
+}
+fun a a int{
+	
+}
+fun a=1
+fun a from
+fun a
+
+--20201224
+\元组={ token_word token_int token_double token_tinybracket \n \eof
+元组是指遇到 \元组 的表达式
+元素是指遇到 , \元组 的表达式
+
+元组是指多个元素的集合
+
+--20201225
+
+c#
+new Object{
+	a=1
+	b=2
+}
+val a=.Object{
+	
+}
+
+--20201227
+字符串字面量类型为
+byte[0]
+class string{
+	auto<byte[0]> string{
+		
+	}
+}
+class byte{
+	
+}
+type<byte[]>{
+	
+}
+
+
+val a:byte[]=.func
+a as byte[10]
+
+数据类型：
+数据类型分为基本数据类型 byte word dword any
+
+类类型
+class类型
+
+地址：byte[]
+
+val s byte[5]="12345"
+val a=s byte[]
+
+val c=a as byte[5]//unsafe
+
+
+类型转换：
+val a=1
+a as double print
+
+val data=[1,2,3]
+assert data is int[3]
+
+val arr int[data.size]=data
+
+fun<T> copy obj T:T{
+	=.obj.clone
+}
+
+val a=100
+val b=a copy
+
+-特性
+fun isInt v int=true,v
+
+100 isInt?
+	"$it is int" print
+:
+	"$it is not int" print
+
+
+100 isInt?{
+	it print
+}
+true?{
+	
+}
+
+val a=.func
+
+a isString?it print:
+
+if true,1,2,3{
+	it[1]
+
+}
+true,1,2,3?{
+	
+}:{
+	
+}
+
+
+
+[1,2,3,4,5,6]
+
+
+todo 
+(1,2,3) & (4,5,6)
+
+--20201228
+所有class默认继承Object
+Object有头
+可以进行is操作
+
+Object可以有继承方法、多态
+
+class myObj:object{
+	
+}//这样则不继承Object 没有vfun 没有多态 没有头 是纯净的结构
+class Object{
+	vfun toString:String
+	vfun clone:this
+
+}
+
+-更改默认类型名称
+byte->u1
+word->u2
+dword->u4
+qword0>u8
+object->any
+
+这样object和Object是一样的
+
+
+冲突分析 u1做变量名
+
+val u1=u1//不冲突
+val u1=.u1//构造u1不冲突
+
+
+if 1{
+	it print//1
+}
+if 1,2{
+	it.0 print//1
+	it.1 print//2
+	val me=it
+	if 3,4{
+		me.0//1
+		me.1//2
+		it.0//3
+		it.1//4
+		it[0]//3
+		it[1]//4
+	}
+}
+
+--字符串类型
+val utf="Hello World"utf8 //utf-8的字符数组 带长度
+val gbk="Hello World"gbk //
+此方案待定
+
+方案二：
+作用域
+scope utf8{
+	charset "utf-8"
+}
+use utf8{
+	val s="你好"
+	s u1[]d
+}
+方案三：
+使用文件的编码
+bad
+
+编译器需要知道字符串的编码
+
+字面量
+
+
+type重载运算符默认继承
+
+--数据类型传参类型
+
+type传值
+class any
+传地址
+
+--20201229
+
+string存unicode？
+那怎么存gbk编码常量和utf8编码常量？
+优化器？
+编译期间执行然后存常量？
+
+方案一：
+val a="Hello World"
+fun func1 value str_gbkbb from "1.dll"
+方案二：
+@gbk
+val a byte[]="Hello World"
+fun func1 value byte[] from "1.dll"
+方案三：
+val a string="Hello World"
+func1=fun value byte[] from "1.dll"
+a toGBK func1
+
+
+
+
+--20201230
+
+数组可以存到data段内
+字符串本质是数组 同理可存data段
+但是语义树不应该做这个功能
+这个功能应该是优化器做
+语义树分析器更多的是做开辟空间然后逐字节写入的操作
+
+
+字面量 字符串 默认ansi编码  即gbk
+
+
+--20210106
+for var i=1,10 range{
+	
+}
+for i=1,10 range{
+	
+}
+--20210210
+基于ide提示的语言
+
+var s=10
+var s2=20
+val s3=30
+
+
+
+
+
+
+设计阶段：
+语法层面的设计 解析层面的设计 优化层面的设计
+
+基本语法：
+
+概念
+
+静态类  static
+类      class
+
+均可以使用var val定义
+
+一个文件可以看成是一个静态类
+
+
+
