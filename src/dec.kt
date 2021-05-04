@@ -4,34 +4,34 @@ import javax.imageio.ImageIO
 
 
 fun main() {
-    var results = ""
-    val a = ("FFFEF6C3FFFEF14BFFFEC2CFFFFEE0E3FFFED07BFFFED337FFFF7747FFFF6167FFFFA87FFFFEC58BFFFEC58BFFFEE39FFFFFA87FFFFEF14BFFFED07BFFFEF14BFFFEF6C3FFFED07BFFFF50FFFFFF6423FFFF8237FFFF7A03FFFF71CFFFFF6C57FFFF8237FFFF7747FFFF6F13FFFF7CBFFFFF8237FFFF7A03FFFF66DFFFFF7747FFFFA87FFFFECDBFFFFEBA9BFFFEEE8FFFFF6167FFFFA87FFFFF253FFFFF0F5FFFFF66DFFFFF66DFFFFEE65BFFFEFC3BFFFF2283FFFEBD57FFFECDBFFFFF302F")
-    for (i in Regex("(.{8})").findAll(a)) {
-        val a = i.value
-        var result: UInt = 0u
-        result += (Integer.parseInt(a.substring(0, 2), 16) shl 3 * 8).toUInt()
-        result += (Integer.parseInt(a.substring(2, 4), 16) shl 2 * 8).toUInt()
-        result += (Integer.parseInt(a.substring(4, 6), 16) shl 1 * 8).toUInt()
-        result += (Integer.parseInt(a.substring(6, 8), 16)).toUInt()
-        val char = (0u - result) / 700u
-        results += char.toInt().toChar()
-    }
-    println(results)
-
-
-    var results = ""
-    val a = "***"//base64后
-    for (i in Regex("(.{8})").findAll(a)) {
-        val a = i.value
-        var result: UInt = 0u
-        result += (Integer.parseInt(a.substring(0, 2), 16) shl 3 * 8).toUInt()
-        result += (Integer.parseInt(a.substring(2, 4), 16) shl 2 * 8).toUInt()
-        result += (Integer.parseInt(a.substring(4, 6), 16) shl 1 * 8).toUInt()
-        result += (Integer.parseInt(a.substring(6, 8), 16)).toUInt()
-        val char = (0u - result) / 700u
-        results += char.toInt().toChar()
-    }
-    println(results)
+//    var results = ""
+//    val a = ("FFFEF6C3FFFEF14BFFFEC2CFFFFEE0E3FFFED07BFFFED337FFFF7747FFFF6167FFFFA87FFFFEC58BFFFEC58BFFFEE39FFFFFA87FFFFEF14BFFFED07BFFFEF14BFFFEF6C3FFFED07BFFFF50FFFFFF6423FFFF8237FFFF7A03FFFF71CFFFFF6C57FFFF8237FFFF7747FFFF6F13FFFF7CBFFFFF8237FFFF7A03FFFF66DFFFFF7747FFFFA87FFFFECDBFFFFEBA9BFFFEEE8FFFFF6167FFFFA87FFFFF253FFFFF0F5FFFFF66DFFFFF66DFFFFEE65BFFFEFC3BFFFF2283FFFEBD57FFFECDBFFFFF302F")
+//    for (i in Regex("(.{8})").findAll(a)) {
+//        val a = i.value
+//        var result: UInt = 0u
+//        result += (Integer.parseInt(a.substring(0, 2), 16) shl 3 * 8).toUInt()
+//        result += (Integer.parseInt(a.substring(2, 4), 16) shl 2 * 8).toUInt()
+//        result += (Integer.parseInt(a.substring(4, 6), 16) shl 1 * 8).toUInt()
+//        result += (Integer.parseInt(a.substring(6, 8), 16)).toUInt()
+//        val char = (0u - result) / 700u
+//        results += char.toInt().toChar()
+//    }
+//    println(results)
+//
+//
+//    var results = ""
+//    val a = "***"//base64后
+//    for (i in Regex("(.{8})").findAll(a)) {
+//        val a = i.value
+//        var result: UInt = 0u
+//        result += (Integer.parseInt(a.substring(0, 2), 16) shl 3 * 8).toUInt()
+//        result += (Integer.parseInt(a.substring(2, 4), 16) shl 2 * 8).toUInt()
+//        result += (Integer.parseInt(a.substring(4, 6), 16) shl 1 * 8).toUInt()
+//        result += (Integer.parseInt(a.substring(6, 8), 16)).toUInt()
+//        val char = (0u - result) / 700u
+//        results += char.toInt().toChar()
+//    }
+//    println(results)
 
 //
 //
