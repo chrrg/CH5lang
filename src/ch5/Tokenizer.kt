@@ -1,4 +1,5 @@
 package ch5
+
 import ch5.*
 
 class Tokenizer(var code: String) {
@@ -36,8 +37,148 @@ class Tokenizer(var code: String) {
     }
 
     fun value(): Token? {
-        if (wordIndex <= 0 || wordIndex >= tokens.size) return null
+        if (wordIndex <= 0 || wordIndex > tokens.size) return null
         return tokens[wordIndex - 1]
+    }
+
+    fun needOp(op: operateSymbol) {
+        val item = this.next()
+        if (item is Token_Operator) {
+            if (item.operator == op) return
+        }
+        throw Exception("期待操作符[" + op.word + "]")
+    }
+
+    fun isOperator(op: operateSymbol): Boolean {
+        next()?.let {
+            prev()
+            if (it is Token_Operator && it.operator === op) return true
+        }
+        return false
+    }
+
+    fun getOperator(): Token_Operator? {
+        next()?.let {
+            if (it is Token_Operator) return it
+            prev()
+        }
+        return null
+    }
+
+    fun getString(): Token_String? {
+        next()?.let {
+            if (it is Token_String) return it
+            prev()
+        }
+        return null
+    }
+
+    fun getCrlf(): Boolean {
+        next()?.let {
+            if (it is Token_Crlf) return true
+            prev()
+        }
+        return false
+    }
+
+    fun isNull(): Boolean {
+        next()?.let {
+            prev()
+            return false
+        } ?: let {
+            prev()
+            return true
+        }
+    }
+
+    fun getCrlfNull(): Boolean {
+        next()?.let {
+            if (it is Token_Crlf) return true
+            prev()
+            return false
+        }
+        return true
+    }
+
+    fun getSingleOperator(op: operateSymbol): Boolean {
+        next(true)?.let {
+            if (it is Token_Operator && it.operator === op) return true
+            prev()
+        }
+        return false
+    }
+
+    fun getOperator(op: operateSymbol): Boolean {
+        next()?.let {
+            if (it is Token_Operator && it.operator === op) return true
+            prev()
+        }
+        return false
+    }
+
+    fun isInt(): Boolean {
+        next()?.let {
+            prev()
+            if (it is Token_Int) return true
+        }
+        return false
+    }
+
+    fun isDouble(): Boolean {
+        next()?.let {
+            prev()
+            if (it is Token_Double) return true
+        }
+        return false
+    }
+
+    fun isString(): Boolean {
+        next()?.let {
+            prev()
+            if (it is Token_String) return true
+        }
+        return false
+    }
+
+    fun isWord(): Boolean {
+        next()?.let {
+            prev()
+            if (it is Token_Word) return true
+        }
+        return false
+    }
+
+    fun isWord(value: String): Boolean {
+        next()?.let {
+            prev()
+            if (it is Token_Word && it.value == value) return true
+        }
+        return false
+    }
+
+    fun getWord(): Token_Word? {
+        next()?.let {
+            if (it is Token_Word) return it
+            prev()
+        }
+        return null
+    }
+
+    fun getWord(value: String): Boolean {
+        next()?.let {
+            if (it is Token_Word && it.value == value) return true
+            prev()
+        }
+        return false
+    }
+
+    fun isBlank(): Boolean {
+        val value = this.value()
+        return value is Token_Comment || value is Token_Crlf
+    }
+
+    fun skipBlank() {
+        while (isBlank()) this.next()
     }
 
     fun next(singleOperator: Boolean = false): Token? {//singleOperator 单符号模式

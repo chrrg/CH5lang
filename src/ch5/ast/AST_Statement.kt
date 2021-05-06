@@ -1,4 +1,4 @@
-package ch5.AST//package compiler.AST
+package ch5.ast//package compiler.AST
 //
 //import compiler.Tokenizer.*
 //

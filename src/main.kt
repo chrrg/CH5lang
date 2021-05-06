@@ -1,5 +1,5 @@
 import ch5.AMT.AMT
-import ch5.AST.AST
+import ch5.ast.AST
 import ch5.Tokenizer
 import java.io.BufferedInputStream
 import java.io.File
@@ -18,11 +18,11 @@ object Compiler {
 
     fun compile(code: String, output: String) {
         val tokenizer = Tokenizer(getFileCode(code))//并没有进行分词
-        val ast = AST.parse(tokenizer)
+        val ast = AST(tokenizer).parse()
 //        ast.print()
-        println(ast.static.toString())
+        println(ast.toString())
 
-        val amt=AMT.parse(ast)
+//        val amt=AMT.parse(ast)
 
     }
 }
