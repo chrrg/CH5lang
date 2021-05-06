@@ -109,17 +109,30 @@ class AST(private val tokens: Tokenizer) {
         return result
     }
     fun parseOuterVar(): ASTOuterVar {
-        val result=ASTOuterVar()
+        val define = ASTOuterVar()
         when {
             tokens.getWord("var") -> {
 
             }
             tokens.getWord("val") -> {
-                result.const = true
+                define.const=true
             }
             else -> throw Exception("err")
         }
-        return result
+        while (true) {
+            val name = tokens.getWord() ?: throw Exception("err")
+            val v = ASTVarName(name)
+            if (tokens.isWord()) v.type = parseDataType()
+            define.names.add(v)
+            if (tokens.getSingleOperator(op_comma)) continue
+            break
+        }
+        if (tokens.getCrlfNull()) return define
+        if (tokens.getSingleOperator(op_assign)) {
+            define.expr = parseExpression()
+        }
+        if (!tokens.getCrlfNull()) throw Exception("err")
+        return define
     }
     fun parseDataType(): ASTDataType {
         //int
@@ -242,7 +255,6 @@ class AST(private val tokens: Tokenizer) {
                     op_bigbracket1->{
                         tokens.prev()
                         result=parseExpressionContainer()
-                        tokens.needOp(op_bigbracket2)
                         return result
                     }
                     in abort_symbol -> {
@@ -367,6 +379,8 @@ class AST(private val tokens: Tokenizer) {
             if (tokens.getOperator(op_bigbracket2)){tokens.prev(); break}
             if (tmp == null) throw Exception("err!")
         }
+        tokens.needOp(op_bigbracket2)
+
         return result
     }
     fun parseIf(): ASTIf {
@@ -408,18 +422,18 @@ class AST(private val tokens: Tokenizer) {
         return ASTFor(condition, trueBranch, falseBrach)
     }
     fun parseInnerVar(): ASTInnerVar {
-        val define: ASTInnerVar
+        val define = ASTInnerVar()
+        when {
+            tokens.getWord("var") -> {
 
-        if (tokens.getWord("var")) {
-            define = ASTInnerVar()
-        } else if (tokens.getWord("val")) {
-            define = ASTInnerVar()
-
-        } else throw Exception("err")
+            }
+            tokens.getWord("val") -> {
+                define.const=true
+            }
+            else -> throw Exception("err")
+        }
         while (true) {
-            val name = tokens.getWord()
-            if (name == null) throw Exception("err")
-
+            val name = tokens.getWord() ?: throw Exception("err")
             val v = ASTVarName(name)
             if (tokens.isWord()) v.type = parseDataType()
             define.names.add(v)

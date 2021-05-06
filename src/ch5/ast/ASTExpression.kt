@@ -52,7 +52,7 @@ class ASTInnerVar : ASTExpression(){
     var expr: ASTExpression? = null
     override fun toString(): String {
         val sb = StringBuilder()
-        sb.append(if (const)"var " else "val ")
+        sb.append(if (const)"val " else "var ")
         var spl = ""
         for (i in names) {
             sb.append(spl)

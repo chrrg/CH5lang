@@ -21,10 +21,38 @@ open class ASTContainer() : ASTOuter() {
 
 class ASTStatic(val name: Token_String) : ASTContainer()
 class ASTClass(val name: Token_String) : ASTContainer()
+class ASTImport: ASTOuter(){
+//    import as from "as.ch5"
+    // import "as.ch5" = as.ch5
+    override fun toString(): String {
 
+    }
+}
 
-class ASTImport : ASTOuter()
-
+//class ASTImport : ASTOuter(){
+//    val arr: ArrayList<ASTWords> = arrayListOf()
+//    var isAll = false
+//    var from: ASTFrom? = null
+//    override fun toString(): String {
+//        val sb = StringBuilder()
+//        sb.append("import ")
+//        if (isAll) {
+//            sb.append("* ")
+//        } else {
+//            var sp = ""
+//            for (i in arr) {
+//                sb.append(sp)
+//                sb.append(i.toString())
+//                sp = ","
+//            }
+//            sb.append(' ')
+//        }
+//        from?.let {
+//            sb.append(it.toString())
+//        }
+//        return sb.toString()
+//    }
+//}
 class ASTWords(private val word: Token_Word) {
     var next: ASTWords? = null
     fun hasNext() = next != null
@@ -78,6 +106,7 @@ class ASTOuterVar() : ASTOuter() {
     var expr: ASTExpression? = null
     override fun toString(): String {
         val sb = StringBuilder()
+        sb.append(if (const) "val " else "var ")
         var spl = ""
         for (i in names) {
             sb.append(spl)
@@ -120,6 +149,7 @@ class ASTOuterFun() : ASTOuter() {
     val param = ArrayList<ASTParam>()
     var exprbody: ASTExpression? = null
     var type: ASTDataType? = null
+
     //    var from: ASTFrom? = null
     override fun toString(): String {
         val sb = StringBuilder()

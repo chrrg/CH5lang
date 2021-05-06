@@ -1,9 +1,9 @@
 //import os
+//import "os" as os
+val a = 1
+fun a {
+    a print
+}
 init {
-    a = if 1==1
-        1
-    else
-        2
-    4 print
-
+    = .a
 }
