@@ -235,3 +235,35 @@ class b{
 
 
 
+05.07
+ast解析基本完成
+
+依赖管理草案 todo
+
+import github.com/chrrg/CH5/parser
+现阶段应该做builtin的函数和类型？
+
+05.08
+字面量类型
+内置类型？
+字面量
+整数
+小数
+字符串 常量字符串是1字符时既可以作为字符也可以作为字符串
+
+builtin类型拟：
+int、uint 按位长 32位、64位
+double 按位长 32位、64位
+char、uchar 字符 8位
+byte、word、dword 基本类型
+string 字符串 引用基本类型 存储地址 按位长 32位、64位
+特殊类型 指向一个类的地址的类型
+基本类型都是值复制
+
+main.ch5
+特殊文件
+import 目录时查找是否有该文件
+即省略文件名
+
+05.09
+

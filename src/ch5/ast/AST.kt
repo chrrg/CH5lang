@@ -159,6 +159,31 @@ class AST(private val tokens: Tokenizer) {
         if (tokens.getSingleOperator(op_question)) type.canNull = true
         return type
     }
+    fun parseImport(): ASTImport {
+        if (!tokens.getWord("import")) throw Exception("err")
+//            if(!isString())throw Exception("err")
+        //import *
+        //import * from "./1.ch5"
+
+        val import = ASTImport()
+        import.from = from
+        if (getOperator(op_mutil)) {
+            import.isAll = true
+            if (getCrlfNull()) return import
+        } else {
+            while (true) {
+                import.arr.add(getWords()!!)
+                if (!getOperator(op_comma)) break
+            }
+            if (getCrlfNull()) return import
+        }
+        if (isWord("from")) {
+            if (import.from != null) throw Exception("err")
+            import.from = parseFrom()
+        }
+        if (!getCrlfNull()) throw Exception("err")
+        return import
+    }
     fun parseOuterFun(): ASTOuterFun {
         val result=ASTOuterFun()
         getWords().let {

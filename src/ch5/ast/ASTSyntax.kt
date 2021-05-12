@@ -22,10 +22,16 @@ open class ASTContainer() : ASTOuter() {
 class ASTStatic(val name: Token_String) : ASTContainer()
 class ASTClass(val name: Token_String) : ASTContainer()
 class ASTImport: ASTOuter(){
-//    import as from "as.ch5"
-    // import "as.ch5" = as.ch5
-    override fun toString(): String {
+//    import as
+//    import a "github.com/chrrg/CH5/parse"
+//    import "github.com/chrrg/CH5/parse"
 
+    var name=""
+    var from:String?=null
+    override fun toString(): String {
+        from?.let{
+            return "import $name \"$it\""
+        }?:return "import $name"
     }
 }
 

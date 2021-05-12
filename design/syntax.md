@@ -93,3 +93,20 @@ a = fun a int,b int{
 
 }
 ```
+
+# 导入、依赖
+import a "github.com/chrrg/CH5/parse"
+
+/pkg/github.com/chrrg/CH5/
+- parse.ch5
+- test.ch5
+
+import parse as ss,test as test2,test "github.com/chrrg/CH5"
+import * "github.com/chrrg/CH5"
+
+import "github.com/chrrg/CH5/parse"
+
+
+
+
+
