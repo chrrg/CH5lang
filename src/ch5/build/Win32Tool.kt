@@ -74,8 +74,8 @@ init {
     word(0x0)                         //MinorOSVersion
     word(0x0)                         //MajorImageVersion
     word(0x0)                         //MinorImageVersion
-    word(0x4)                         //MajorSubSystemVerion
-    word(0x0)                         //MinorSubSystemVerion
+    word(0x4)                         //MajorSubSystemVersion
+    word(0x0)                         //MinorSubSystemVersion
     dword(0x0)                        //Win32VersionValue
     dword(0, "SizeOfImage")         //SizeOfImage
     dword(0, "SizeOfHeaders")       //SizeOfHeaders
@@ -116,12 +116,12 @@ init {
     dword(0x0); dword(0x0)      //BoundImportTable
     dword(0x0); dword(0x0)      //ImportAddressTable
     dword(0x0); dword(0x0)      //DelayImportDescriptor
-    dword(0x0); dword(0x0)      //COMplusRuntimeHeader
+    dword(0x0); dword(0x0)      //COMPlusRuntimeHeader
     dword(0x0); dword(0x0)      //Reserved
 }
 }
 
-open class AlignSection(val align: Int) : BuildSection() {
+open class AlignSection(private val align: Int) : BuildSection() {
     override fun getSize(): Int {
         val size = super.getSize()
         if (size % align == 0) return size
@@ -171,14 +171,12 @@ class ImageThunkData32 : FixableSection() {
     }
 }
 
-class ImportLibraryItem(val dllPath: String, val Method: String) {
-
-}
+class ImportLibraryItem(val dllPath: String, val method: String)
 
 class ImportManager {
     private val list = mutableListOf<ImportLibraryItem>()
-    private val iids = hashMapOf<String, ImageImportDescriptor>()
-    private val itds = hashMapOf<ImportLibraryItem, ImageThunkData32>()
+    private val iid = hashMapOf<String, ImageImportDescriptor>()
+    private val itd = hashMapOf<ImportLibraryItem, ImageThunkData32>()
     fun getLibraryList(): List<String> {
         val result = mutableListOf<String>()
         for (i in list) {
@@ -193,20 +191,20 @@ class ImportManager {
 
 
     fun setIID(library: String, iid: ImageImportDescriptor) {
-        iids[library] = iid
+        this.iid[library] = iid
     }
 
     fun getIID(library: String): ImageImportDescriptor {
-        return iids[library]!!
+        return iid[library]!!
     }
 
 
     fun setITD(ili: ImportLibraryItem, imageThunkData32: ImageThunkData32) {
-        itds[ili] = imageThunkData32
+        itd[ili] = imageThunkData32
     }
 
     fun getITD(ili: ImportLibraryItem): ImageThunkData32 {
-        return itds[ili]!!
+        return itd[ili]!!
     }
 
     fun add(ili: ImportLibraryItem) {
@@ -214,7 +212,7 @@ class ImportManager {
     }
 }
 
-class ImportSection(val im: ImportManager) : AlignSection(0x200) {
+class ImportSection(im: ImportManager) : AlignSection(0x200) {
     // 1.写入所有dll
     // 2.写入空白
     // 3.对每一个dll写入对应的函数
@@ -235,7 +233,7 @@ class ImportSection(val im: ImportManager) : AlignSection(0x200) {
         }
         if (librariesList.isNotEmpty()) add(ImageImportDescriptor())
         for (i in librariesList) {
-            im.getIID(i).dwordFix(0, "TABLE")
+            im.getIID(i).fix(0, "TABLE")
             for (j in im.get(i)) {
                 val itd = ImageThunkData32()
                 im.setITD(j, itd)
@@ -243,15 +241,15 @@ class ImportSection(val im: ImportManager) : AlignSection(0x200) {
             }
             add(ImageThunkData32())
         }
-        for (i in librariesList){
-            im.getIID(i).dwordFix(0,"ENTRY")
+        for (i in librariesList) {
+            im.getIID(i).fix(0, "ENTRY")
             add(UTF8ByteArray(i))
         }
-        for (i in im.get()){
-            im.getITD(i).dwordFix(0,"ENTRY")
+        for (i in im.get()) {
+            im.getITD(i).fix(0, "ENTRY")
             add(WordSection(0))
+            add(UTF8ByteArray(i.method))
         }
-
 
 
     }
@@ -285,9 +283,9 @@ class SectionTableItem(name: String, Characteristics: Int) : FixableSection() {
         dword(0, "SizeOfRawData")
         dword(0, "PointerToRawData")
         dword(0, "PointerToRelocations")
-        dword(0x0)                        //PointerToLinenumbers
+        dword(0x0)                        //PointerToLineNumbers
         word(0x0)                         //NumberOfRelocations
-        word(0x0)                         //NumberOfLinenumbers
+        word(0x0)                         //NumberOfLineNumbers
         dword(Characteristics)
     }
 }

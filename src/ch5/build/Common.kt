@@ -49,7 +49,9 @@ open class ByteArraySection : Section {
 
 open class FixableSection : ByteArraySection() {
     class FixCore(val offset: Int, val size: Int, val symbol: String)
-    class FixedCore(val value: Int, val symbol: String)
+    open class FixedCore(val value: Int, val symbol: String)
+    class FixedFunCore(val fn: ()->Int,  symbol: String):FixedCore(0,symbol)
+
 
     private val waitFix = arrayListOf<FixCore>()
     private val fixed = arrayListOf<FixedCore>()
@@ -104,19 +106,20 @@ open class FixableSection : ByteArraySection() {
         }
     }
 
-    fun dwordFix(value: Int, symbol: String) {
+    fun fix(value: Int, symbol: String) {
         fixed.add(FixedCore(value, symbol))
-        for (i in waitFix) if (i.symbol == symbol) fix(i.offset, 4, value)
     }
 
-    fun wordFix(value: Int, symbol: String) {
-        fixed.add(FixedCore(value, symbol))
-        for (i in waitFix) if (i.symbol == symbol) fix(i.offset, 2, value)
-    }
-
-    fun byteFix(value: Int, symbol: String) {
-        fixed.add(FixedCore(value, symbol))
-        for (i in waitFix) if (i.symbol == symbol) fix(i.offset, 1, value)
+    override fun getByteArray(): ByteArray {
+        for (i in fixed)
+            for (j in waitFix.filter { it.symbol == i.symbol }){
+                if(i is FixedFunCore){
+                    fix(j.offset, j.size, i.fn())
+                }else{
+                    fix(j.offset, j.size, i.value)
+                }
+            }
+        return super.getByteArray()
     }
 }
 
