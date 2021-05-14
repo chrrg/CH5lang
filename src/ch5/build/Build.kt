@@ -7,89 +7,89 @@ import java.io.FileOutputStream
 /**
  * 一个build的二进制文件
  */
-class Build {
-    val data = DataManager()
-    val function = FunManager()
-    val entryIndex = 0//入口的函数id
-    fun output(file:String){
-        val bw = DataOutputStream(FileOutputStream(file))
-        bw.write(data.getByteArray())
-        bw.write(function.getByteArray())
-        bw.close()
-    }
-}
+//class Build {
+//    val data = DataManager()
+//    val function = FunManager()
+//    val entryIndex = 0//入口的函数id
+//    fun output(file:String){
+//        val bw = DataOutputStream(FileOutputStream(file))
+//        bw.write(data.getByteArray())
+//        bw.write(function.getByteArray())
+//        bw.close()
+//    }
+//}
 
-abstract class DataItem {
-    abstract fun value(): ByteArray
-    fun size(): Int {
-        return value().size
-    }
-}
-
-abstract class FunItem {
-    abstract fun value(): ByteArray
-    fun size(): Int {
-        return value().size
-    }
-}
-
-class DataItemByte(val byte: Byte) : DataItem() {
-    override fun value(): ByteArray {
-        return byteArrayOf(byte)
-    }
-}
-
-class DataItemDword(val dword: Int) : DataItem() {
-    override fun value(): ByteArray {
-        TODO()
-    }
-
-}
-
-class DataItemString(val str: String) : DataItem() {
-    override fun value(): ByteArray {
-        return ("$str\\0").toByteArray()
-    }
-}
+//abstract class DataItem {
+//    abstract fun value(): ByteArray
+//    fun size(): Int {
+//        return value().size
+//    }
+//}
+//
+//abstract class FunItem {
+//    abstract fun value(): ByteArray
+//    fun size(): Int {
+//        return value().size
+//    }
+//}
+//
+//class DataItemByte(val byte: Byte) : DataItem() {
+//    override fun value(): ByteArray {
+//        return byteArrayOf(byte)
+//    }
+//}
+//
+//class DataItemDword(val dword: Int) : DataItem() {
+//    override fun value(): ByteArray {
+//        TODO()
+//    }
+//
+//}
+//
+//class DataItemString(val str: String) : DataItem() {
+//    override fun value(): ByteArray {
+//        return ("$str\\0").toByteArray()
+//    }
+//}
 
 /**
  * data管理器
  */
-class DataManager {
-    private val list = arrayListOf<DataItem>()
-    fun size(): Int {
-        var result = 0
-        for (i in list) {
-            result += i.value().size
-        }
-        return result
-    }
-    fun getByteArray(): ByteArray {
-        val buf=ByteArrayBuffer()
-        for(i in list){
-            buf.write(i.value())
-        }
-        return buf.rawData
-    }
-}
-
-class FunManager {
-    private val list = arrayListOf<FunItem>()//下标就是索引值
-    fun size(): Int {
-        var result = 0
-        for (i in list) {
-            result += i.value().size
-        }
-        return result
-    }
-    fun getByteArray(): ByteArray {
-        val buf=ByteArrayBuffer()
-        for(i in list){
-            buf.write(i.value())
-        }
-        return buf.rawData
-    }
-}
+//class DataManager {
+//    private val list = arrayListOf<DataItem>()
+//    fun size(): Int {
+//        var result = 0
+//        for (i in list) {
+//            result += i.value().size
+//        }
+//        return result
+//    }
+//    fun getByteArray(): ByteArray {
+//        val buf=ByteArrayBuffer()
+//        for(i in list){
+//            buf.write(i.value())
+//        }
+//        return buf.rawData
+//    }
+//}
+//
+//class FunManager {
+//    private val list = arrayListOf<FunItem>()//下标就是索引值
+//    fun size(): Int {
+//        var result = 0
+//        for (i in list) {
+//            result += i.value().size
+//        }
+//        return result
+//    }
+//    fun getByteArray(): ByteArray {
+//        val buf=ByteArrayBuffer()
+//        for(i in list){
+//            buf.write(i.value())
+//        }
+//        return buf.rawData
+//    }
+//}
 //如何描述一个函数
 
 //open class a {
