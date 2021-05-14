@@ -1,6 +1,6 @@
 package ch5.build
 
-object DOSHeader : ByteSection() {
+object DOSHeader : ByteArraySection() {
     init {
         dword(0x805A4D)
         dword(0x1)
@@ -21,7 +21,7 @@ object DOSHeader : ByteSection() {
     }
 }
 
-object DOSStub : ByteSection() {
+object DOSStub : ByteArraySection() {
     init {
         dword(0xEBA1F0E)
         dword(0xCD09B400.toInt())
@@ -249,8 +249,7 @@ class ImportSection(val im: ImportManager) : AlignSection(0x200) {
         }
         for (i in im.get()){
             im.getITD(i).dwordFix(0,"ENTRY")
-            add(UTF8ByteArray("\u0000"))
-
+            add(WordSection(0))
         }
 
 
