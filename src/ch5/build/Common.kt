@@ -120,29 +120,29 @@ open class FixableSection : ByteArraySection() {
     }
 }
 
-class UTF8ByteArray(val value: String) : Section {
+class UTF8ByteArray(var value: String) : Section {
     private val bytes = "$value\u0000".toByteArray(Charsets.UTF_8)
     override fun getByteArray() = bytes
     override fun getSize() = bytes.size
 }
 
-class GBKByteArray(val value: String) : Section {
+class GBKByteArray(var value: String) : Section {
     private val bytes = "$value\u0000".toByteArray(Charset.forName("GBK"))
     override fun getByteArray() = bytes
     override fun getSize() = bytes.size
 }
 
-class ByteSection(val value: Int) : Section {
+class ByteSection(var value: Int) : Section {
     override fun getByteArray() = byteArrayOf(value.toByte())
     override fun getSize() = 1
 }
 
-class WordSection(val value: Int) : Section {
+class WordSection(var value: Int) : Section {
     override fun getByteArray() = byteArrayOf(value.toByte(), (value shr 8).toByte())
     override fun getSize() = 2
 }
 
-class DwordSection(val value: Int) : Section {
+class DwordSection(var value: Int) : Section {
     override fun getByteArray() = byteArrayOf(
         value.toByte(),
         (value shr 8).toByte(),
