@@ -42,8 +42,9 @@ fun main() {
     val getProcessHeap = importManager.use("KERNEL32.DLL", "GetProcessHeap")
     val heapAlloc = importManager.use("KERNEL32.DLL", "HeapAlloc")
 //    val messageBoxA = importManager.use("USER32.DLL", "MessageBoxA")
+    val rootCode=CodeBox()
     val dataSection = DataSection()
-    val codeSection = CodeSection()
+    val codeSection = CodeSection(rootCode)
     val idataSection = IdataSection(importManager)
 
     dataSectionHeader.setSectionBody(dataSection)
@@ -56,9 +57,24 @@ fun main() {
     sectionBody.add(codeSection)
     sectionBody.add(idataSection)
 
-    root.add(sectionBody)
+    dataSection.add(GBKByteArray("Hello,world!"))
+    dataSection.add(GBKByteArray("123456789"))
 
-    codeSection.add(Invoke(codeSection, getProcessHeap))
+    root.add(sectionBody)
+    val fun1=Fun()
+    Push(0).addTo(fun1)
+    Invoke(exitProcess).addTo(fun1)
+
+//    Invoke(getProcessHeap).addTo(rootCode)
+    Call(fun1).addTo(rootCode)
+    Push(0).addTo(rootCode)
+    Invoke(exitProcess).addTo(rootCode)
+    rootCode.add(fun1)
+
+
+
+//    codeSection.add(fun1)
+
 
     var sizeOfAllSectionsBefore = 0x1000
     var sizeOfAllSectionsBeforeRaw = header.getSize()

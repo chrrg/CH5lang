@@ -1,5 +1,7 @@
 package ch5.build
 
+import java.lang.Exception
+
 object DOSHeader : ByteArraySection() {
     init {
         dword(0x805A4D)
@@ -147,25 +149,65 @@ class DataByteItem(val value: Int) : DataItem {
 
 class DataSection : AlignSection(0x200) {
     init {
-        add(GBKByteArray("Hello,world!"))
-        add(GBKByteArray("123456789"))
+
     }
 }
 
-open class CodeItem : FixableSection()
-class Invoke(codeSection: CodeSection, ili: ImportLibraryItem) : CodeItem() {
+open class CodeItem : FixableSection() {
+    private var codeOffset = 0
+    private var codeSection: CodeSection? = null
+    fun addTo(section: CodeSection) {
+        codeOffset = section.getSize()
+        section.add(this)
+    }
+
+    fun getCodeSection(): CodeSection {
+        return codeSection!!
+    }
+
+    fun getCodeOffset(): Int {
+        if (codeSection == null) throw Exception("?")
+        return codeOffset
+    }
+}
+
+class Invoke(ili: ImportLibraryItem) : CodeItem() {
     init {
         word(0x15ff)
         dword(0, "invoke")
-        fix(codeSection.getSize(), "invoke", fun(value: Int): Int {
-            val size = 0x400000 + value + virtualAddressOf(codeSection) + ili.importManager!!.getITD(ili).offset("ENTRY")
-            println(size)
-            return size
+        fix(0, "invoke", fun(value: Int): Int {
+            return 0x400000 + virtualAddressOf(ili.importManager!!.idataSection!!) + ili.offset
         })
     }
 }
 
-class CodeSection : AlignSection(0x200) {
+class Call(fn: Fun) : CodeItem() {
+    init {
+        byte(0xE8)
+        dword(0, "call")
+        fix(0, "call", fun(value: Int): Int {
+
+            return fn.getParent().offset(fn)
+        })
+    }
+}
+
+class Push(value: Int) : CodeItem() {
+    init {
+        byte(0x68)
+        dword(value)
+    }
+}
+
+class Fun() : BuildSection() {
+    var offset=0
+    fun addTo(codeSection: CodeSection){
+        offset=codeSection.getSize()
+        codeSection.add(this)
+    }
+}
+
+class CodeSection() : AlignSection(0x200) {
     init {
 
     }
@@ -190,10 +232,11 @@ class ImageThunkData32 : FixableSection() {
 
 class ImportLibraryItem(val dllPath: String, val method: String) {
     var importManager: ImportManager? = null
+    var offset = 0
 }
 
 class ImportManager {
-    var idataSection:IdataSection?=null
+    var idataSection: IdataSection? = null
     private val list = mutableListOf<ImportLibraryItem>()
     private val iid = hashMapOf<String, ImageImportDescriptor>()
     private val itd = hashMapOf<ImportLibraryItem, ImageThunkData32>()
@@ -249,7 +292,7 @@ class IdataSection(im: ImportManager) : AlignSection(0x200) {
     // 4.写入dll名称 0结束 并且修复1步骤的地址
     // 5.写入函数名称 0结束 并且修复3步骤的地址
     init {
-        im.idataSection=this
+        im.idataSection = this
         val librariesList = im.getLibraryList()
         println("加载了${librariesList.size}个动态链接库，共${im.get().size}个函数！")
         for (i in librariesList) {
@@ -259,9 +302,9 @@ class IdataSection(im: ImportManager) : AlignSection(0x200) {
         }
         if (librariesList.isNotEmpty()) add(ImageImportDescriptor())
         for (i in librariesList) {
-            im.getIID(i).fix(getRawSize(), "TABLE", fun(value: Int) = 0x1000 + value + virtualAddressOf(this))
+            im.getIID(i).fix(getRawSize(), "TABLE", fun(value: Int) = value + virtualAddressOf(this))
             for (j in im.get(i)) {
-                //offset=getRawSize()
+                j.offset = getRawSize()
                 val itd = ImageThunkData32()//MessageBoxA_ENTRY
                 im.setITD(j, itd)
                 add(itd)
@@ -269,16 +312,14 @@ class IdataSection(im: ImportManager) : AlignSection(0x200) {
             add(ImageThunkData32())
         }
         for (i in librariesList) {
-            im.getIID(i).fix(getRawSize(), "NAME", fun(offset: Int) = 0x1000 + offset + virtualAddressOf(this))
+            im.getIID(i).fix(getRawSize(), "NAME", fun(offset: Int) = offset + virtualAddressOf(this))
             add(UTF8ByteArray(i))
         }
         for (i in im.get()) {
-            im.getITD(i).fix(getRawSize(), "ENTRY", fun(offset: Int) = 0x1000 + offset + virtualAddressOf(this))
+            im.getITD(i).fix(getRawSize(), "ENTRY", fun(offset: Int) = offset + virtualAddressOf(this))
             add(WordSection(0))
             add(UTF8ByteArray(i.method))
         }
-
-
     }
 
     private fun add(item: ImportItem) {
@@ -329,7 +370,7 @@ class SectionTableItem(val name: String, Characteristics: Int) : FixableSection(
 }
 
 fun virtualAddressOf(buildSection: BuildSection): Int {
-    var size = 0
+    var size = 0x1000
     for (j in buildSection.getParent()) {
         if (j == buildSection) break
         size += j.getSize(0x1000)//vra
