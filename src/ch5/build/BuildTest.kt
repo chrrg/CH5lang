@@ -70,7 +70,7 @@ fun main() {
     Push(7).addTo(fun1)
 //    Invoke(exitProcess).addTo(fun1)
 
-
+    Push(0).addTo(codeSection)
     Push(1).addTo(codeSection)
     Push(2).addTo(codeSection)
     Push(3).addTo(codeSection)
