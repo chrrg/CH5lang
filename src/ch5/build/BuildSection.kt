@@ -36,6 +36,7 @@ open class BuildSection : Section, Iterable<Section> {
         throw Exception("?")
     }
     fun<T:Section> add(section: T): T {
+        if (list.contains(section))throw Exception("?")
         list.add(section)
         if (section is BuildSection) {
             if (section.parent != null) throw Exception("?")

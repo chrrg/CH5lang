@@ -157,8 +157,13 @@ open class CodeItem : FixableSection() {
     private var codeOffset = 0
     private var codeSection: CodeSection? = null
     fun addTo(section: CodeSection) {
-        codeOffset = section.getSize()
+        codeSection = section
+        codeOffset = section.getRawSize()
         section.add(this)
+    }
+
+    fun addTo(fn: Fun) {
+        fn.add(this)
     }
 
     fun getCodeSection(): CodeSection {
@@ -186,8 +191,7 @@ class Call(fn: Fun) : CodeItem() {
         byte(0xE8)
         dword(0, "call")
         fix(0, "call", fun(value: Int): Int {
-
-            return fn.getParent().offset(fn)
+            return fn.offset - getCodeOffset() - 5
         })
     }
 }
@@ -200,9 +204,24 @@ class Push(value: Int) : CodeItem() {
 }
 
 class Fun() : BuildSection() {
-    var offset=0
-    fun addTo(codeSection: CodeSection){
-        offset=codeSection.getSize()
+    var offset = 0
+    init {
+        val size=0//局部变量大小
+        add(ByteSection(0xC8))//enter
+        add(WordSection(size))//局部变量大小//sub esp,size2
+        add(ByteSection(0))//固定
+
+        val after=getAfter()
+        after.add(ByteSection(0xC9))
+        if (size==0){
+            after.add(ByteSection(0xC3))
+        }else{
+            after.add(ByteSection(0xc2))
+            after.add(WordSection(size))
+        }
+    }
+    fun addTo(codeSection: CodeSection) {
+        offset = codeSection.getRawSize()
         codeSection.add(this)
     }
 }

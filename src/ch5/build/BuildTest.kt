@@ -13,7 +13,7 @@ const val CH_MEM_WRITE = 0x80000000
 
 fun main() {
     val root = BuildSection()
-    val header=AlignSection(0x200)
+    val header = AlignSection(0x200)
 
     root.add(header)
     header.add(DOSHeader)
@@ -42,9 +42,8 @@ fun main() {
     val getProcessHeap = importManager.use("KERNEL32.DLL", "GetProcessHeap")
     val heapAlloc = importManager.use("KERNEL32.DLL", "HeapAlloc")
 //    val messageBoxA = importManager.use("USER32.DLL", "MessageBoxA")
-    val rootCode=CodeBox()
     val dataSection = DataSection()
-    val codeSection = CodeSection(rootCode)
+    val codeSection = CodeSection()
     val idataSection = IdataSection(importManager)
 
     dataSectionHeader.setSectionBody(dataSection)
@@ -61,16 +60,29 @@ fun main() {
     dataSection.add(GBKByteArray("123456789"))
 
     root.add(sectionBody)
-    val fun1=Fun()
-    Push(0).addTo(fun1)
-    Invoke(exitProcess).addTo(fun1)
+    val fun1 = Fun()
+    Push(1).addTo(fun1)
+    Push(2).addTo(fun1)
+    Push(3).addTo(fun1)
+    Push(4).addTo(fun1)
+    Push(5).addTo(fun1)
+    Push(6).addTo(fun1)
+    Push(7).addTo(fun1)
+//    Invoke(exitProcess).addTo(fun1)
 
+
+    Push(1).addTo(codeSection)
+    Push(2).addTo(codeSection)
+    Push(3).addTo(codeSection)
+    Push(4).addTo(codeSection)
+    Push(5).addTo(codeSection)
+    Push(6).addTo(codeSection)
+    Push(7).addTo(codeSection)
 //    Invoke(getProcessHeap).addTo(rootCode)
-    Call(fun1).addTo(rootCode)
-    Push(0).addTo(rootCode)
-    Invoke(exitProcess).addTo(rootCode)
-    rootCode.add(fun1)
-
+    Call(fun1).addTo(codeSection)
+    Push(0).addTo(codeSection)
+    Invoke(exitProcess).addTo(codeSection)
+    fun1.addTo(codeSection)
 
 
 //    codeSection.add(fun1)
@@ -104,7 +116,7 @@ fun main() {
 
 
     root.doFix()
-    println("输出大小："+root.getSize())
+    println("输出大小：" + root.getSize())
     root.outputFile("1.exe")
 }
 
