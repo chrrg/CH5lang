@@ -50,7 +50,7 @@ open class ByteArraySection : Section {
 open class FixableSection : ByteArraySection() {
     class FixCore(val offset: Int, val size: Int, val symbol: String)
     open class FixedCore(val value: Int, val symbol: String)
-    class FixedFunCore(val fn: ()->Int,  symbol: String):FixedCore(0,symbol)
+    class FixedFunCore(value: Int, symbol: String, val fn: (value: Int) -> Int) : FixedCore(value, symbol)
 
 
     private val waitFix = arrayListOf<FixCore>()
@@ -59,6 +59,13 @@ open class FixableSection : ByteArraySection() {
     private fun isFixed(symbol: String): FixedCore? {
         for (i in fixed) if (i.symbol == symbol) return i
         return null
+    }
+
+    /**
+     * 获取一个symbol在当前section中的偏移值
+     */
+    fun offset(symbol: String): Int {
+        return waitFix.find { it.symbol == symbol }!!.offset
     }
 
     fun dword(value: Int, symbol: String) {
@@ -110,16 +117,19 @@ open class FixableSection : ByteArraySection() {
         fixed.add(FixedCore(value, symbol))
     }
 
-    override fun getByteArray(): ByteArray {
+    fun fix(value: Int = 0, symbol: String,fn: (Int) -> Int ) {
+        fixed.add(FixedFunCore(value, symbol,fn ))
+    }
+
+    fun doFix(){
         for (i in fixed)
-            for (j in waitFix.filter { it.symbol == i.symbol }){
-                if(i is FixedFunCore){
-                    fix(j.offset, j.size, i.fn())
-                }else{
+            for (j in waitFix.filter { it.symbol == i.symbol }) {
+                if (i is FixedFunCore) {
+                    fix(j.offset, j.size, i.fn(i.value))
+                } else {
                     fix(j.offset, j.size, i.value)
                 }
             }
-        return super.getByteArray()
     }
 }
 

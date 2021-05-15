@@ -13,36 +13,82 @@ const val CH_MEM_WRITE = 0x80000000
 
 fun main() {
     val root = BuildSection()
-    root.add(DOSHeader)
-    root.add(DOSStub)
-    val peHeader = PEHeader()
-    root.add(peHeader)
-    if (root.getSize() != 0x178) throw Exception("文件大小验证失败！")
+    val header=AlignSection(0x200)
+
+    root.add(header)
+    header.add(DOSHeader)
+    header.add(DOSStub)
+    val peHeader = header.add(PEHeader())
+    if (header.getRawSize() != 0x178) throw Exception("文件大小验证失败！")
     //SectionTable
     val sectionTable = BuildSection()//段表
 
-    sectionTable.add(SectionTableItem("data", (CH_INITIALIZED_DATA + CH_MEM_READ + CH_MEM_WRITE).toInt()))
-    sectionTable.add(SectionTableItem("code", CH_CODE + CH_MEM_READ + CH_MEM_EXECUTE))
-    sectionTable.add(SectionTableItem("idata", (CH_INITIALIZED_DATA + CH_MEM_READ + CH_MEM_WRITE).toInt()))
-    sectionTable.add(SectionTableItem("edata", CH_INITIALIZED_DATA + CH_MEM_READ))
-    sectionTable.add(SectionTableItem("rsrc", CH_INITIALIZED_DATA + CH_MEM_READ))
-    sectionTable.add(SectionTableItem("reloc", CH_MEM_DISCARDABLE + CH_INITIALIZED_DATA))
+    val dataSectionHeader =
+        sectionTable.add(SectionTableItem("data", (CH_INITIALIZED_DATA + CH_MEM_READ + CH_MEM_WRITE).toInt()))
+    val codeSectionHeader = sectionTable.add(SectionTableItem("code", CH_CODE + CH_MEM_READ + CH_MEM_EXECUTE))
+    val idataSectionHeader =
+        sectionTable.add(SectionTableItem("idata", (CH_INITIALIZED_DATA + CH_MEM_READ + CH_MEM_WRITE).toInt()))
+//    sectionTable.add(SectionTableItem("edata", CH_INITIALIZED_DATA + CH_MEM_READ))
+//    sectionTable.add(SectionTableItem("rsrc", CH_INITIALIZED_DATA + CH_MEM_READ))
+//    sectionTable.add(SectionTableItem("reloc", CH_MEM_DISCARDABLE + CH_INITIALIZED_DATA))
 
-    root.add(sectionTable)
+    header.add(sectionTable)
 
-    //SectionBody
-    val sectionBody = BuildSection()//段体
+    val importManager = ImportManager()
 
+
+    val printf = importManager.use("MSVCRT.DLL", "printf")
+    val exitProcess = importManager.use("KERNEL32.DLL", "ExitProcess")
+    val getProcessHeap = importManager.use("KERNEL32.DLL", "GetProcessHeap")
+    val heapAlloc = importManager.use("KERNEL32.DLL", "HeapAlloc")
+//    val messageBoxA = importManager.use("USER32.DLL", "MessageBoxA")
     val dataSection = DataSection()
     val codeSection = CodeSection()
-    val importSection = ImportSection(ImportManager())
+    val idataSection = IdataSection(importManager)
+
+    dataSectionHeader.setSectionBody(dataSection)
+    codeSectionHeader.setSectionBody(codeSection)
+    idataSectionHeader.setSectionBody(idataSection)
+
+    val sectionBody = BuildSection()//段体
+
     sectionBody.add(dataSection)
     sectionBody.add(codeSection)
-    sectionBody.add(importSection)
+    sectionBody.add(idataSection)
 
     root.add(sectionBody)
 
+    codeSection.add(Invoke(codeSection, getProcessHeap))
 
-    root.outputFile("1.txt")
+    var sizeOfAllSectionsBefore = 0x1000
+    var sizeOfAllSectionsBeforeRaw = header.getSize()
+    peHeader.fix(sizeOfAllSectionsBeforeRaw, "SizeOfHeaders")
+    var numberOfSections = 0
+    for (i in sectionTable.filterIsInstance<SectionTableItem>()) {
+        numberOfSections++
+        when (i.name) {
+            "code" -> peHeader.fix(sizeOfAllSectionsBefore, "AddressOfEntryPoint")
+            "idata" -> {
+                peHeader.fix(sizeOfAllSectionsBefore, "ImportTable.Entry")
+                peHeader.fix(i.getSectionBody().getRawSize(), "ImportTable.Size")
+            }
+        }
+        i.fix(i.getSectionBody().getRawSize(), "VirtualSize")
+        i.fix(sizeOfAllSectionsBefore, "VirtualAddress")
+        i.fix(sizeOfAllSectionsBeforeRaw, "PointerToRawData")
+        i.fix(i.getSectionBody().getSize(), "SizeOfRawData")//PhysicalSize
+        sizeOfAllSectionsBefore += i.getSize(0x1000)
+        sizeOfAllSectionsBeforeRaw += i.getSectionBody().getSize()
+    }
+    peHeader.fix(numberOfSections, "NumberOfSections")
+    peHeader.fix(
+        0x1000 + dataSection.getSize(0x1000) + codeSection.getSize(0x1000) + idataSection.getSize(0x1000),
+        "SizeOfImage"
+    )
+
+
+    root.doFix()
+    println("输出大小："+root.getSize())
+    root.outputFile("1.exe")
 }
 
