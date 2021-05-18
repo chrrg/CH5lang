@@ -3,10 +3,14 @@ package ch5.amt
 import ch5.ast.ASTContainer
 
 //import ch5.AST.ast_container
-
 object AMT{
     fun parse(ast: ASTContainer): AmtApplication {
         val app=AmtApplication()
+        //解析一个静态对象
+
+        for(i in ast.container){
+
+        }
         return app
     }
 //    fun parse(ast: ast_container) {
