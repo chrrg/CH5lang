@@ -9,7 +9,8 @@ object AMT {
     fun parse(ast: ASTContainer): AmtApplication {
         val app = AmtApplication()
         //解析一个静态对象
-        app.staticList.add(parseStatic(ast))
+        app.entryStatic = parseStatic(ast)
+//        app.staticList.add(parseStatic(ast))
 
         return app
     }
@@ -22,12 +23,12 @@ object AMT {
 
             if (i is ASTOuterVar) {
                 assert(i.names.size == 1)
-                static.amtVariablePool.add(AmtVariable(i.names[0].name.value,i.const,0))
+                static.variablePool.add(AmtVariable(i.names[0].name.value, i.const, 0))
 
-            }else if(i is ASTOuterFun){
-                val func=AmtFun()
-                static.amtFunPool.add(func)
-                static.amtDefineFunPool.add(AmtDefineFun(i.name.getName(),func))
+            } else if (i is ASTOuterFun) {
+                val func = AmtFun()
+                static.funPool.add(func)
+                static.defineFunPool.add(AmtDefineFun(i.name.getName(), func))
             }
             println(i)
         }
