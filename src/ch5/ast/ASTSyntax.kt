@@ -62,6 +62,7 @@ class ASTImport: ASTOuter(){
 class ASTWords(private val word: Token_Word) {
     var next: ASTWords? = null
     fun hasNext() = next != null
+    fun getName() = word.value
     override fun toString(): String {
         next?.let {
             return word.value + "." + it
