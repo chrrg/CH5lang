@@ -1,10 +1,14 @@
-package ch5.AMT
+package ch5.amt
 
-import ch5.*
+import ch5.ast.ASTContainer
 
 //import ch5.AST.ast_container
 
 object AMT{
+    fun parse(ast: ASTContainer): AmtApplication {
+        val app=AmtApplication()
+        return app
+    }
 //    fun parse(ast: ast_container) {
 //        val app= amt_application()
 //        app.main= amt_container(app,ast)
