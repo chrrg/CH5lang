@@ -1,5 +1,10 @@
 package ch5.amt
 
+import ch5.ast.ASTContainer
+import ch5.ast.ASTExpression
+import ch5.ast.ASTOuterFun
+import ch5.ast.ASTOuterVar
+
 
 open class AmtConst
 class AmtConstUtf8String(val value: String) : AmtConst()
@@ -10,6 +15,7 @@ open class AmtPool<T> {
         list.add(item)
         return item
     }
+
     operator fun iterator() = list.iterator()
 }
 
@@ -21,34 +27,79 @@ class AmtImportDllPool : AmtPool<AmtImportDll>()//全局导入的dll池
 class AmtVariable(val name: String, val changeable: Boolean, val defaultValue: Int)//定义在对象或类中的变量或常量 存储在堆中
 
 class AmtVariablePool : AmtPool<AmtVariable>()
-class AmtCode
+open class AmtCode
 class AmtCodePool : AmtPool<AmtCode>()
-class AmtFun {
+class AmtFun(val obj: AmtStatic, val ast: ASTOuterFun) {
     //函数 无名函数
     val codePool = AmtCodePool()
+    fun parse() {
+//        这个时候函数定义和变量定义都提升了,开始解析函数代码块
+//        顺序解析就可以了
+//        for (i in ast.exprbody){
+//
+//        }
+
+        ast.exprbody
+
+    }
 }
 
 class AmtFunPool : AmtPool<AmtFun>()
-class AmtDefineFun(val name: String, val func: AmtFun)
+class AmtDefineFun(val name: String, val func: AmtFun)//todo 参数 各类型类型 返回类型
 class AmtDefineFunPool : AmtPool<AmtDefineFun>()
+class DeferFunPool : AmtPool<() -> Unit>()
 
-
-open class AmtStatic() {
+open class AmtStatic(val ast: ASTContainer) : AmtNameSpace() {
     //一个静态对象 只能存在一个
     //静态对象不存储字符串常量 字符串常量在application中存储
     //静态对象存储的变量 var和val
+    //解析顺序:
+    //import
     val variablePool = AmtVariablePool()//对象里面存储的变量池
-    val funPool = AmtFunPool()//包含匿名函数？
-    val defineFunPool = AmtDefineFunPool()
-    val nameSpace = AmtNameSpace()//命名空间
+    val funPool = AmtFunPool()
     val initCodePool = AmtCodePool()//初始化对象的时候需要执行的代码列表 比如在初始化时需要执行变量的初始操作就是写在这里
+
+    init {
+        val defer = DeferFunPool()
+        //定义提升
+        for (i in ast.container) {
+            if (i is ASTOuterVar) {
+                assert(i.names.size == 1)
+                val variable = variablePool.add(AmtVariable(i.names[0].name.value, i.const, 0))
+                i.expr?.let {
+                    //var定义变量如果有赋值
+                    defer.add {
+                        initCodePool.add(AmtAssignVariable(variable, AmtExpression(it)))
+                    }
+                }
+
+            } else if (i is ASTOuterFun) {
+                assert(i.param.size == 0)
+                val func = funPool.add(AmtFun(this, i))
+                defer.add {
+                    func.parse()
+                }
+            } else throw Exception("unsupported syntax ${i::class.java.simpleName}")
+        }
+        for (i in defer) i()
+    }
 }
 
-class AmtClass : AmtStatic()
+/**
+ * 表达式计算之后赋值给变量
+ */
+class AmtAssignVariable(val variable: AmtVariable, val value: AmtCode) : AmtCode()
+
+/**
+ * 一个表达式
+ */
+class AmtExpression(val expr: ASTExpression) : AmtCode()
+
+class AmtClass(ast: ASTContainer) : AmtStatic(ast)
 
 class AmtStaticPool : AmtPool<AmtStatic>()//所有的静态对象列表
 class AmtClassPool : AmtPool<AmtClass>()//所有的静态对象列表
-class AmtNameSpace {
+open class AmtNameSpace {
     val staticPool = AmtStaticPool()//这个命名空间下的静态对象池
     val classPool = AmtClassPool()//这个命名空间下的静态对象池
 }

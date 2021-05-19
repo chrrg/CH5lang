@@ -7,9 +7,8 @@ object AMT {
     fun parse(ast: ASTContainer): AmtApplication {
         val app = AmtApplication()
         //解析一个静态对象
-        val parser=AmtParser()
-        val task=parser.parseStatic(ast)
-        app.entryStatic = task.use()
+        //解析过程 写解析提升部分 后解析代码部分
+        app.entryStatic = AmtStatic(ast)
         return app
     }
 

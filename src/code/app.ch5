@@ -2,13 +2,5 @@
 //import "os" as os
 //print builtin 函数
 main {
-    a.nb print
+    1 print
 }
-fun fn{
-
-}
-static a{
-    val nb=10
-}
-
-
