@@ -1,9 +1,7 @@
 package ch5.amt
 
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import ch5.ast.ASTContainer
+import ch5.ast.ASTSyntax
 
 //abstract class AmtParseTask {
 //    var isCompleted = false
@@ -14,75 +12,18 @@ import kotlinx.coroutines.runBlocking
 //    } //0 解析完成 1 解析成功(可能未解析完全) 2 解析失败(遇到需要修复的，延迟解析)
 //}
 
-
-abstract class AmtParseTask {
-    var thread: Job? = null
-    val lock = Object()
-    abstract fun task(task: AmtParseTask): Int
-
-    init {
-//        Thread{
-//            while (true) {
-//                Thread.sleep(1000)
-//                synchronized(lock) {
-//                    lock.notify()
-//                }
-//            }
-//        }.start()
-        val that = this
-        thread = GlobalScope.launch {
-            synchronized(lock) {
-                lock.wait()
-                task(that)
-            }
+class AmtStaticTask(val ast: ASTContainer) : AmtTask<AmtStatic>() {
+    override fun task(taskControl: TaskControl): AmtStatic? {
+        val result=AmtStatic()
+        for (i in ast.container) {
+            taskControl.addSubTask(AmtSyntaxTask(i))
         }
-        thread?.start()
-//
-    }
-
-
-    fun doTask(): Int {//0 解析完成 1 解析成功(可能未解析完全) 2 解析失败(遇到需要修复的，延迟解析)
-//        runBlocking {
-//            while (!thread!!.isActive) {
-//            }
-//        }
-        synchronized(lock) {
-            lock.notify()
-        }
-        return 0
+        return result
     }
 }
-
-class Task1 : AmtParseTask() {
-    override fun task(task: AmtParseTask): Int {
-        println("begin run")
-        task.lock.wait()
-        println("ok")
-        task.lock.wait()
-        println("ok2")
-        task.lock.wait()
-        println("ok3")
-
-        return 0
+open class AmtSyntax
+class AmtSyntaxTask(val syntax: ASTSyntax):AmtTask<AmtSyntax>(){
+    override fun task(taskControl: TaskControl): AmtSyntax? {
+        TODO("Not yet implemented")
     }
-
-}
-
-
-//class AmtParseOuterVar(val static: AmtStatic, val i: ASTOuterVar) :AmtParseTask(){
-//    override fun task(): Int {
-//
-//    }
-//}
-
-fun main() = runBlocking {
-    GlobalScope.launch {
-        val task = Task1()
-        task.doTask()
-//        while (true) {
-//            delay(1000)
-//            task.doTask()
-//        }
-    }.join()
-
 }

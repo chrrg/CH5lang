@@ -10,7 +10,6 @@ open class AmtPool<T> {
         list.add(item)
         return item
     }
-
     operator fun iterator() = list.iterator()
 }
 
@@ -33,7 +32,8 @@ class AmtFunPool : AmtPool<AmtFun>()
 class AmtDefineFun(val name: String, val func: AmtFun)
 class AmtDefineFunPool : AmtPool<AmtDefineFun>()
 
-open class AmtStatic {
+
+open class AmtStatic() {
     //一个静态对象 只能存在一个
     //静态对象不存储字符串常量 字符串常量在application中存储
     //静态对象存储的变量 var和val
@@ -53,7 +53,7 @@ class AmtNameSpace {
     val classPool = AmtClassPool()//这个命名空间下的静态对象池
 }
 
-class AmtApplication() {
+class AmtApplication {
     //一个app的语义树
     //就是一个应用
     val constPool = AmtConstPool()//全局字符串常量池

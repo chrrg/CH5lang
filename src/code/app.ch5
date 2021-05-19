@@ -1,7 +1,14 @@
 //import os
 //import "os" as os
-val a = 1
 //print builtin 函数
 main {
-    1 print
+    a.nb print
 }
+fun fn{
+
+}
+static a{
+    val nb=10
+}
+
+
