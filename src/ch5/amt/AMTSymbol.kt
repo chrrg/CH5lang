@@ -1,10 +1,5 @@
 package ch5.amt
 
-import ch5.build.BuildSection
-import ch5.build.ByteArraySection
-import ch5.build.ByteSection
-import ch5.build.FixableSection
-
 
 open class AmtConst
 class AmtConstUtf8String(val value: String) : AmtConst()

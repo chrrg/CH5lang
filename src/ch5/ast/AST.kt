@@ -13,7 +13,7 @@ import ch5.*
  * 输出文件的语法树容器
  */
 class AST(private val tokens: Tokenizer) {
-    companion object{
+    companion object {
         fun OperateType(node: Token_Operator): Int {
             when (node.operator.word) {
                 "+", "-", "*", "/", "%", ".", ",", "=", "/=", "*=", "%=", "+=", "-=", "<<=", ">>=", "&=", "^=", "|=", "=>", "/=>", "*=>", "%=>", "+=>", "-=>", "<<=>", ">>=>", "&=>", "^=>", "|=>", "||", "&&", "|", "&", "==", "!=", "^", ">", "<", ">=", "<=", ">>", "<<" -> return 2 //双目运算符
@@ -23,6 +23,7 @@ class AST(private val tokens: Tokenizer) {
             }
             throw Exception("不支持的操作符类型：" + node.operator)
         }
+
         fun getPriority(node: Token_Operator): Int {
             return when (node.operator.word) {
                 "=", "/=", "*=", "%=", "+=", "-=", "<<=", ">>=", "&=", "^=", "|=" -> 17
@@ -45,8 +46,9 @@ class AST(private val tokens: Tokenizer) {
             }
         }
     }
-    fun parse():ASTContainer {
-        val result=ASTContainer()
+
+    fun parse(): ASTContainer {
+        val result = ASTContainer()
         while (true) {
             val token = tokens.next()
             token ?: break
@@ -60,7 +62,7 @@ class AST(private val tokens: Tokenizer) {
                 is Token_Word -> {
                     when (val keyword = token.value) {
                         "class" -> {
-                            val name=tokens.next() as Token_String
+                            val name = tokens.next() as Token_String
                             tokens.needOp(op_bigbracket1)
                             result.container.add(ASTClass(name))
                             tokens.needOp(op_bigbracket2)
@@ -79,11 +81,7 @@ class AST(private val tokens: Tokenizer) {
                         "fun" -> {
                             result.container.add(parseOuterFun())
                         }
-                        "init" -> {
-                            tokens.prev()
-                            result.container.add(parseOuterFun())
-                        }
-                        "free" -> {
+                        "init", "free", "main" -> {
                             tokens.prev()
                             result.container.add(parseOuterFun())
                         }
@@ -108,6 +106,7 @@ class AST(private val tokens: Tokenizer) {
         }
         return result
     }
+
     fun parseOuterVar(): ASTOuterVar {
         val define = ASTOuterVar()
         when {
@@ -115,7 +114,7 @@ class AST(private val tokens: Tokenizer) {
 
             }
             tokens.getWord("val") -> {
-                define.const=true
+                define.const = true
             }
             else -> throw Exception("err")
         }
@@ -134,6 +133,7 @@ class AST(private val tokens: Tokenizer) {
         if (!tokens.getCrlfNull()) throw Exception("err")
         return define
     }
+
     fun parseDataType(): ASTDataType {
         //int
         //int[]
@@ -159,6 +159,7 @@ class AST(private val tokens: Tokenizer) {
         if (tokens.getSingleOperator(op_question)) type.canNull = true
         return type
     }
+
     fun parseImport(): ASTImport {
         if (!tokens.getWord("import")) throw Exception("err")
 //            if(!isString())throw Exception("err")
@@ -184,8 +185,9 @@ class AST(private val tokens: Tokenizer) {
 //        if (!getCrlfNull()) throw Exception("err")
         return import
     }
+
     fun parseOuterFun(): ASTOuterFun {
-        val result=ASTOuterFun()
+        val result = ASTOuterFun()
         getWords().let {
             result.name = it!!
         }
@@ -236,19 +238,20 @@ class AST(private val tokens: Tokenizer) {
         }
         return result
     }
-    fun parseExpression(priority: Int = 100, abort_symbol: Array<operateSymbol> = arrayOf()):ASTExpression? {//得到表达式
+
+    fun parseExpression(priority: Int = 100, abort_symbol: Array<operateSymbol> = arrayOf()): ASTExpression? {//得到表达式
         val token = tokens.next()
         token ?: return ASTVoid
         var result: ASTExpression
-        if(token is Token_Word) {
-            if (token.value=="var" || token.value=="val") {
+        if (token is Token_Word) {
+            if (token.value == "var" || token.value == "val") {
                 tokens.prev()
                 return parseInnerVar()
             }
-            if (token.value=="if") {
+            if (token.value == "if") {
                 return parseIf()
             }
-            if (token.value=="for") {
+            if (token.value == "for") {
                 return parseFor()
             }
         }
@@ -277,9 +280,9 @@ class AST(private val tokens: Tokenizer) {
             }
             is Token_Operator -> {//++i +5+6
                 when (token.operator) {
-                    op_bigbracket1->{
+                    op_bigbracket1 -> {
                         tokens.prev()
-                        result=parseExpressionContainer()
+                        result = parseExpressionContainer()
                         return result
                     }
                     in abort_symbol -> {
@@ -374,7 +377,7 @@ class AST(private val tokens: Tokenizer) {
                         tokens.prev();return result
                     }
                     tokens.prev();
-                    result = ASTCall(parseExpression(15, abort_symbol)!!,result)
+                    result = ASTCall(parseExpression(15, abort_symbol)!!, result)
                 }
                 is Token_Crlf -> {
                     tokens.prev()
@@ -386,8 +389,9 @@ class AST(private val tokens: Tokenizer) {
             }
         }
     }
-    fun parseExpressionContainer():ASTExpressionContainer{
-        val result=ASTExpressionContainer()
+
+    fun parseExpressionContainer(): ASTExpressionContainer {
+        val result = ASTExpressionContainer()
         if (!tokens.getOperator(op_bigbracket1)) {
             throw java.lang.Exception("except {")
 //            result.container.add(parseExpression()!!)
@@ -401,13 +405,16 @@ class AST(private val tokens: Tokenizer) {
             tmp?.let {
                 result.container.add(it)
             }
-            if (tokens.getOperator(op_bigbracket2)){tokens.prev(); break}
+            if (tokens.getOperator(op_bigbracket2)) {
+                tokens.prev(); break
+            }
             if (tmp == null) throw Exception("err!")
         }
         tokens.needOp(op_bigbracket2)
 
         return result
     }
+
     fun parseIf(): ASTIf {
         val condition = parseExpression()!!
         var trueBranch: ASTExpression? = null
@@ -423,6 +430,7 @@ class AST(private val tokens: Tokenizer) {
         }
         return ASTIf(condition, trueBranch, falseBrach)
     }
+
     fun parseFor(): ASTFor {
         if (tokens.getOperator(op_bigbracket1)) {//死循环
             /**
@@ -446,6 +454,7 @@ class AST(private val tokens: Tokenizer) {
 
         return ASTFor(condition, trueBranch, falseBrach)
     }
+
     fun parseInnerVar(): ASTInnerVar {
         val define = ASTInnerVar()
         when {
@@ -453,7 +462,7 @@ class AST(private val tokens: Tokenizer) {
 
             }
             tokens.getWord("val") -> {
-                define.const=true
+                define.const = true
             }
             else -> throw Exception("err")
         }
@@ -472,6 +481,7 @@ class AST(private val tokens: Tokenizer) {
         if (!tokens.getCrlfNull()) throw Exception("err")
         return define
     }
+
     fun getWords(): ASTWords? {
         val word = tokens.getWord()
         word ?: return null

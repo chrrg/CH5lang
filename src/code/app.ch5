@@ -1,9 +1,7 @@
 //import os
 //import "os" as os
 val a = 1
-fun a {
-    a print
-}
-init {
-    = .a
+//print builtin 函数
+main {
+    1 print
 }

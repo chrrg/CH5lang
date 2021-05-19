@@ -4,32 +4,9 @@ package ch5.amt
 import ch5.ast.ASTContainer
 import ch5.ast.ASTOuterFun
 import ch5.ast.ASTOuterVar
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 class AmtParser {
     private val parseTaskPool = AmtParseTaskPool()
-
-    abstract class AmtParseTask {
-        var job: Job? = null
-        abstract suspend fun task()
-        fun fail() {
-            job!!
-            job!!.
-        }
-
-        fun doTask(): Int {//0 解析完成 1 解析成功(可能未解析完全) 2 解析失败(遇到需要修复的，延迟解析)
-            var myJob=job
-            if (myJob == null) {
-                myJob = GlobalScope.launch {
-                    task()
-                }
-            }
-            if (myJob.isCompleted) return 0
-
-        }
-    }
 
     class AmtParseTaskPool : AmtPool<AmtParseTask>() {
         fun remove(item: AmtParseTask) {
@@ -39,12 +16,18 @@ class AmtParser {
 
     fun parseStatic(ast: ASTContainer): AmtStatic {
         val static = AmtStatic()
+        //解析static对象 这个时候继承关系可能无法解析 需要延迟解析
 
         for (i in ast.container) {
             //在这里碰到的语句需要在外层全部解析完成后进行解析，即：
             if (i is ASTOuterVar) {
+                //解析var时，这个时候变量指定的类型可能无法解析（类型在后面定义但是没有暂时没有解析到那里去）表达式也可能无法解析（表达式的函数可能在后面定义的）
+                //可以解析的：变量名称
+//                AmtParseOuterVar(static, i)
                 parseOuterVar(i)
             } else if (i is ASTOuterFun) {
+                //解析fun时，可能无法解析的：函数参数类型，函数体的代码块
+                //可以解析的：函数名称
                 val func = AmtFun()
                 static.funPool.add(func)
                 static.defineFunPool.add(AmtDefineFun(i.name.getName(), func))
@@ -56,7 +39,7 @@ class AmtParser {
 
     fun parseOuterVar(i: ASTOuterVar) {
         assert(i.names.size == 1)
-        static.variablePool.add(AmtVariable(i.names[0].name.value, i.const, 0))
+//        static.variablePool.add(AmtVariable(i.names[0].name.value, i.const, 0))
     }
 
     fun link(): Boolean {//链接修复
