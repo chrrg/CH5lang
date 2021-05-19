@@ -7,15 +7,16 @@ import ch5.build.FixableSection
 
 
 open class AmtConst
-class AmtConstUtf8String(val value:String):AmtConst()
-class AmtConstGBKString(val value:String):AmtConst()
+class AmtConstUtf8String(val value: String) : AmtConst()
+class AmtConstGBKString(val value: String) : AmtConst()
 open class AmtPool<T> {
-    private val list = arrayListOf<T>()
+    protected val list = arrayListOf<T>()
     fun add(item: T): T {
         list.add(item)
         return item
     }
-    fun iterator() = list.iterator()
+
+    operator fun iterator() = list.iterator()
 }
 
 class AmtConstPool : AmtPool<AmtConst>()//全局应用程序的常量池
@@ -27,9 +28,10 @@ class AmtVariable(val name: String, val changeable: Boolean, val defaultValue: I
 
 class AmtVariablePool : AmtPool<AmtVariable>()
 class AmtCode
-class AmtCodePool: AmtPool<AmtCode>()
-class AmtFun {//函数 无名函数
-    val codePool=AmtCodePool()
+class AmtCodePool : AmtPool<AmtCode>()
+class AmtFun {
+    //函数 无名函数
+    val codePool = AmtCodePool()
 }
 
 class AmtFunPool : AmtPool<AmtFun>()
@@ -43,31 +45,25 @@ open class AmtStatic {
     val variablePool = AmtVariablePool()//对象里面存储的变量池
     val funPool = AmtFunPool()//包含匿名函数？
     val defineFunPool = AmtDefineFunPool()
-    val nameSpace=AmtNameSpace()//命名空间
-    val initCodePool=AmtCodePool()//初始化对象的时候需要执行的代码列表 比如在初始化时需要执行变量的初始操作就是写在这里
+    val nameSpace = AmtNameSpace()//命名空间
+    val initCodePool = AmtCodePool()//初始化对象的时候需要执行的代码列表 比如在初始化时需要执行变量的初始操作就是写在这里
 }
-class AmtClass:AmtStatic()
+
+class AmtClass : AmtStatic()
 
 class AmtStaticPool : AmtPool<AmtStatic>()//所有的静态对象列表
 class AmtClassPool : AmtPool<AmtClass>()//所有的静态对象列表
-class AmtNameSpace{
-    val staticPool=AmtStaticPool()//这个命名空间下的静态对象池
-    val classPool=AmtClassPool()//这个命名空间下的静态对象池
+class AmtNameSpace {
+    val staticPool = AmtStaticPool()//这个命名空间下的静态对象池
+    val classPool = AmtClassPool()//这个命名空间下的静态对象池
 }
-class AmtApplication {
+
+class AmtApplication() {
     //一个app的语义树
     //就是一个应用
-    val constPool = AmtConstPool()//常量池
+    val constPool = AmtConstPool()//全局字符串常量池
     val importDllPool = AmtImportDllPool()//导入池
-//    val staticList = AmtStaticPool()//静态对象池
     var entryStatic: AmtStatic? = null//入口对象
-    fun link():Boolean{//链接
-        //这里要进行链接任务
-//       循环进行链接
-//        链接就是把变量等串起来
-//        循环链接
 
-//        val
-
-    }
 }
+
