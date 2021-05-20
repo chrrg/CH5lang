@@ -1,6 +1,8 @@
-import ch5.ast.AST
+
 import ch5.Tokenizer
 import ch5.amt.AMT
+import ch5.ast.AST
+import ch5.build.Build
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileInputStream
@@ -21,7 +23,7 @@ object Compiler {
         val ast = AST(tokenizer).parse()
 //        ast.print()
         val app=AMT.parse(ast)
-
+        Build.build(app,"1.exe")
         println(ast.toString())
 
 //        val amt=AMT.parse(ast)

@@ -8,7 +8,10 @@ object AMT {
         val app = AmtApplication()
         //解析一个静态对象
         //解析过程 写解析提升部分 后解析代码部分
-        app.entryStatic = AmtStatic(ast)
+        val entry = AmtStatic(ast)
+        app.entryStatic = entry
+        val entryFun = entry.funPool.find { it.name == "main" } ?: throw Exception("未找到main方法！")
+        app.codePool.add(AmtCall(entryFun))
         return app
     }
 

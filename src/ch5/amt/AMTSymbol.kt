@@ -9,14 +9,14 @@ import ch5.ast.ASTOuterVar
 open class AmtConst
 class AmtConstUtf8String(val value: String) : AmtConst()
 class AmtConstGBKString(val value: String) : AmtConst()
-open class AmtPool<T> {
+open class AmtPool<T> : Iterable<T> {
     protected val list = arrayListOf<T>()
     fun add(item: T): T {
         list.add(item)
         return item
     }
 
-    operator fun iterator() = list.iterator()
+    override fun iterator(): Iterator<T> = list.iterator()
 }
 
 class AmtConstPool : AmtPool<AmtConst>()//全局应用程序的常量池
@@ -28,25 +28,38 @@ class AmtVariable(val name: String, val changeable: Boolean, val defaultValue: I
 
 class AmtVariablePool : AmtPool<AmtVariable>()
 open class AmtCode
+class AmtCall(func: AmtFun) : AmtCode() {
+    init {
+        func.use()
+    }
+}
+
 class AmtCodePool : AmtPool<AmtCode>()
-class AmtFun(val obj: AmtStatic, val ast: ASTOuterFun) {
+class AmtFun(val name: String, val obj: AmtStatic, val ast: ASTOuterFun) {
     //函数 无名函数
-    val codePool = AmtCodePool()
+    private val code = AmtExpression(ast.exprbody!!)
+    private var isParsed = false
     fun parse() {
-//        这个时候函数定义和变量定义都提升了,开始解析函数代码块
-//        顺序解析就可以了
-//        for (i in ast.exprbody){
-//
-//        }
+//        解析参数和类型
+//        这个时候函数定义和变量定义都提升了
+        isParsed = true
+        code.parse()//解析表达式
 
-        ast.exprbody
+    }
 
+    /**
+     * 如果这个函数被使用了，就调用use函数，否则不会去真正解析这个函数！
+     */
+    fun use(): AmtFun {
+        if (!isParsed) parse()
+        return this
     }
 }
 
 class AmtFunPool : AmtPool<AmtFun>()
-class AmtDefineFun(val name: String, val func: AmtFun)//todo 参数 各类型类型 返回类型
-class AmtDefineFunPool : AmtPool<AmtDefineFun>()
+
+//class AmtDefineFun(val name: String, val func: AmtFun)//todo 参数 各类型类型 返回类型
+//class AmtDefineFunPool : AmtPool<AmtDefineFun>()
 class DeferFunPool : AmtPool<() -> Unit>()
 
 open class AmtStatic(val ast: ASTContainer) : AmtNameSpace() {
@@ -75,7 +88,7 @@ open class AmtStatic(val ast: ASTContainer) : AmtNameSpace() {
 
             } else if (i is ASTOuterFun) {
                 assert(i.param.size == 0)
-                val func = funPool.add(AmtFun(this, i))
+                val func = funPool.add(AmtFun(i.name.getName(), this, i))
                 defer.add {
                     func.parse()
                 }
@@ -93,7 +106,21 @@ class AmtAssignVariable(val variable: AmtVariable, val value: AmtCode) : AmtCode
 /**
  * 一个表达式
  */
-class AmtExpression(val expr: ASTExpression) : AmtCode()
+class AmtExpression(private val expr: ASTExpression) : AmtCode() {
+
+    fun parse() {
+        println(expr)
+//        if (expr is ASTExpressionContainer){
+//            if (expr.container.size==1){
+//                parse(expr.container[0])
+//            }
+//        }
+    }
+//
+//    private fun parse(astExpression: ASTCall) {
+//
+//    }
+}
 
 class AmtClass(ast: ASTContainer) : AmtStatic(ast)
 
@@ -110,6 +137,6 @@ class AmtApplication {
     val constPool = AmtConstPool()//全局字符串常量池
     val importDllPool = AmtImportDllPool()//导入池
     var entryStatic: AmtStatic? = null//入口对象
-
+    val codePool = AmtCodePool()
 }
 

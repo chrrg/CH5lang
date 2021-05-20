@@ -16,7 +16,7 @@ const val CH_MEM_READ = 0x40000000
 const val CH_MEM_WRITE = 0x80000000
 
 object Build {
-    fun build(app: AmtApplication) {
+    fun build(app: AmtApplication,output:String) {
         val root = BuildSection()
         val header = AlignSection(0x200)
 
@@ -69,6 +69,7 @@ object Build {
                 dataSection.add(GBKByteArray(i.value))
             }
         }
+
 
         root.add(sectionBody)
 //        val fun1 = Fun()
@@ -128,6 +129,6 @@ object Build {
 
         root.doFix()
         println("输出大小：" + root.getSize())
-        root.outputFile("1.exe")
+        root.outputFile(output)
     }
 }
