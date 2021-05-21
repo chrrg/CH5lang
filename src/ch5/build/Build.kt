@@ -1,9 +1,5 @@
 package ch5.build
 
-import ch5.amt.AmtApplication
-import ch5.amt.AmtConstGBKString
-import ch5.amt.AmtConstUtf8String
-
 const val CH_CODE = 0x20
 const val CH_INITIALIZED_DATA = 0x40
 const val CH_UNINITIALIZED_DATA = 0x80
@@ -16,7 +12,7 @@ const val CH_MEM_READ = 0x40000000
 const val CH_MEM_WRITE = 0x80000000
 
 object Build {
-    fun build(app: AmtApplication,output:String) {
+    fun build(app: BuildStruct,output:String) {
         val root = BuildSection()
         val header = AlignSection(0x200)
 
@@ -39,17 +35,17 @@ object Build {
 
         header.add(sectionTable)
 
-        val importManager = ImportManager()
-        for (i in app.importDllPool) importManager.use(i.path, i.name)
+        val importManager = app.importManager
+//        for (i in app.importDllPool) importManager.use(i.path, i.name)
 
         //内置dll调用
-        val exitProcess = importManager.use("KERNEL32.DLL", "ExitProcess")
-        val getProcessHeap = importManager.use("KERNEL32.DLL", "GetProcessHeap")
-        val heapAlloc = importManager.use("KERNEL32.DLL", "HeapAlloc")
+//        val exitProcess = importManager.use("KERNEL32.DLL", "ExitProcess")
+//        val getProcessHeap = importManager.use("KERNEL32.DLL", "GetProcessHeap")
+//        val heapAlloc = importManager.use("KERNEL32.DLL", "HeapAlloc")
 
 //    val messageBoxA = importManager.use("USER32.DLL", "MessageBoxA")
-        val dataSection = DataSection()
-        val codeSection = CodeSection()
+        val dataSection = app.dataSection
+        val codeSection = app.codeSection
         val idataSection = IdataSection(importManager)
 
         dataSectionHeader.setSectionBody(dataSection)
@@ -62,43 +58,9 @@ object Build {
         sectionBody.add(codeSection)
         sectionBody.add(idataSection)
 
-        for(i in app.constPool){
-            if (i is AmtConstUtf8String){
-                dataSection.add(UTF8ByteArray(i.value))
-            }else if (i is AmtConstGBKString){
-                dataSection.add(GBKByteArray(i.value))
-            }
-        }
-
-
         root.add(sectionBody)
-//        val fun1 = Fun()
-//        Push(1).addTo(fun1)
-//        Push(2).addTo(fun1)
-//        Push(3).addTo(fun1)
-//        Push(4).addTo(fun1)
-//        Push(5).addTo(fun1)
-//        Push(6).addTo(fun1)
-//        Push(7).addTo(fun1)
-//    Invoke(exitProcess).addTo(fun1)
-
 //        Push(0).addTo(codeSection)
-//        Push(1).addTo(codeSection)
-//        Push(2).addTo(codeSection)
-//        Push(3).addTo(codeSection)
-//        Push(4).addTo(codeSection)
-//        Push(5).addTo(codeSection)
-//        Push(6).addTo(codeSection)
-//        Push(7).addTo(codeSection)
-////    Invoke(getProcessHeap).addTo(rootCode)
-//        Call(fun1).addTo(codeSection)
-        Push(0).addTo(codeSection)
-        Invoke(exitProcess).addTo(codeSection)
-//        fun1.addTo(codeSection)
-
-
-//    codeSection.add(fun1)
-
+//        Invoke(exitProcess).addTo(codeSection)
 
         var sizeOfAllSectionsBefore = 0x1000
         var sizeOfAllSectionsBeforeRaw = header.getSize()
@@ -125,8 +87,6 @@ object Build {
             0x1000 + dataSection.getSize(0x1000) + codeSection.getSize(0x1000) + idataSection.getSize(0x1000),
             "SizeOfImage"
         )
-
-
         root.doFix()
         println("输出大小：" + root.getSize())
         root.outputFile(output)

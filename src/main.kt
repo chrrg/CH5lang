@@ -1,8 +1,8 @@
 
 import ch5.Tokenizer
-import ch5.amt.AMT
 import ch5.ast.AST
 import ch5.build.Build
+import ch5.parser.Parser
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileInputStream
@@ -21,13 +21,8 @@ object Compiler {
     fun compile(code: String, output: String) {
         val tokenizer = Tokenizer(getFileCode(code))//并没有进行分词
         val ast = AST(tokenizer).parse()
-//        ast.print()
-        val app=AMT.parse(ast)
-        Build.build(app,"1.exe")
         println(ast.toString())
-
-//        val amt=AMT.parse(ast)
-
+        Build.build(Parser.parse(ast),"1.exe")
     }
 }
 
