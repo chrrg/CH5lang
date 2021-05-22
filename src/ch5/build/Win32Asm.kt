@@ -107,11 +107,12 @@ class Call(fn: Fun) : CodeItem() {
     init {
         byte(0xE8)
         dword(0, "call")
-        fix(0, "call", fun(value: Int): Int {
-            val offset = getCodeSection().offsetDeep(fn)
+        fix(0, "call", fun(_: Int): Int {
+            val offset = getCodeSection().offsetDeep(fn)//获取要调用的函数的偏移值
             if (offset == -1) throw java.lang.Exception("?")
-            return offset - getCodeOffset() - 5
+            return offset - getCodeSection().offsetDeep(this) - 5//获取当前代码的偏移值
         })
+
     }
 }
 
