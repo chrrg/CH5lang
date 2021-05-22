@@ -108,7 +108,9 @@ class Call(fn: Fun) : CodeItem() {
         byte(0xE8)
         dword(0, "call")
         fix(0, "call", fun(value: Int): Int {
-            return fn.offset - getCodeOffset() - 5
+            val offset = getCodeSection().offsetDeep(fn)
+            if (offset == -1) throw java.lang.Exception("?")
+            return offset - getCodeOffset() - 5
         })
     }
 }

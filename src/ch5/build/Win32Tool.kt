@@ -161,6 +161,7 @@ open class CodeItem : FixableSection() {
     }
 
     fun addTo(box: CodeBox) {
+
         box.add(this)
     }
 
@@ -189,7 +190,7 @@ class AddrSection(val section: Section, val parentSection: BuildSection) : Addr(
 class CodeBox : BuildSection()
 
 class Fun : BuildSection() {
-    var offset = 0
+//    var offset = 0
     var code = CodeBox()
 
     init {
@@ -207,10 +208,10 @@ class Fun : BuildSection() {
         }
     }
 
-    fun addTo(codeSection: CodeSection) {
-        offset = codeSection.getRawSize()
-        codeSection.add(this)
-    }
+//    fun addTo(codeSection: CodeSection) {
+//        offset = codeSection.getRawSize()
+//        codeSection.add(this)
+//    }
 }
 
 class CodeSection() : AlignSection(0x200) {

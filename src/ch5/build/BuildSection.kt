@@ -3,7 +3,6 @@ package ch5.build
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 import java.io.FileOutputStream
-import java.lang.Exception
 
 open class BuildSection : Section, Iterable<Section> {
     private var before: BuildSection? = null
@@ -33,10 +32,29 @@ open class BuildSection : Section, Iterable<Section> {
             if (i == section) return size
             size += i.getSize()
         }
+        //深度搜索
         throw Exception("?")
     }
-    fun<T:Section> add(section: T): T {
-        if (list.contains(section))throw Exception("?")
+
+    /**
+     * 深度获取子section的偏移
+     */
+    fun offsetDeep(section: Section): Int {
+        var size = 0
+        for (i in list) {
+            if (i == section) return size
+            if (i is BuildSection) {
+                val result = i.offsetDeep(section)
+                if (result != -1) return size + result
+            }
+            size += i.getSize()
+        }
+        //深度搜索
+        return -1
+    }
+
+    fun <T : Section> add(section: T): T {
+        if (list.contains(section)) throw Exception("?")
         list.add(section)
         if (section is BuildSection) {
             if (section.parent != null) throw Exception("?")

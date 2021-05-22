@@ -1,6 +1,7 @@
 //import os
 //import "os" as os
 //print builtin 函数
+val a=100
 main {
-    1 print
+    a=200
 }
