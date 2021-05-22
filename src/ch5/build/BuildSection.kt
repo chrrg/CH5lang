@@ -38,13 +38,20 @@ open class BuildSection : Section, Iterable<Section> {
 
     /**
      * 深度获取子section的偏移
+     * 不存在则抛异常
      */
     fun offsetDeep(section: Section): Int {
+        val a = _offsetDeep(section)
+        if (a == -1) throw java.lang.Exception("offset不存在!")
+        return a
+    }
+
+    fun _offsetDeep(section: Section): Int {
         var size = 0
         for (i in list) {
             if (i == section) return size
             if (i is BuildSection) {
-                val result = i.offsetDeep(section)
+                val result = i._offsetDeep(section)
                 if (result != -1) return size + result
             }
             size += i.getSize()
@@ -52,6 +59,7 @@ open class BuildSection : Section, Iterable<Section> {
         //深度搜索
         return -1
     }
+
 
     fun <T : Section> add(section: T): T {
         if (list.contains(section)) throw Exception("?")

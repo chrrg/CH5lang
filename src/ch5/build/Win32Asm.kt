@@ -86,7 +86,7 @@ fun mov(register: Win32Register, addr: Addr): CodeItem {
         }
         if (addr is AddrSection) {
             result.fix(0, "addr", fun(_: Int): Int {
-                return 0x400000 + virtualAddressOf(addr.parentSection) + addr.parentSection.offset(addr.section)
+                return 0x400000 + virtualAddressOf(addr.parentSection) + addr.parentSection.offsetDeep(addr.section)
             })
         }
     }
@@ -109,7 +109,6 @@ class Call(fn: Fun) : CodeItem() {
         dword(0, "call")
         fix(0, "call", fun(_: Int): Int {
             val offset = getCodeSection().offsetDeep(fn)//获取要调用的函数的偏移值
-            if (offset == -1) throw java.lang.Exception("?")
             return offset - getCodeSection().offsetDeep(this) - 5//获取当前代码的偏移值
         })
 

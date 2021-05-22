@@ -4,4 +4,5 @@ class BuildStruct {
     val dataSection=DataSection()
     val codeSection=CodeSection()
     val importManager=ImportManager()
+    var heap:AddrSection?=null
 }

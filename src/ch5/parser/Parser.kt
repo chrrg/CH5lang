@@ -16,7 +16,7 @@ import ch5.build.*
 //}
 
 open class NameSpace(val app: BuildStruct) {
-    val defFunList = arrayListOf<DefFun>()
+    val defFunList = arrayListOf<Fun>()
     val defVarList = arrayListOf<DefVar>()
     val defType = arrayListOf<DefType>()
     private var used = false
@@ -29,11 +29,11 @@ open class NameSpace(val app: BuildStruct) {
         return result
     }
 
-    fun link() {
-        for (i in defFunList) {
-            code.add(i.func)
-        }
-    }
+//    fun link() {
+//        for (i in defFunList) {
+//            code.add(i.code)
+//        }
+//    }
 
     fun use() {
         used = true
@@ -64,15 +64,15 @@ open class NameSpace(val app: BuildStruct) {
     }
 
     //todo 参数判断
-    fun getFunction(name: String, param: Array<DataType>): DefFun {
-        defFunList.find { it.name == name }?.let {
-            return it
-        }
-        parent?.let {
-            return it.getFunction(name, param)
-        }
-        throw Exception("函数${name}不存在!")
-    }
+//    fun getFunction(name: String, param: Array<DataType>): DefFun {
+//        defFunList.find { it.name == name }?.let {
+//            return it
+//        }
+//        parent?.let {
+//            return it.getFunction(name, param)
+//        }
+//        throw Exception("函数${name}不存在!")
+//    }
 
     /**
      * 通过名字获取类型实体
@@ -102,20 +102,21 @@ object Parser {
         val entry = StaticObject(ast, app)//预编译 此时有了变量,函数(函数参数),type
         root.addChild(entry)
 
-        val heapAlloc = app.importManager.use("KERNEL32.DLL", "HeapAlloc")
+//        val heapAlloc = app.importManager.use("KERNEL32.DLL", "HeapAlloc")
         val getProcessHeap = app.importManager.use("KERNEL32.DLL", "GetProcessHeap")
         val exitProcess = app.importManager.use("KERNEL32.DLL", "ExitProcess");
 
         val heap = AddrSection(app.dataSection.add(DwordSection(0)), app.dataSection)//堆空间开始地址
+        app.heap = heap
         Invoke(getProcessHeap).addTo(root.code)//获取程序堆
         mov(heap, EAX).addTo(root.code) //将eax存入heap中
 
-        Call(entry.getFun("main")!!.use().func).addTo(root.code)
+        Call(entry.getFun("main")!!.use()).addTo(root.code)
         push(0).addTo(root.code);Invoke(exitProcess).addTo(root.code)//最后写退出程序
 
         val nameSpaceList = root.flat()//平铺所有命名空间
         for (i in nameSpaceList) {
-//            if (i.isUsed()) //todo
+//            if (i.isUsed()) // todo
             code.add(i.code)
         }//将命名空间的代码写入代码段
         app.dataSection.add(DwordSection(0x7FFFFFFF))//结尾

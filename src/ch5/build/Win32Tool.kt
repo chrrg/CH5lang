@@ -186,7 +186,7 @@ class CodeBox(val codeSection: CodeSection) : BuildSection() {
     }
 }
 
-class Fun(val app: BuildStruct) : BuildSection() {
+open class Fun(val app: BuildStruct) : BuildSection() {
     //    var offset = 0
     var code = CodeBox(app.codeSection)
 
