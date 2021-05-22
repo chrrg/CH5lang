@@ -151,47 +151,44 @@ class DataSection : AlignSection(0x200) {
     }
 }
 
-open class CodeItem : FixableSection() {
-    private var codeOffset = 0
+open class CodeItem() : FixableSection() {
     private var codeSection: CodeSection? = null
-    fun addTo(section: CodeSection) {
-        codeSection = section
-        codeOffset = section.getRawSize()
-        section.add(this)
-    }
-
-    fun addTo(box: CodeBox) {
-
-        box.add(this)
-    }
-
-    fun addTo(fn: Fun) {
-        fn.code.add(this)
-    }
-
     fun getCodeSection(): CodeSection {
         return codeSection!!
     }
 
-    fun getCodeOffset(): Int {
-        if (codeSection == null) throw Exception("?")
-        return codeOffset
+    fun setCodeSection(code: CodeSection) {
+        codeSection = code
+    }
+
+    fun addTo(section: CodeSection) {
+        setCodeSection(section)
+        section.add(this)
+    }
+
+    fun addTo(box: CodeBox) {
+        setCodeSection(box.codeSection)
+        box.add(this)
     }
 }
 
 open class Addr {
-    val register: Win32Register? = null
-    val value = 0
+    var register: Win32Register? = null
+    var value = 0
 }
 
 class AddrSection(val section: Section, val parentSection: BuildSection) : Addr()
 
 
-class CodeBox : BuildSection()
+class CodeBox(val codeSection: CodeSection) : BuildSection() {
+    fun addTo(code: CodeBox) {
+        code.add(this)
+    }
+}
 
-class Fun : BuildSection() {
-//    var offset = 0
-    var code = CodeBox()
+class Fun(val app: BuildStruct) : BuildSection() {
+    //    var offset = 0
+    var code = CodeBox(app.codeSection)
 
     init {
         val size = 0//局部变量大小

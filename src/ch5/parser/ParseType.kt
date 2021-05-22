@@ -33,4 +33,11 @@ open class DataType(val name: String) {
         }
         return false
     }
+
+    /**
+     * 获取类型大小
+     */
+    fun getSize(): Int {
+        TODO()
+    }
 }
