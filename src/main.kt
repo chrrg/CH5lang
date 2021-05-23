@@ -22,6 +22,9 @@ object Compiler {
         val tokenizer = Tokenizer(getFileCode(code))//并没有进行分词
         val ast = AST(tokenizer).parse()
         println(ast.toString())
+
+
+
         Build.build(Parser.parse(ast),"1.exe")
     }
 }

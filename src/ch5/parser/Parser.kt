@@ -24,7 +24,7 @@ object Parser {
         val app = Application(buildStruct)
         val runtime = Runtime(app)
         app.list.add(runtime)//todo 初始化堆 实例化入口static,并且调用main方法
-        ParseProgram(app)
+        ParseProgram(app,ast)
 
         //预编译命名空间树
         //todo 将ast转为MyStatic 并写入代码
