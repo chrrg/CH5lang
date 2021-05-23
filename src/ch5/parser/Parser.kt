@@ -3,169 +3,39 @@ package ch5.parser
 import ch5.ast.ASTContainer
 import ch5.build.*
 
-//open class BuildObject {
-//    //static对象
-//    val size = 0//对象的字节大小
-//
-//    val initFun = Fun()//初始化这个对象的函数
-//    val funcList = ArrayList<Fun>()//所有函数
-//
-//    init {
-//
-//    }
-//}
+class Application(val buildStruct: BuildStruct) {
+    val heap = AddrSection(buildStruct.dataSection.add(DwordSection(0)), buildStruct.dataSection)//堆空间开始地址
+    var entry: Fun? = null
+    val list = arrayListOf<Space>()
 
-open class NameSpace(val app: BuildStruct) {
-    val defFunList = arrayListOf<Fun>()
-    val defVarList = arrayListOf<DefVar>()
-    val defType = arrayListOf<DefType>()
-    private var used = false
-    private var children = arrayListOf<NameSpace>()
-    private var parent: NameSpace? = null
-    val code = CodeBox(app.codeSection)
-    fun flat(): Collection<NameSpace> {
-        val result = arrayListOf(this)
-        for (i in children) result.addAll(i.flat())
-        return result
-    }
-
-//    fun link() {
-//        for (i in defFunList) {
-//            code.add(i.code)
-//        }
-//    }
-
-    fun use() {
-        used = true
-    }
-
-    fun isUsed() = used
-
-    fun setParent(nameSpace: NameSpace) {
-        if (parent != null && parent != nameSpace) throw Exception("already exist parent namespace")
-        parent = nameSpace
-        nameSpace.addChild(this)
-    }
-
-    fun addChild(nameSpace: NameSpace) {
-        children.add(nameSpace)
-        nameSpace.parent = this
-    }
-
-    //获取变量
-    fun getVariable(name: String): DefVar {
-        defVarList.find { it.name == name }?.let {
-            return it
-        }
-        parent?.let {
-            return it.getVariable(name)
-        }
-        throw Exception("变量${name}不存在!")
-    }
-
-    //todo 参数判断
-//    fun getFunction(name: String, param: Array<DataType>): DefFun {
-//        defFunList.find { it.name == name }?.let {
-//            return it
-//        }
-//        parent?.let {
-//            return it.getFunction(name, param)
-//        }
-//        throw Exception("函数${name}不存在!")
-//    }
-
-    /**
-     * 通过名字获取类型实体
-     */
-    fun getType(name: String): DefType {
-        defType.find { it.name == name }?.let {
-            return it
-        }
-        parent?.let {
-            return it.getType(name)
-        }
-        throw Exception("类型${name}不存在!")
-    }
 }
 
-//class BuildClass : BuildObject()
+open class Space(val app: Application) {
+    val data = BuildSection()
+    val code = BuildSection()
+}
+
+
 object Parser {
     fun parse(ast: ASTContainer): BuildStruct {
-        // 预编译static
-        val app = BuildStruct()
-        val data = app.dataSection
-        val code = app.codeSection
-        val root = NameSpace(app)//根命名空间 存放一些基础的内容 builtin类型函数在这里
-        root.defType.add(DefType("int"))//builtin int类型
-        root.defType.add(DefType("void"))//builtin int类型
+        val buildStruct = BuildStruct()
+        val data = buildStruct.dataSection
+        val code = buildStruct.codeSection
+        val app = Application(buildStruct)
+        val runtime = Runtime(app)
+        app.list.add(runtime)//todo 初始化堆 实例化入口static,并且调用main方法
+        ParseProgram(app)
 
-        val entry = StaticObject(ast, app)//预编译 此时有了变量,函数(函数参数),type
-        root.addChild(entry)
+        //预编译命名空间树
+        //todo 将ast转为MyStatic 并写入代码
+        //todo 将MyStatic的main函数赋值到app.entry上面
 
-//        val heapAlloc = app.importManager.use("KERNEL32.DLL", "HeapAlloc")
-        val getProcessHeap = app.importManager.use("KERNEL32.DLL", "GetProcessHeap")
-        val exitProcess = app.importManager.use("KERNEL32.DLL", "ExitProcess");
 
-        val heap = AddrSection(app.dataSection.add(DwordSection(0)), app.dataSection)//堆空间开始地址
-        app.heap = heap
-        Invoke(getProcessHeap).addTo(root.code)//获取程序堆
-        mov(heap, EAX).addTo(root.code) //将eax存入heap中
-
-        Call(entry.getFun("main")!!.use()).addTo(root.code)
-        push(0).addTo(root.code);Invoke(exitProcess).addTo(root.code)//最后写退出程序
-
-        val nameSpaceList = root.flat()//平铺所有命名空间
-        for (i in nameSpaceList) {
-//            if (i.isUsed()) // todo
-            code.add(i.code)
-        }//将命名空间的代码写入代码段
-        app.dataSection.add(DwordSection(0x7FFFFFFF))//结尾
-        return app
-//        return win32Build()
+        app.list.forEach {
+            data.add(it.data)
+            code.add(it.code)
+        }
+        data.add(DwordSection(0x7FFFFFFF))
+        return buildStruct
     }
-
-//    private fun win32Build(): BuildStruct {
-//        val app = BuildStruct()
-//        val buildList = ArrayList<BuildObject>()
-//
-//        buildList.add(BuildObject())
-//        val code = app.codeSection
-//
-//        //写入调用主函数的代码
-//        val getProcessHeap = app.importManager.use("KERNEL32.DLL", "GetProcessHeap")
-//        val heapAlloc = app.importManager.use("KERNEL32.DLL", "HeapAlloc")
-//
-//        val heap = AddrSection(app.dataSection.add(DwordSection(0)), app.dataSection)//堆空间开始地址
-//        Invoke(getProcessHeap).addTo(code)//获取程序堆
-//        mov(heap, EAX).addTo(code) //将eax存入heap中
-//
-//
-//        Call(buildList[0].initFun).addTo(code) // todo 调用入口函数
-//
-//        val exitProcess = app.importManager.use("KERNEL32.DLL", "ExitProcess");
-//        push(0).addTo(code);Invoke(exitProcess).addTo(code)//最后写退出程序
-//        // todo 写入各个会使用到的类和对象的方法
-//
-//        //写入所有static对象的函数
-//        for (i in buildList) {
-//            val staticAddress = AddrSection(app.dataSection.add(DwordSection(0)), app.dataSection)//堆空间开始地址
-//            val initMe = i.initFun
-//            // 判断是否为0 不为0则直接ret 说明已经初始化过了不要再初始化
-//            mov(EAX, staticAddress).addTo(initMe)
-//            val initCode = CodeBox()
-//            push(32).addTo(initCode) // dwBytes是分配堆内存的大小。
-//            push(8).addTo(initCode) // dwFlags是分配堆内存的标志。包括HEAP_ZERO_MEMORY，即使分配的空间清零。
-//            mov(EAX, heap).addTo(initCode) //将heap取出到eax
-//            push(EAX).addTo(initCode) // hHeap是进程堆内存开始位置。
-//            Invoke(heapAlloc).addTo(initCode)//分配空间
-//            mov(staticAddress, EAX).addTo(initCode) // 将eax存入对象的地址
-//            jnz(initCode).addTo(initMe)//如果不是0就跳转到最后面
-//            initMe.addTo(code)
-//            for (j in i.funcList) {
-//                j.addTo(code)
-//            }
-//        }
-//
-//        return app
-//    }
 }

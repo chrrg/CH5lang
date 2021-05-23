@@ -12,7 +12,7 @@ const val CH_MEM_READ = 0x40000000
 const val CH_MEM_WRITE = 0x80000000
 
 object Build {
-    fun build(app: BuildStruct,output:String) {
+    fun build(app: BuildStruct, output: String) {
         val root = BuildSection()
         val header = AlignSection(0x200)
 
@@ -87,7 +87,7 @@ object Build {
             0x1000 + dataSection.getSize(0x1000) + codeSection.getSize(0x1000) + idataSection.getSize(0x1000),
             "SizeOfImage"
         )
-        root.doFix()
+        root.doFix(app)
         println("输出大小：" + root.getSize())
         root.outputFile(output)
     }

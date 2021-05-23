@@ -37,7 +37,7 @@ fun mov(addr: Addr, register: Win32Register): CodeItem {
     }
     result.dword(addr.value, "addr")
     if (addr is AddrSection) {
-        result.fix(0, "addr", fun(_: Int): Int {
+        result.fix(0, "addr", fun(_: Int,_): Int {
             return 0x400000 + virtualAddressOf(addr.parentSection) + addr.parentSection.offset(addr.section)
         })
     }
@@ -85,7 +85,7 @@ fun mov(register: Win32Register, addr: Addr): CodeItem {
             }
         }
         if (addr is AddrSection) {
-            result.fix(0, "addr", fun(_: Int): Int {
+            result.fix(0, "addr", fun(_: Int,_): Int {
                 return 0x400000 + virtualAddressOf(addr.parentSection) + addr.parentSection.offsetDeep(addr.section)
             })
         }
@@ -97,7 +97,7 @@ class Invoke(ili: ImportLibraryItem) : CodeItem() {
     init {
         word(0x15ff)
         dword(0, "invoke")
-        fix(0, "invoke", fun(value: Int): Int {
+        fix(0, "invoke", fun(value: Int,_): Int {
             return 0x400000 + virtualAddressOf(ili.importManager!!.idataSection!!) + ili.offset
         })
     }
@@ -107,9 +107,9 @@ class Call(fn: Fun) : CodeItem() {
     init {
         byte(0xE8)
         dword(0, "call")
-        fix(0, "call", fun(_: Int): Int {
-            val offset = getCodeSection().offsetDeep(fn)//获取要调用的函数的偏移值
-            return offset - getCodeSection().offsetDeep(this) - 5//获取当前代码的偏移值
+        fix(0, "call", fun(_: Int, buildStruct): Int {
+            val offset = buildStruct.codeSection.offsetDeep(fn)//获取要调用的函数的偏移值
+            return offset - buildStruct.codeSection.offsetDeep(this) - 5//获取当前代码的偏移值
         })
 
     }
@@ -143,7 +143,7 @@ fun jz(code: CodeBox): CodeItem {
     result.byte(0x0F)
     result.byte(0x84)
     result.dword(0, "jz")
-    result.fix(0, "jz", fun(_): Int {
+    result.fix(0, "jz", fun(_,_): Int {
         return code.getSize()
     })
     return result
@@ -154,7 +154,7 @@ fun jnz(code: CodeBox): CodeItem {
     result.byte(0x0F)
     result.byte(0x85)
     result.dword(0, "jnz")
-    result.fix(0, "jnz", fun(_): Int {
+    result.fix(0, "jnz", fun(_,_): Int {
         return code.getSize()
     })
     return result

@@ -2,6 +2,9 @@
 //import "os" as os
 //print builtin 函数
 //val a=100
-init {
+
 //    a=200
+
+main {
+    1
 }

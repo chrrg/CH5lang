@@ -111,9 +111,9 @@ open class BuildSection : Section, Iterable<Section> {
 
     operator fun get(index: Int) = list[index]
     override fun iterator() = list.iterator()
-    fun doFix() {
-        before?.doFix()
-        for (i in list) if (i is FixableSection) i.doFix() else if (i is BuildSection) i.doFix()
-        after?.doFix()
+    fun doFix(buildStruct: BuildStruct) {
+        before?.doFix(buildStruct)
+        for (i in list) if (i is FixableSection) i.doFix(buildStruct) else if (i is BuildSection) i.doFix(buildStruct)
+        after?.doFix(buildStruct)
     }
 }

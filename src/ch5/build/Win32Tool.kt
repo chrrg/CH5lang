@@ -152,23 +152,8 @@ class DataSection : AlignSection(0x200) {
 }
 
 open class CodeItem() : FixableSection() {
-    private var codeSection: CodeSection? = null
-    fun getCodeSection(): CodeSection {
-        return codeSection!!
-    }
-
-    fun setCodeSection(code: CodeSection) {
-        codeSection = code
-    }
-
-    fun addTo(section: CodeSection) {
-        setCodeSection(section)
-        section.add(this)
-    }
-
-    fun addTo(box: CodeBox) {
-        setCodeSection(box.codeSection)
-        box.add(this)
+    fun addTo(buildSection: BuildSection) {
+        buildSection.add(this)
     }
 }
 
@@ -180,36 +165,31 @@ open class Addr {
 class AddrSection(val section: Section, val parentSection: BuildSection) : Addr()
 
 
-class CodeBox(val codeSection: CodeSection) : BuildSection() {
-    fun addTo(code: CodeBox) {
-        code.add(this)
+class CodeBox() : BuildSection() {
+    fun addTo(buildSection: BuildSection):CodeBox {
+        buildSection.add(this)
+        return this
     }
 }
-
-open class Fun(val app: BuildStruct) : BuildSection() {
-    //    var offset = 0
-    var code = CodeBox(app.codeSection)
+open class Fun() : BuildSection() {
+    var stackSize = 0//栈大小
+    var code = BuildSection()
 
     init {
-        val size = 0//局部变量大小
         add(ByteSection(0xC8))//enter
-        add(WordSection(size))//局部变量大小//sub esp,size2
+        add(WordSection(stackSize))//局部变量大小//sub esp,size2
         add(ByteSection(0))//固定
         add(code)
         add(ByteSection(0xC9))
-        if (size == 0) {
+        if (stackSize == 0) {
             add(ByteSection(0xC3))
         } else {
             add(ByteSection(0xc2))
-            add(WordSection(size))
+            add(WordSection(stackSize))
         }
     }
-
-//    fun addTo(codeSection: CodeSection) {
-//        offset = codeSection.getRawSize()
-//        codeSection.add(this)
-//    }
 }
+
 
 class CodeSection() : AlignSection(0x200) {
     init {
@@ -306,7 +286,7 @@ class IdataSection(im: ImportManager) : AlignSection(0x200) {
         }
         if (librariesList.isNotEmpty()) add(ImageImportDescriptor())
         for (i in librariesList) {
-            im.getIID(i).fix(getRawSize(), "TABLE", fun(value: Int) = value + virtualAddressOf(this))
+            im.getIID(i).fix(getRawSize(), "TABLE", fun(value: Int, _) = value + virtualAddressOf(this))
             for (j in im.get(i)) {
                 j.offset = getRawSize()
                 val itd = ImageThunkData32()//MessageBoxA_ENTRY
@@ -316,11 +296,11 @@ class IdataSection(im: ImportManager) : AlignSection(0x200) {
             add(ImageThunkData32())
         }
         for (i in librariesList) {
-            im.getIID(i).fix(getRawSize(), "NAME", fun(offset: Int) = offset + virtualAddressOf(this))
+            im.getIID(i).fix(getRawSize(), "NAME", fun(offset: Int, _) = offset + virtualAddressOf(this))
             add(UTF8ByteArray(i))
         }
         for (i in im.get()) {
-            im.getITD(i).fix(getRawSize(), "ENTRY", fun(offset: Int) = offset + virtualAddressOf(this))
+            im.getITD(i).fix(getRawSize(), "ENTRY", fun(offset: Int, _) = offset + virtualAddressOf(this))
             add(WordSection(0))
             add(UTF8ByteArray(i.method))
         }
