@@ -2,7 +2,7 @@ package ch5.parser
 
 import ch5.build.*
 
-class Runtime(app: Application) : Space(app) {
+class RunTime(app: Application) : Space(app) {
     init {
         val buildStruct = app.buildStruct
 

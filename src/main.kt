@@ -1,31 +1,29 @@
-
-import ch5.Tokenizer
-import ch5.ast.AST
 import ch5.build.Build
-import ch5.parser.Parser
-import java.io.BufferedInputStream
-import java.io.File
-import java.io.FileInputStream
+import ch5.build.BuildStruct
+import ch5.build.DwordSection
+import ch5.parser.Application
+import ch5.parser.ParseProgram
+import ch5.parser.RunTime
 
 object Compiler {
-    fun getFileCode(mainFile: String): String {
-        val inputFilePath = File(mainFile).absolutePath
-        val input = BufferedInputStream(FileInputStream(inputFilePath))
-        var len = 0
-        val temp = ByteArray(1024)
-        val sb = StringBuilder()
-        while (input.read(temp).also({ len = it }) != -1) sb.append(String(temp, 0, len))
-        return sb.toString()
-    }
-
-    fun compile(code: String, output: String) {
-        val tokenizer = Tokenizer(getFileCode(code))//并没有进行分词
-        val ast = AST(tokenizer).parse()
-        println(ast.toString())
 
 
+    fun compile(entryFilePath: String, output: String) {
+        val buildStruct = BuildStruct()
+        val data = buildStruct.dataSection
+        val code = buildStruct.codeSection
+        val app = Application(buildStruct)
+        val runtime = RunTime(app)
+        app.list.add(runtime)//todo 初始化堆 实例化入口static,并且调用main方法
+        ParseProgram(app, entryFilePath)
 
-        Build.build(Parser.parse(ast),"1.exe")
+        app.list.forEach {
+            data.add(it.data)
+            code.add(it.code)
+        }
+        data.add(DwordSection(0x7FFFFFFF))
+        Build.build(buildStruct, "1.exe")
+
     }
 }
 
