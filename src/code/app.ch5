@@ -1,10 +1,7 @@
-//import os
-//import "os" as os
-//print builtin 函数
-//val a=100
-
-//    a=200
-
+val a=1
+fun add num1 int,num2 int{
+    =num1+num2
+}
 main {
-    1
+    1,a add
 }

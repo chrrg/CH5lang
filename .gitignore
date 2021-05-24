@@ -4,3 +4,4 @@ resource
 *.exe
 *.iml
 lib
+build
