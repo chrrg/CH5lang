@@ -6,12 +6,16 @@ class Application(val buildStruct: BuildStruct) {
     val heap = AddrSection(buildStruct.dataSection.add(DwordSection(0)), buildStruct.dataSection)//堆空间开始地址
     var entry: Fun? = null
     val list = arrayListOf<Space>()
-
 }
 
-open class Space(val app: Application) {
+abstract class Space(val app: Application) {
     val data = BuildSection()
     val code = BuildSection()
+    var isUsed = false
+    open fun build() {}
+    fun use() {
+        isUsed = true
+    }
 }
 
 

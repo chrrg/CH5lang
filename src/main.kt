@@ -17,7 +17,10 @@ object Compiler {
         app.list.add(runtime)//todo 初始化堆 实例化入口static,并且调用main方法
         ParseProgram(app, entryFilePath)
 
+//        app.entry.getAfter()
+
         app.list.forEach {
+            it.build()
             data.add(it.data)
             code.add(it.code)
         }
