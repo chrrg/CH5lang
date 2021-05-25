@@ -124,7 +124,7 @@ class DefFunction {
     val func = Fun()
     val param = arrayListOf<DefFunParam>()
     var ast: ASTOuterFun? = null
-    var type: DataType? = null//返回类型
+    var type: DataType = VoidType//返回类型
     var space: MyClass? = null
     fun use() {
         space?.use()
@@ -151,18 +151,7 @@ open class PreStatic(app: Application) : MyStatic(app) {
  * @param app
  */
 class PreFile(app: Application, val file: File) : PreStatic(app) {
-    fun parseDataType(type: ASTDataType): DataType {
-        if (type is ASTTypeWord) {
-            val name = type.value.getName()
-            return when (name) {
-                "int" -> IntType
-                "string" -> StringType
-                "bool" -> BoolType
-                else -> throw java.lang.Exception("无法找到类型")
-            }
-        }
-        throw java.lang.Exception("无法解析类型")
-    }
+
 
     init {
         val tokenizer = Tokenizer(getFileCode(file))//并没有进行分词
@@ -297,7 +286,7 @@ class ParseProgram(val app: Application, val entryFile: String) {
             it.use()
             app.entry = it.func
         } ?: run {
-            throw java.lang.Exception("未找到main方法！")
+            throw Exception("未找到main方法！")
         }
         app.list.add(entryObject)
     }

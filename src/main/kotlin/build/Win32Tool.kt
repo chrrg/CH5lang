@@ -242,32 +242,35 @@ class CodeBox : BuildSection() {
  * 包含完整指令一个函数。
  * @constructor Create empty Fun
  */
-open class Fun(var stackValue: Int = 0) : BuildSection() {
+open class Fun(localVariableStackStackValue: Int = 0, paramStackValue: Int = 0) : BuildSection() {
     //stackSize 栈大小
     var code = BuildSection()
-    private val stackSize = WordSection(stackValue)
-    private val stackSize2 = WordSection(stackValue)
+    private val localVariableStackSize = WordSection(localVariableStackStackValue)//本地栈大小
+    private val paramStackSize = WordSection(paramStackValue)//入参栈大小
 
-    //设置参数的栈大小
+
+    /**
+     * 设置入参参数的栈大小
+     */
     fun setParamSize(value: Int) {
-
-        stackValue = value
+        paramStackSize.value = value
     }
-//    private fun getStackSize() = stackSize.value
-//    private fun setStackSize(value: Int) {
-//        stackSize.value = value
-//        stackSize2.value = value
-//    }
+
+    /**
+     * Get param size
+     * 获取入参栈大小
+     */
+    fun getParamSize() = paramStackSize.value
 
     fun allocStack(size: Int): Int {
-        stackSize.value += size
-        stackSize2.value += size
-        return stackValue - 4 + size - stackSize.value
+        val oldOffset = localVariableStackSize.value
+        localVariableStackSize.value += size
+        return -oldOffset - 4
     }
 
     init {
         add(ByteSection(0xC8))//enter
-        add(stackSize)//局部变量大小//sub esp,size2
+        add(localVariableStackSize)//局部变量大小//sub esp,size2
         add(ByteSection(0))//固定
         add(code)
         add(ByteSection(0xC9))
@@ -275,7 +278,7 @@ open class Fun(var stackValue: Int = 0) : BuildSection() {
 //            add(ByteSection(0xC3))
 //        } else {
         add(ByteSection(0xc2))
-        add(stackSize2)
+        add(paramStackSize)//入参的大小
 //        }
     }
 }

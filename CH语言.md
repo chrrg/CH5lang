@@ -286,3 +286,23 @@ init{
 如果是入口文件应该调用main函数
 
 如果没有main函数说明不能作为入口文件
+
+
+2021.05.25
+第一个hello world
+
+EAX        累加器(Accumulator), 用于乘、除、输入/输出等操作
+EBX        基地址寄存器(Base Register), 作为存储器指针来使用
+ECX        计数寄存器(Count Register), 在循环和字符串操作时，要用它来控制循环次数；在位操作中，当移多位时，要用CL来指明移位的位数
+
+EDX        数据寄存器(Data Register), 在进行乘、除运算时，它可作为默认的操作数参与运算，也可用于存放I/O的端口地址
+EDI         目的变址寄存器（Destination Index)
+ESI         源变址寄存器（Source Index）
+用于存放存储单元在段内的偏移量，用它们可实现多种存储器操作数的寻址方式，为以不同的地址形式访问存储单元提供方便
+
+EBP        基址指针寄存器（Base Pointer）
+ESP        堆栈指针寄存器（Stack Pointer）
+用于存放堆栈内存储单元的偏移量，用它们可实现多种存储器操作数的寻址方式，为以不同的地址形式访问存储单元提供方便
+
+链接：https://www.jianshu.com/p/134678afa146
+

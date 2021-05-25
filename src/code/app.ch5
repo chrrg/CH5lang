@@ -1,11 +1,37 @@
-import printf "msvcrt.dll/printf"
+import printf "msvcrt.dll"
+import getch "msvcrt.dll/_getch"
+
+fun printf a string
+fun printf a string,b int
 fun printf a string,b string
+fun getch
+
+fun pause{
+    "请按任意键继续. . .\n" printf
+    .getch
+}
+fun 打印字符串 字符串 string{
+    "%s",字符串 printf
+}
 init{
-
+    "init\n" 打印字符串
 }
-main{
-    val a1 = 9
-    "Hello,world","Hello2" printf
-
-//    "%s",a printf
+main {
+    val 一个字符串 string
+    一个字符串="你好啊！\n"
+    一个字符串 打印字符串
+    "你好啊！\n" 打印字符串
+    "你好啊！\n" 打印字符串
+    "你好啊！\n" 打印字符串
+    "你好啊！\n" 打印字符串
+    "你好啊！\n" 打印字符串
+    "程序结束！\n" 打印字符串
 }
+
+//fun demo{
+//    if 1==1{
+//        =1
+//    }else{
+//        ="abc"
+//    }
+//}
