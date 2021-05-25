@@ -1,0 +1,11 @@
+import printf "msvcrt.dll"
+fun printf a string
+fun println str string{
+    str printf
+    "\n"printf
+}
+main{
+    "Hello,World" println
+    "Hello,World" println
+    "Hello,World" println
+}
