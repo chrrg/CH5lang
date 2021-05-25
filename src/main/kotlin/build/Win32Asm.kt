@@ -349,7 +349,7 @@ fun shl(register: Win32Register, register2: Win8Register): CodeItem {
     val result = CodeItem()
     result.byte(0xD3)
     result.byte(0xE0 + register.value)
-    assert(register2 == CL)
+    if (register2 != CL) TODO()
     return result
 }
 
@@ -365,7 +365,7 @@ fun shr(register: Win32Register, register2: Win8Register): CodeItem {
     val result = CodeItem()
     result.byte(0xD3)
     result.byte(0xE8 + register.value)
-    assert(register2 == CL)
+    if (register2 != CL) TODO()
     return result
 }
 

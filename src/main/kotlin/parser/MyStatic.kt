@@ -149,7 +149,7 @@ open class MyStatic(app: Application) : MyClass(app) {
             }
             is ASTInnerVar -> {
                 val variable = DefLocalVariable()
-                assert(ast.names.size == 1)
+                if (ast.names.size != 1) TODO()
                 scope.varList.find { it.name == ast.names[0].name.value }?.let {
                     throw Exception("重复定义的局部变量" + it.name + "！")
                 }
@@ -193,7 +193,6 @@ open class MyStatic(app: Application) : MyClass(app) {
                             if (right is ASTNodeWord) {
                                 //调用当前作用域（static或者class）的方法
                                 val func = scope.findFunction(right.value.value, arrayListOf())
-                                assert(func.param.size == 0)
                                 Call(func.func).addTo(codeBox)
                                 return Pair(func.type, codeBox)
                             }
@@ -210,7 +209,10 @@ open class MyStatic(app: Application) : MyClass(app) {
                             codeBox.add(result.second)
                             if (left is ASTNodeWord) {
                                 val variable = parseVariable(scope, left.value.value)
-                                assert(variable.first == result.first)//赋值两边变量类型要相等
+                                if (variable.first != result.first) {
+                                    //赋值两边变量类型要相等
+                                    throw Exception("赋值变量" + left.value.value + "类型不匹配！")
+                                }
                                 mov(variable.second, EAX).addTo(codeBox)
                             } else TODO()
                             return Pair(type, codeBox)
@@ -352,7 +354,7 @@ open class MyStatic(app: Application) : MyClass(app) {
 //                            val result = parseFunExpression(scope, left)
                             if (left is ASTNodeWord) {
                                 val variable = parseVariable(scope, left.value.value)
-                                assert(variable.first is IntType)
+                                if (variable.first !is IntType) TODO()
                                 mov(EAX, variable.second).addTo(codeBox)
                                 mov(EDX, EAX).addTo(codeBox)
                                 when (operator) {
@@ -366,7 +368,7 @@ open class MyStatic(app: Application) : MyClass(app) {
 //                            ++a
                             if (left is ASTNodeWord) {
                                 val variable = parseVariable(scope, left.value.value)
-                                assert(variable.first is IntType)
+                                if (variable.first !is IntType) TODO()
                                 mov(EAX, variable.second).addTo(codeBox)
                                 when (operator) {
                                     is op_inc -> add(EAX, 1).addTo(codeBox)

@@ -188,7 +188,7 @@ class PreFile(app: Application, val file: File) : PreStatic(app) {
                     }
                 }
                 is ASTOuterVar -> {
-                    assert(i.names.size == 1)
+                    if(i.names.size != 1) TODO()
                     val variable = DefVariable()
                     variable.ast = i
                     variable.name = i.names[0].name.value
