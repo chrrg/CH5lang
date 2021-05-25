@@ -1,7 +1,8 @@
-//import printf "msvcrt.dll/printf"
+import printf "msvcrt.dll/printf"
+fun printf a string
 main{
-    val a1=(3*4/2)<<1
+    val a1=12
+    "Hello,world" printf
 
-    a1+=
 //    "%s",a printf
 }

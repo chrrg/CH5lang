@@ -74,6 +74,10 @@ class AST(private val tokens: Tokenizer) {
 //                            tokens.prev()
 //                            obj.addStatement(parseImport())
 //                        }
+                        "import" -> {
+                            tokens.prev()
+                            result.container.add(parseImport())
+                        }
                         "var", "val" -> {
                             tokens.prev()
                             result.container.add(parseOuterVar())
@@ -162,27 +166,10 @@ class AST(private val tokens: Tokenizer) {
 
     fun parseImport(): ASTImport {
         if (!tokens.getWord("import")) throw Exception("err")
-//            if(!isString())throw Exception("err")
-        //import *
-        //import * from "./1.ch5"
-
         val import = ASTImport()
-//        import.from = from
-//        if (getOperator(op_mutil)) {
-//            import.isAll = true
-//            if (getCrlfNull()) return import
-//        } else {
-//            while (true) {
-//                import.arr.add(getWords()!!)
-//                if (!getOperator(op_comma)) break
-//            }
-//            if (getCrlfNull()) return import
-//        }
-//        if (isWord("from")) {
-//            if (import.from != null) throw Exception("err")
-//            import.from = parseFrom()
-//        }
-//        if (!getCrlfNull()) throw Exception("err")
+        import.name = tokens.getWord()!!.value
+        import.from = tokens.getString()?.value
+        if (!tokens.getCrlfNull()) throw Exception("import语句已经结束了！")
         return import
     }
 

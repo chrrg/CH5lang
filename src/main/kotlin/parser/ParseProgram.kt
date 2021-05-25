@@ -1,12 +1,10 @@
 package ch5.parser
 
 import ch5.Tokenizer
-import ch5.ast.AST
-import ch5.ast.ASTImport
-import ch5.ast.ASTOuterFun
-import ch5.ast.ASTOuterVar
+import ch5.ast.*
 import ch5.build.CodeBox
 import ch5.build.Fun
+import ch5.build.ImportLibraryItem
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileInputStream
@@ -18,6 +16,25 @@ import java.io.FileInputStream
  */
 abstract class DataType {
     abstract fun getSize(): Int
+
+    override operator fun equals(other: Any?): Boolean {
+        if (super.equals(other)) return true
+        if (this is ReferenceType && other is ReferenceType) {
+            if (ref != other.ref) return false
+            if (general.size != other.general.size) return false
+            for (i in 0 until this.general.size) {
+                if (general[i] != other.general[i]) return false
+            }
+            return true
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return javaClass.hashCode()
+    }
+
+
 }
 
 /**
@@ -30,7 +47,12 @@ abstract class PrimitiveType(val name: String) : DataType()
 object BoolType : PrimitiveType("bool") {
     override fun getSize() = 1
 }
+
 object IntType : PrimitiveType("int") {
+    override fun getSize() = 4
+}
+
+object StringType : PrimitiveType("string") {
     override fun getSize() = 4
 }
 
@@ -43,7 +65,7 @@ object VoidType : PrimitiveType("void") {
  * 引用类型
  * @constructor Create empty Reference type
  */
-class ReferenceType() : DataType() {
+open class ReferenceType() : DataType() {
     var ref: MyClass? = null//类
     var general = arrayListOf<DataType>()//泛型列表
     override fun getSize() = 4
@@ -59,7 +81,7 @@ class DefLocalVariable {
     var name = ""//变量名
     var type: DataType? = null
     var isConst = false
-    var offset=0
+    var offset = 0
 }
 
 /**
@@ -77,6 +99,10 @@ class DefVariable {
     fun use() {
         space?.use()
     }
+}
+
+class DefImport(var alias: String, var ili: ImportLibraryItem) {
+    var func: DefFunction? = null
 }
 
 /**
@@ -125,6 +151,18 @@ open class PreStatic(app: Application) : MyStatic(app) {
  * @param app
  */
 class PreFile(app: Application, val file: File) : PreStatic(app) {
+    fun parseDataType(type: ASTDataType): DataType {
+        if (type is ASTTypeWord) {
+            val name = type.value.getName()
+            return when (name) {
+                "int" -> IntType
+                "string" -> StringType
+                "bool" -> BoolType
+                else -> throw java.lang.Exception("无法找到类型")
+            }
+        }
+        throw java.lang.Exception("无法解析类型")
+    }
 
     init {
         val tokenizer = Tokenizer(getFileCode(file))//并没有进行分词
@@ -141,14 +179,36 @@ class PreFile(app: Application, val file: File) : PreStatic(app) {
         for (i in ast.container) {
             when (i) {
                 is ASTImport -> {
-                    TODO()
+                    val from = i.from
+                    from?.let {
+                        val name = it.split("/")
+                        if (name.size <= 2 && name[0].toUpperCase().endsWith(".DLL")) {
+                            //说明是导入动态链接库
+                            val ili: ImportLibraryItem
+                            if (name.size == 1) {
+                                //import printf "msvcrt.dll"
+                                ili = app.buildStruct.importManager.use(it, i.name)
+                            } else {
+                                //import print "msvcrt.dll/printf"
+                                ili = app.buildStruct.importManager.use(name[0], name[1])
+                            }
+                            importList.add(DefImport(i.name, ili))
+                        }
+                    } ?: kotlin.run {
+                        TODO()
+                    }
                 }
                 is ASTOuterVar -> {
                     assert(i.names.size == 1)
                     val variable = DefVariable()
                     variable.ast = i
                     variable.name = i.names[0].name.value
-                    variable.type = IntType//todo 类型 ast好像没有类型？
+                    i.names[0].type?.let {
+                        variable.type = parseDataType(it)
+                    }
+                    if (variable.type == null && i.expr == null) {
+                        throw Exception("变量" + variable.name + "必须指定类型！")
+                    }
                     variable.space = this
                     varList.add(variable)
                     if (i.const) variable.isConst = true
@@ -159,9 +219,14 @@ class PreFile(app: Application, val file: File) : PreStatic(app) {
                     function.name = i.name.getName()
                     function.space = this
                     i.param.forEach {
-                        function.param.add(DefFunParam(it.name, IntType))
+                        if (it is ASTFunParam) {
+                            val type = parseDataType(it.type)
+                            function.param.add(DefFunParam(it.name, type))
+                        } else TODO()
                     }
-                    function.type = IntType//todo i.type
+                    i.type?.let {
+                        function.type = parseDataType(it)
+                    }
                     funList.add(function)
                 }
                 else -> {
@@ -169,6 +234,7 @@ class PreFile(app: Application, val file: File) : PreStatic(app) {
                 }
             }
         }
+//        预解析完成
 
 
     }

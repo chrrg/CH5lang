@@ -84,9 +84,7 @@ open class MyStatic(app: Application) : MyClass(app) {
                     codeBox.add(result.second)
                 }
             }
-            is ASTCall -> {
 
-            }
             is ASTBinary -> {
                 if (ast.op.operator == op_assign) {
                     //return todo 需要验证类型是否匹配
@@ -106,6 +104,11 @@ open class MyStatic(app: Application) : MyClass(app) {
         val codeBox = CodeBox()
         if (ast == null) return Pair(VoidType, codeBox)
         when (ast) {
+            is ASTNodeString -> {
+                val str = app.buildStruct.dataSection.add(GBKByteArray(ast.value.value))
+                mov(EAX, AddrSection(str, app.buildStruct.dataSection))
+                return Pair(StringType, codeBox)
+            }
             is ASTNodeWord -> {
                 val variable = scope.findVariable(ast.value.value)
                 mov(EAX, Addr(EBP, variable.offset)).addTo(codeBox)
@@ -334,7 +337,7 @@ open class MyStatic(app: Application) : MyClass(app) {
                                 mov(Addr(EBP, variable.offset), EAX).addTo(codeBox)
                                 return Pair(IntType, codeBox)
                             } else TODO()
-                        }
+                        } else TODO()
                     }
                     else -> {
                         throw Exception("暂不支持的操作符${ast.op.operator.javaClass.simpleName}：${ast.op.operator.word}")
@@ -343,10 +346,35 @@ open class MyStatic(app: Application) : MyClass(app) {
             }
             is ASTCall -> {
                 val caller = ast.caller
+                var expr = ast.value
                 if (caller is ASTNodeWord) {
                     val func = scope.findFunction(caller.value.value)
+                    val exprList = arrayListOf<ASTExpression?>()
+
+                    while (true) {
+                        if (expr is ASTBinary) {
+                            if (expr.op.operator == op_comma) {
+                                exprList.add(expr.left)
+                                expr = expr.right
+                            }
+                        } else {
+                            exprList.add(expr)
+                            break
+                        }
+                    }
+                    assert(func.param.size == exprList.size)
+
+                    for (i in exprList) {
+                        val result = parseFunExpression(scope, expr)
+                        assert(result.first == func.param[0].type)
+
+                        result.second.addTo(codeBox)
+                        push(EAX).addTo(codeBox)
+                    }
+
                     //todo ast.value 解析参数
                     Call(func.func).addTo(codeBox)
+                    return Pair(func.type!!, codeBox)
                 } else TODO()
             }
         }
@@ -359,6 +387,20 @@ open class MyStatic(app: Application) : MyClass(app) {
         //这里开始真正的解析
         //先解析变量的表达式
         //再解析函数的表达式
+        //将import的函数替换成自己的函数
+        importList.forEach {
+            funList.find { func ->
+                func.name == it.alias && func.ast?.exprbody == null
+            }?.let { defFunction ->
+                //找到了匹配的函数
+                it.func = defFunction
+                Invoke(it.ili).addTo(defFunction.func.code)
+            } ?: run {
+                throw Exception("未实现" + it.alias + "函数！")
+            }
+        }
+
+
         varList.forEach {
             val result = parse(it.ast?.expr)
             it.type = result.first

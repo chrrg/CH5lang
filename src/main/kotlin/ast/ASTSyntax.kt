@@ -112,7 +112,7 @@ class ASTWords(private val word: Token_Word) {
  * @property generic
  * @constructor Create empty Ast type word
  */
-class ASTTypeWord(private val value: ASTWords, val generic: ASTTypeGeneric = ASTTypeGeneric()) : ASTDataType() {
+class ASTTypeWord(val value: ASTWords, val generic: ASTTypeGeneric = ASTTypeGeneric()) : ASTDataType() {
     override fun toString(): String {
         return value.toString() + generic.toString() + super.toString()
     }
