@@ -6,19 +6,10 @@ fun printf a string,b int
 fun printf a string,b string
 fun getch
 
-fun 打印整数 整数 int {
-    "%d",整数 printf
-}
-fun pause{
-    "请按任意键继续. . .\n" printf
-    .getch
-}
-fun 打印字符串 字符串 string{
-    "%s",字符串 printf
-}
-fun 打印换号{
-    "\n" printf
-}
+fun 打印整数 整数 int {"%d",整数 printf}
+fun pause{"请按任意键继续. . .\n" printf;.getch}
+fun 打印字符串 字符串 string{"%s",字符串 printf}
+fun 打印换号{"\n" printf}
 init{
     "init\n" 打印字符串
 }
