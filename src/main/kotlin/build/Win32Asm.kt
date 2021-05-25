@@ -13,6 +13,12 @@ fun push(value: Int): CodeItem {
     return result
 }
 
+fun leave(): CodeItem {
+    val result = CodeItem()
+    result.byte(0xC9)
+    return result
+}
+
 fun ret(): CodeItem {
     val result = CodeItem()
     result.byte(0xC3)
@@ -37,6 +43,9 @@ fun push(addr: Addr): CodeItem {
     } else {
         addr.register?.let {
             result.byte(0xB0 + it.value)
+            if (it is ESP) {
+                result.byte(0x20 + it.value)
+            }
         } ?: run {
             result.byte(0x35)
         }
@@ -135,6 +144,23 @@ fun mov(register: Win32Register, addr: Addr): CodeItem {
                 return 0x400000 + virtualAddressOf(addr.parentSection) + addr.parentSection.offsetDeep(addr.section)
             })
         }
+    }
+    return result
+}
+
+fun lea(register: Win32Register, addr: Addr): CodeItem {
+    val result = CodeItem()
+    result.byte(0x8D)
+    addr.register?.let {
+        result.byte(0x80 + register.value * 8 + it.value)
+    } ?: run {
+        result.byte(0x05 + register.value * 8)
+    }
+    result.dword(addr.value, "addr")
+    if (addr is AddrSection) {
+        result.fix(0, "addr", fun(_: Int, _): Int {
+            return 0x400000 + virtualAddressOf(addr.parentSection) + addr.parentSection.offsetDeep(addr.section)
+        })
     }
     return result
 }
@@ -258,6 +284,28 @@ fun sub(register: Win32Register, value: Int): CodeItem {
     val result = CodeItem()
     result.byte(0x81)
     result.byte(0xE8 + register.value)
+    result.dword(value)
+    return result
+}
+
+fun cmp(addr: Addr, register: Win32Register): CodeItem {
+    val result = CodeItem()
+    addr.register?.let {
+        result.byte(0x39)
+        result.byte(0x80 + it.value + register.value * 8)
+        result.dword(addr.value)
+    } ?: run {
+        result.byte(0x39)
+        result.byte(0x05 + register.value * 8)
+        result.dword(addr.value)
+    }
+    return result
+}
+
+fun cmp(register: Win32Register, value: Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0x81)
+    result.byte(0xF8 + register.value)
     result.dword(value)
     return result
 }

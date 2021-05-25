@@ -250,6 +250,7 @@ open class Fun(var stackValue: Int = 0) : BuildSection() {
 
     //设置参数的栈大小
     fun setParamSize(value: Int) {
+
         stackValue = value
     }
 //    private fun getStackSize() = stackSize.value

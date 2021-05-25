@@ -224,6 +224,11 @@ class PreFile(app: Application, val file: File) : PreStatic(app) {
                             function.param.add(DefFunParam(it.name, type))
                         } else TODO()
                     }
+                    var paramSize = 0
+                    function.param.forEach {
+                        paramSize += it.type.getSize()
+                    }
+//                    function.func.setParamSize(paramSize)todo
                     i.type?.let {
                         function.type = parseDataType(it)
                     }

@@ -1,8 +1,11 @@
 import printf "msvcrt.dll/printf"
-fun printf a string
+fun printf a string,b string
+init{
+
+}
 main{
-    val a1=12
-    "Hello,world" printf
+    val a1 = 9
+    "Hello,world","Hello2" printf
 
 //    "%s",a printf
 }

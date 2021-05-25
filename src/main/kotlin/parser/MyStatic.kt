@@ -52,7 +52,9 @@ open class MyStatic(app: Application) : MyClass(app) {
         //写入所有fun代码 但是代码前面要加上判断对象是否初始化的函数
         val initStaticCode = Fun()//初始化对象的函数 如果初始化过了会跳过
         mov(EAX, entryAddr).addTo(initStaticCode.code)
+        cmp(EAX, 0).addTo(initStaticCode.code)
         val retCode = CodeBox()
+        leave().addTo(retCode)
         ret().addTo(retCode)
         jz(retCode).addTo(initStaticCode.code)
         push(heapSize).addTo(initStaticCode.code) // dwBytes是分配堆内存的大小。
@@ -106,7 +108,7 @@ open class MyStatic(app: Application) : MyClass(app) {
         when (ast) {
             is ASTNodeString -> {
                 val str = app.buildStruct.dataSection.add(GBKByteArray(ast.value.value))
-                mov(EAX, AddrSection(str, app.buildStruct.dataSection))
+                lea(EAX, AddrSection(str, app.buildStruct.dataSection)).addTo(codeBox)
                 return Pair(StringType, codeBox)
             }
             is ASTNodeWord -> {
@@ -349,28 +351,37 @@ open class MyStatic(app: Application) : MyClass(app) {
                 var expr = ast.value
                 if (caller is ASTNodeWord) {
                     val func = scope.findFunction(caller.value.value)
-                    val exprList = arrayListOf<ASTExpression?>()
+//                    val exprList = arrayListOf<ASTExpression?>()
+//                    while (true) {
+//                        if (expr is ASTBinary) {
+//                            if (expr.op.operator == op_comma) {
+//                                exprList.add(expr.left)
+//                                expr = expr.right
+//                            }
+//                        } else {
+//                            exprList.add(expr)
+//                            break
+//                        }
+//                    }
+//                    assert(func.param.size == exprList.size)
 
-                    while (true) {
-                        if (expr is ASTBinary) {
-                            if (expr.op.operator == op_comma) {
-                                exprList.add(expr.left)
-                                expr = expr.right
-                            }
-                        } else {
-                            exprList.add(expr)
-                            break
+//                    for (i in exprList) {
+//                        val result = parseFunExpression(scope, expr)
+//                        assert(result.first == func.param[0].type)
+//
+//                        result.second.addTo(codeBox)
+//                        push(EAX).addTo(codeBox)
+//                    }
+                    if (expr is ASTTuple) {
+                        assert(func.param.size == expr.tuples.size)
+                        for (i in 0 until expr.tuples.size) {
+                            val result = parseFunExpression(scope, expr.tuples[i])
+                            assert(result.first == func.param[i].type)
+                            result.second.addTo(codeBox)
+                            push(EAX).addTo(codeBox)
                         }
                     }
-                    assert(func.param.size == exprList.size)
 
-                    for (i in exprList) {
-                        val result = parseFunExpression(scope, expr)
-                        assert(result.first == func.param[0].type)
-
-                        result.second.addTo(codeBox)
-                        push(EAX).addTo(codeBox)
-                    }
 
                     //todo ast.value 解析参数
                     Call(func.func).addTo(codeBox)
@@ -394,6 +405,7 @@ open class MyStatic(app: Application) : MyClass(app) {
             }?.let { defFunction ->
                 //找到了匹配的函数
                 it.func = defFunction
+                push(Addr(ESP, 8)).addTo(defFunction.func.code)
                 Invoke(it.ili).addTo(defFunction.func.code)
             } ?: run {
                 throw Exception("未实现" + it.alias + "函数！")
