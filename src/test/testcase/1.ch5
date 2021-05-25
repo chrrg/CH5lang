@@ -1,0 +1,7 @@
+import printf "msvcrt.dll"
+fun printf a string
+
+main{
+    val a="你好，世界！"
+    a printf
+}

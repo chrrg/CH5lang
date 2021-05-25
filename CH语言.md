@@ -240,7 +240,7 @@ ast解析基本完成
 
 依赖管理草案 todo
 
-import github.com/chrrg/CH5/parser
+import github.com/chrrg/CH5/ch5.parser
 现阶段应该做builtin的函数和类型？
 
 05.08
