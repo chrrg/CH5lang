@@ -1,25 +1,28 @@
 import printf "msvcrt.dll"
-import getch "msvcrt.dll/_getch"
+import getChar "msvcrt.dll/_getch"
 
 fun printf a string
 fun printf a string,b int
+fun printf a string,b bool
 fun printf a string,b string
-fun getch
+fun getChar
 
 fun 打印整数 整数 int {"%d",整数 printf}
-fun pause{"请按任意键继续. . .\n" printf;.getch}
+fun 打印布尔值 布尔值 bool {"%d",布尔值 printf}
+fun pause{"请按任意键继续. . .\n" printf;.getChar}
 fun 打印字符串 字符串 string{"%s",字符串 printf}
 fun 打印换号{"\n" printf}
-init{
-    "init\n" 打印字符串
-}
+
 main {
+
     val 一个字符串 string
     一个字符串 = "你好啊！\n"
     一个字符串 = "你很好啊！\n"
     一个字符串 打印字符串
     886 打印整数
+    11==11 打印布尔值
     .打印换号
     "666" printf
     "程序结束！\n" 打印字符串
+
 }
