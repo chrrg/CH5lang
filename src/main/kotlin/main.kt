@@ -1,4 +1,3 @@
-
 import ch5.build.Build
 import ch5.build.BuildStruct
 import ch5.build.DwordSection
@@ -19,7 +18,6 @@ object Compiler {
         app.list.add(runtime)//todo 初始化堆 实例化入口static,并且调用main方法
         ParseProgram(app, entryFilePath)
         runtime.addEntryFun(app.entry!!)
-//        app.entry.getAfter()
 
         app.list.forEach {
             if (it.isUsed) {
@@ -28,7 +26,7 @@ object Compiler {
                 code.add(it.code)
             }
         }
-        data.add(DwordSection(0x7FFFFFFF))
+        data.add(DwordSection(0x7FFFFFFF))//没什么用 只是标志着数据段最后4个字节
         Build.build(buildStruct, output)
         println("\u001B[0;32m编译完成！\u001B[0m")
     }
@@ -77,12 +75,11 @@ fun performance(block: () -> Unit) {
  * 编译的入口函数
  */
 fun main() {
-    while (true) {
-        performance {
-            Compiler.compile("src/code/app.ch5", "1.exe")
-        }
-        Compiler.run("1.exe")
-        System.`in`.read()
-
+//    while (true) {
+    performance {
+        Compiler.compile("src/code/app.ch5", "1.exe")
     }
+    Compiler.run("1.exe")
+//        System.`in`.read()
+//    }
 }

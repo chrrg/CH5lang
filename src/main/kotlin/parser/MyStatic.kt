@@ -159,7 +159,11 @@ open class MyStatic(app: Application) : MyClass(app) {
                 }
                 ast.expr?.let {
                     val result = parseFunExpression(scope, ast.expr)
-                    if (type != result.first) throw Exception("变量${variable.name}类型不匹配")
+                    if (type == VoidType) {
+                        type = result.first
+                    } else {
+                        if (type != result.first) throw Exception("变量${variable.name}类型不匹配")
+                    }
                     codeBox.add(result.second)//先运行初始化代码
                 }
                 if (type == VoidType) throw Exception("变量${variable.name}需要指定类型")
