@@ -137,6 +137,20 @@ open class MyStatic(app: Application) : MyClass(app) {
         val codeBox = CodeBox()
         if (ast == null) return Pair(VoidType, codeBox)
         when (ast) {
+            is ASTIf -> {
+                val result = parseFunExpression(scope, ast.condition)
+                if (result.first !is BoolType) throw Exception("if语句只支持bool类型的表达式")
+                result.second.addTo(codeBox)
+                cmp(EAX, 0).addTo(codeBox)
+                val trueBranch = parseFunExpression(scope, ast.trueBranch)
+                val falseBranch = parseFunExpression(scope, ast.falseBrach)
+                jz(trueBranch.second, falseBranch.second).addTo(codeBox)
+                return if (trueBranch.first == falseBranch.first) {
+                    Pair(trueBranch.first, codeBox)
+                } else {
+                    Pair(VoidType, codeBox)
+                }
+            }
             is ASTNodeString -> {
                 val str = app.buildStruct.dataSection.add(GBKByteArray(ast.value.value))
                 lea(EAX, AddrSection(str, app.buildStruct.dataSection)).addTo(codeBox)
@@ -405,25 +419,8 @@ open class MyStatic(app: Application) : MyClass(app) {
                     } else {
                         //只有一个参数
                         val result = parseFunExpression(scope, expr)
-//                        lahf().addTo(codeBox)
-//                        lahf().addTo(codeBox)
-//                        lahf().addTo(codeBox)
-//                        lahf().addTo(codeBox)
-//                        lahf().addTo(codeBox)
                         result.second.addTo(codeBox)
-//                        lahf().addTo(codeBox)
-//                        lahf().addTo(codeBox)
-//                        lahf().addTo(codeBox)
-//                        lahf().addTo(codeBox)
-//                        lahf().addTo(codeBox)
-
                         push(EAX).addTo(codeBox)
-//                        lahf().addTo(codeBox)
-//                        lahf().addTo(codeBox)
-//                        lahf().addTo(codeBox)
-//                        lahf().addTo(codeBox)
-//                        lahf().addTo(codeBox)
-
                         typeArray.add(result.first)
                     }
                     val func = scope.findFunction(caller.value.value, typeArray)

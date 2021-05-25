@@ -382,7 +382,6 @@ fun and(register: Win32Register, value: Int): CodeItem {
     result.byte(0x81)
     result.byte(0xE0 + register.value)
     result.dword(value)
-    result.byte(value)
     return result
 }
 
@@ -523,13 +522,32 @@ fun jz(code: CodeBox): CodeBox {
     val result = CodeItem()
     result.byte(0x0F)
     result.byte(0x84)
-    result.dword(0, "jz")
-    result.fix(0, "jz", fun(_, _): Int {
+    result.dword(0, fun(_, _): Int {
         return code.getSize()
     })
     result.addTo(box)
     code.addTo(box)
     return box
+}
+
+fun jz(code: CodeBox, code2: CodeBox): CodeBox {
+    val codeBox = CodeBox()
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x84)
+    result.dword(0, fun(_, _): Int {
+        return code.getSize()
+    })
+    result.addTo(codeBox)
+    val result2 = CodeItem()
+    result2.byte(0xE9)//jmp
+    result2.dword(0, fun(_, _): Int {
+        return code2.getSize()
+    })
+    result2.addTo(code.getAfter())
+    code.addTo(codeBox)
+    code2.addTo(codeBox)
+    return codeBox
 }
 
 /**

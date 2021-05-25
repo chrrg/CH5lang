@@ -3,4 +3,5 @@ import java.io.File
 
 fun main() {
     Compiler.compile(File("src/test/code/dev.ch5"), File("src/test/code/dev.exe"))
+    println("编译完成")
 }

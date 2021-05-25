@@ -39,7 +39,6 @@ object Compiler {
  */
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
-        println("欢迎使用CH编译器，开发人：曹鸿，毕业院校：桂林理工大学 信息科学与工程学院。毕业年份：2021年")
         println(
             """
    ______    __  __          ______                                _     __              
@@ -50,7 +49,18 @@ fun main(args: Array<String>) {
                                                       /_/                                
         """.trimIndent()
         )
-        println("使用方法：\njava -jar ch5.jar -c 1.ch5 1.exe")
+        println("欢迎使用CH编译器！")
+        println("可以将你的代码编译为Win32下可执行文件！")
+        println("开发人：曹鸿")
+        println("毕业院校：桂林理工大学 信息科学与工程学院")
+        println("毕业年份：2021年")
+
+        println("使用方法：")
+        println("java -jar ch5.jar -c 1.ch5 1.exe")
+        println("-c inputFile outputFile")
+        println("inputFile 源代码文件路径，一般以ch5后缀")
+        println("outputFile 输出可执行文件的路径，一般以exe后缀")
+
         return
     }
     if (args[0] == "-c") {
