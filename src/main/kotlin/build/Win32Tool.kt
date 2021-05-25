@@ -205,10 +205,8 @@ open class CodeItem() : FixableSection() {
  * 地址 可以是寄存器或者偏移值或两者都有
  * @constructor Create empty Addr
  */
-open class Addr {
-    var register: Win32Register? = null
-    var value = 0
-}
+open class Addr(var register: Win32Register? = null, var value: Int = 0)
+
 
 /**
  * Addr section
@@ -225,13 +223,14 @@ class AddrSection(val section: Section, val parentSection: BuildSection) : Addr(
  * 可以插入很多代码的代码盒子。
  * @constructor Create empty Code box
  */
-class CodeBox() : BuildSection() {
+class CodeBox : BuildSection() {
     /**
      * Add to
      *
      * @param buildSection
      * @return
      */
+
     fun addTo(buildSection: BuildSection): CodeBox {
         buildSection.add(this)
         return this
@@ -243,22 +242,40 @@ class CodeBox() : BuildSection() {
  * 包含完整指令一个函数。
  * @constructor Create empty Fun
  */
-open class Fun() : BuildSection() {
-    var stackSize = 0//栈大小
+open class Fun(var stackValue: Int = 0) : BuildSection() {
+    //stackSize 栈大小
     var code = BuildSection()
+    private val stackSize = WordSection(stackValue)
+    private val stackSize2 = WordSection(stackValue)
+
+    //设置参数的栈大小
+    fun setParamSize(value: Int) {
+        stackValue = value
+    }
+//    private fun getStackSize() = stackSize.value
+//    private fun setStackSize(value: Int) {
+//        stackSize.value = value
+//        stackSize2.value = value
+//    }
+
+    fun allocStack(size: Int): Int {
+        stackSize.value += size
+        stackSize2.value += size
+        return stackValue - 4 + size - stackSize.value
+    }
 
     init {
         add(ByteSection(0xC8))//enter
-        add(WordSection(stackSize))//局部变量大小//sub esp,size2
+        add(stackSize)//局部变量大小//sub esp,size2
         add(ByteSection(0))//固定
         add(code)
         add(ByteSection(0xC9))
-        if (stackSize == 0) {
-            add(ByteSection(0xC3))
-        } else {
-            add(ByteSection(0xc2))
-            add(WordSection(stackSize))
-        }
+//        if (stackSize == 0) {
+//            add(ByteSection(0xC3))
+//        } else {
+        add(ByteSection(0xc2))
+        add(stackSize2)
+//        }
     }
 }
 

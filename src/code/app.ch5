@@ -1,7 +1,7 @@
-val a=1
-fun add num1 int,num2 int{
-    =num1+num2
-}
-main {
-    1,a add
+//import printf "msvcrt.dll/printf"
+main{
+    val a1=(3*4/2)<<1
+
+    a1+=
+//    "%s",a printf
 }

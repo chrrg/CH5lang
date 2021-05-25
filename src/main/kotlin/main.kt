@@ -16,13 +16,15 @@ object Compiler {
         val runtime = RunTime(app)
         app.list.add(runtime)//todo 初始化堆 实例化入口static,并且调用main方法
         ParseProgram(app, entryFilePath)
-
+        runtime.addEntryFun(app.entry!!)
 //        app.entry.getAfter()
 
         app.list.forEach {
-            it.build()
-            data.add(it.data)
-            code.add(it.code)
+            if (it.isUsed) {
+                it.build()
+                data.add(it.data)
+                code.add(it.code)
+            }
         }
         data.add(DwordSection(0x7FFFFFFF))
         Build.build(buildStruct, "1.exe")

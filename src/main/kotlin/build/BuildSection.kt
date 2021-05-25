@@ -56,8 +56,8 @@ open class BuildSection : Section, Iterable<Section> {
             if (i == section) return size
             size += i.getSize()
         }
-        //深度搜索
-        throw Exception("?")
+        return offsetDeep(section)
+//        throw Exception("?")
     }
 
     /**
@@ -68,7 +68,7 @@ open class BuildSection : Section, Iterable<Section> {
      */
     fun offsetDeep(section: Section): Int {
         val a = _offsetDeep(section)
-        if (a == -1) throw java.lang.Exception("offset不存在!")
+        if (a == -1) throw Exception("offset不存在!")
         return a
     }
 
@@ -80,6 +80,12 @@ open class BuildSection : Section, Iterable<Section> {
      */
     fun _offsetDeep(section: Section): Int {
         var size = 0
+        before?.let {
+            if (it == section) return size
+            val result = it._offsetDeep(section)
+            if (result != -1) return size + result
+            size += it.getSize()
+        }
         for (i in list) {
             if (i == section) return size
             if (i is BuildSection) {
@@ -87,6 +93,12 @@ open class BuildSection : Section, Iterable<Section> {
                 if (result != -1) return size + result
             }
             size += i.getSize()
+        }
+        after?.let {
+            if (it == section) return size
+            val result = it._offsetDeep(section)
+            if (result != -1) return size + result
+            size += it.getSize()
         }
         //深度搜索
         return -1
@@ -101,10 +113,10 @@ open class BuildSection : Section, Iterable<Section> {
      * @return
      */
     fun <T : Section> add(section: T): T {
-        if (list.contains(section)) throw Exception("?")
+        if (list.contains(section)) throw Exception("")
         list.add(section)
         if (section is BuildSection) {
-            if (section.parent != null) throw Exception("?")
+            if (section.parent != null && section.parent != this) throw Exception("已经有其它父级，不允许重复添加")
             section.parent = this
         }
         return section

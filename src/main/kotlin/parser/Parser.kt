@@ -12,6 +12,7 @@ class Application(val buildStruct: BuildStruct) {
     val heap = AddrSection(buildStruct.dataSection.add(DwordSection(0)), buildStruct.dataSection)//堆空间开始地址
     var entry: Fun? = null
     val list = arrayListOf<Space>()
+    val alloc = Fun(4)
 }
 
 /**

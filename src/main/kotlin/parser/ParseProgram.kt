@@ -16,7 +16,9 @@ import java.io.FileInputStream
  * 数据类型描述类 数组是一种类
  * @constructor Create empty Data type
  */
-open class DataType
+abstract class DataType {
+    abstract fun getSize(): Int
+}
 
 /**
  * Primitive type
@@ -24,9 +26,17 @@ open class DataType
  * @property name
  * @constructor Create empty Primitive type
  */
-open class PrimitiveType(val name: String) : DataType()
+abstract class PrimitiveType(val name: String) : DataType()
+object BoolType : PrimitiveType("bool") {
+    override fun getSize() = 1
+}
+object IntType : PrimitiveType("int") {
+    override fun getSize() = 4
+}
 
-object IntType : PrimitiveType("int")
+object VoidType : PrimitiveType("void") {
+    override fun getSize() = 0
+}
 
 /**
  * Reference type
@@ -36,6 +46,20 @@ object IntType : PrimitiveType("int")
 class ReferenceType() : DataType() {
     var ref: MyClass? = null//类
     var general = arrayListOf<DataType>()//泛型列表
+    override fun getSize() = 4
+
+}
+
+/**
+ * Def local variable
+ * 定义在函数内的变量
+ * @constructor Create empty Def local variable
+ */
+class DefLocalVariable {
+    var name = ""//变量名
+    var type: DataType? = null
+    var isConst = false
+    var offset=0
 }
 
 /**
@@ -47,7 +71,7 @@ class DefVariable {
     var name = ""//变量名
     var type: DataType? = null
     var isConst = false
-    val initCode = CodeBox()
+    var initCode: CodeBox? = null
     var ast: ASTOuterVar? = null
     var space: Space? = null
     fun use() {
@@ -71,11 +95,11 @@ class DefFunParam(val name: String, val type: DataType)
  */
 class DefFunction {
     var name = ""//函数名
-    val code = Fun()
+    val func = Fun()
     val param = arrayListOf<DefFunParam>()
     var ast: ASTOuterFun? = null
     var type: DataType? = null//返回类型
-    var space: Space? = null
+    var space: MyClass? = null
     fun use() {
         space?.use()
     }
@@ -116,7 +140,7 @@ class PreFile(app: Application, val file: File) : PreStatic(app) {
         //todo 将MyStatic的main函数赋值到app.entry上面
         for (i in ast.container) {
             when (i) {
-                is ASTImport->{
+                is ASTImport -> {
                     TODO()
                 }
                 is ASTOuterVar -> {
@@ -200,10 +224,11 @@ class ParseProgram(val app: Application, val entryFile: String) {
         val entryObject = parseFile(File(entryFile))//预编译 如果遇到import会优先预编译import的部分
         entryObject.funList.find { it.name == "main" }?.let {
             it.use()
-            app.entry = it.code
+            app.entry = it.func
         } ?: run {
             throw java.lang.Exception("未找到main方法！")
         }
+        app.list.add(entryObject)
     }
 }
 

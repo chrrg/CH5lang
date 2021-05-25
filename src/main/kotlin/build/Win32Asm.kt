@@ -13,6 +13,12 @@ fun push(value: Int): CodeItem {
     return result
 }
 
+fun ret(): CodeItem {
+    val result = CodeItem()
+    result.byte(0xC3)
+    return result
+}
+
 /**
  * Push
  * 向段中插入参数所指定的地址的值。
@@ -56,7 +62,7 @@ fun mov(addr: Addr, register: Win32Register): CodeItem {
     }
     result.dword(addr.value, "addr")
     if (addr is AddrSection) {
-        result.fix(0, "addr", fun(_: Int,_): Int {
+        result.fix(0, "addr", fun(_: Int, _): Int {
             return 0x400000 + virtualAddressOf(addr.parentSection) + addr.parentSection.offset(addr.section)
         })
     }
@@ -125,7 +131,7 @@ fun mov(register: Win32Register, addr: Addr): CodeItem {
             }
         }
         if (addr is AddrSection) {
-            result.fix(0, "addr", fun(_: Int,_): Int {
+            result.fix(0, "addr", fun(_: Int, _): Int {
                 return 0x400000 + virtualAddressOf(addr.parentSection) + addr.parentSection.offsetDeep(addr.section)
             })
         }
@@ -144,7 +150,7 @@ class Invoke(ili: ImportLibraryItem) : CodeItem() {
     init {
         word(0x15ff)
         dword(0, "invoke")
-        fix(0, "invoke", fun(value: Int,_): Int {
+        fix(0, "invoke", fun(value: Int, _): Int {
             return 0x400000 + virtualAddressOf(ili.importManager!!.idataSection!!) + ili.offset
         })
     }
@@ -162,8 +168,8 @@ class Call(fn: Fun) : CodeItem() {
         byte(0xE8)
         dword(0, "call")
         fix(0, "call", fun(_: Int, buildStruct): Int {
-            val offset = buildStruct.codeSection.offsetDeep(fn)//获取要调用的函数的偏移值
-            return offset - buildStruct.codeSection.offsetDeep(this) - 5//获取当前代码的偏移值
+            val offset = buildStruct.codeSection.offset(fn)//获取要调用的函数的偏移值
+            return offset - buildStruct.codeSection.offset(this) - 5//获取当前代码的偏移值
         })
 
     }
@@ -184,6 +190,16 @@ object ESP : Win32Register(4)//堆栈的最顶端
 object EBP : Win32Register(5)
 object ESI : Win32Register(6)
 object EDI : Win32Register(7)
+open class Win8Register(val value: Int)
+object AL : Win8Register(0)
+object CL : Win8Register(1)
+object DL : Win8Register(2)
+object BL : Win8Register(3)
+object AH : Win8Register(4)
+object CH : Win8Register(5)
+object DH : Win8Register(6)
+object BH : Win8Register(7)
+
 
 /**
  * Push
@@ -210,20 +226,262 @@ fun pop(register: Win32Register): CodeItem {
 }
 
 /**
+ * Add
+ *
+ * @param register
+ * @param register2
+ * @return
+ */
+fun add(register: Win32Register, register2: Win32Register): CodeItem {
+    val result = CodeItem()
+    result.byte(0x03)
+    result.byte(0xC0 + register.value * 8 + register2.value)
+    return result
+}
+
+fun add(register: Win32Register, value: Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0x81)
+    result.byte(0xC0 + register.value)
+    result.dword(value)
+    return result
+}
+
+fun sub(register: Win32Register, register2: Win32Register): CodeItem {
+    val result = CodeItem()
+    result.byte(0x2B)
+    result.byte(0xC0 + register.value * 8 + register2.value)
+    return result
+}
+
+fun sub(register: Win32Register, value: Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0x81)
+    result.byte(0xE8 + register.value)
+    result.dword(value)
+    return result
+}
+
+fun cmp(register: Win32Register, register2: Win32Register): CodeItem {
+    val result = CodeItem()
+    result.byte(0x3B)
+    result.byte(0xC0 + register.value * 8 + register2.value)
+    return result
+}
+
+fun mul(register: Win32Register): CodeItem {
+    val result = CodeItem()
+    result.byte(0xF7)
+    result.byte(0xE0 + register.value)
+    return result
+}
+
+fun div(register: Win32Register): CodeItem {
+    val result = CodeItem()
+    result.byte(0xF7)
+    result.byte(0xF0 + register.value)
+    return result
+}
+
+fun lahf(): CodeItem {
+    val result = CodeItem()
+    result.byte(0x9F)
+    return result
+}
+
+fun shl(register: Win32Register, value: Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0xC1)
+    result.byte(0xE0 + register.value)
+    result.byte(value)
+    return result
+}
+
+fun shl(register: Win32Register, register2: Win8Register): CodeItem {
+    val result = CodeItem()
+    result.byte(0xD3)
+    result.byte(0xE0 + register.value)
+    assert(register2 == CL)
+    return result
+}
+
+fun shr(register: Win32Register, value: Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0xC1)
+    result.byte(0xE8 + register.value)
+    result.byte(value)
+    return result
+}
+
+fun shr(register: Win32Register, register2: Win8Register): CodeItem {
+    val result = CodeItem()
+    result.byte(0xD3)
+    result.byte(0xE8 + register.value)
+    assert(register2 == CL)
+    return result
+}
+
+
+fun and(register: Win32Register, register2: Win32Register): CodeItem {
+    val result = CodeItem()
+    result.byte(0x21)
+    result.byte(0xC0 + register.value + register2.value * 8)
+    return result
+}
+
+fun and(register: Win32Register, value: Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0x81)
+    result.byte(0xE0 + register.value)
+    result.dword(value)
+    result.byte(value)
+    return result
+}
+
+fun or(register: Win32Register, register2: Win32Register): CodeItem {
+    val result = CodeItem()
+    result.byte(0x09)
+    result.byte(0xC0 + register.value + register2.value * 8)
+    return result
+}
+
+fun xor(register: Win32Register, register2: Win32Register): CodeItem {
+    val result = CodeItem()
+    result.byte(0x33)
+    result.byte(0xC0 + register.value * 8 + register2.value)
+    return result
+}
+
+fun xor(register: Win32Register, value: Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0x81)
+    result.byte(0xF0 + register.value)
+    result.dword(value)
+    return result
+}
+
+fun jg(code: CodeBox): CodeBox {
+    val codeBox = CodeBox()
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x8F)
+    result.dword(0, fun(_, _): Int {
+        return code.getSize()
+    })
+    result.addTo(codeBox)
+    code.addTo(codeBox)
+    return codeBox
+}
+
+fun jg(code: CodeBox, code2: CodeBox): CodeBox {
+    val codeBox = CodeBox()
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x8F)
+    result.dword(0, fun(_, _): Int {
+        return code.getSize()
+    })
+    result.addTo(codeBox)
+    val result2 = CodeItem()
+    result2.byte(0xE9)
+    result2.dword(0, fun(_, _): Int {
+        return code2.getSize()
+    })
+    result2.addTo(code.getAfter())
+    code.addTo(codeBox)
+    code2.addTo(codeBox)
+    return codeBox
+}
+
+fun jge(code: CodeBox): CodeBox {
+    val codeBox = CodeBox()
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x8D)
+    result.dword(0, fun(_, _): Int {
+        return code.getSize()
+    })
+    result.addTo(codeBox)
+    code.addTo(codeBox)
+    return codeBox
+}
+
+fun jge(code: CodeBox, code2: CodeBox): CodeBox {
+    val codeBox = CodeBox()
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x8D)
+    result.dword(0, fun(_, _): Int {
+        return code.getSize()
+    })
+    result.addTo(codeBox)
+    val result2 = CodeItem()
+    result2.byte(0xE9)//jmp
+    result2.dword(0, fun(_, _): Int {
+        return code2.getSize()
+    })
+    result2.addTo(code.getAfter())
+    code.addTo(codeBox)
+    code2.addTo(codeBox)
+    return codeBox
+}
+
+fun jmp(code: CodeBox): CodeBox {
+    val codeBox = CodeBox()
+    val result = CodeItem()
+    result.byte(0xE9)
+    result.dword(0, fun(_, _): Int {
+        return code.getSize()
+    })
+    result.addTo(codeBox)
+    code.addTo(codeBox)
+    return codeBox
+}
+
+fun jl(code: CodeBox): CodeBox {
+    val codeBox = CodeBox()
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x8C)
+    result.dword(0, fun(_, _): Int {
+        return code.getSize()
+    })
+    result.addTo(codeBox)
+    code.addTo(codeBox)
+    return codeBox
+}
+
+fun jle(code: CodeBox): CodeBox {
+    val codeBox = CodeBox()
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x8E)
+    result.dword(0, fun(_, _): Int {
+        return code.getSize()
+    })
+    result.addTo(codeBox)
+    code.addTo(codeBox)
+    return codeBox
+}
+
+/**
  * Jz
  * 如果EAX值为0那么跳转。
  * @param code
  * @return
  */
-fun jz(code: CodeBox): CodeItem {
+fun jz(code: CodeBox): CodeBox {
+    val box = CodeBox()
     val result = CodeItem()
     result.byte(0x0F)
     result.byte(0x84)
     result.dword(0, "jz")
-    result.fix(0, "jz", fun(_,_): Int {
+    result.fix(0, "jz", fun(_, _): Int {
         return code.getSize()
     })
-    return result
+    result.addTo(box)
+    code.addTo(box)
+    return box
 }
 
 /**
@@ -237,8 +495,8 @@ fun jnz(code: CodeBox): CodeItem {
     result.byte(0x0F)
     result.byte(0x85)
     result.dword(0, "jnz")
-    result.fix(0, "jnz", fun(_,_): Int {
-        return code.getSize()
+    result.fix(0, "jnz", fun(_, _): Int {
+        return code.getSize() - 1
     })
     return result
 }
