@@ -305,7 +305,7 @@ open class MyStatic(app: Application) : MyClass(app) {
                             return Pair(BoolType, codeBox)
                         } else TODO()
                     }
-                    op_inc -> {
+                    op_inc, op_dec -> {
                         if (left !is ASTVoid && right is ASTVoid) {
 //                            a++
 //                            val result = parseFunExpression(scope, left)
@@ -314,7 +314,10 @@ open class MyStatic(app: Application) : MyClass(app) {
                                 assert(variable.type is IntType)
                                 mov(EAX, Addr(EBP, variable.offset)).addTo(codeBox)
                                 mov(EDX, EAX).addTo(codeBox)
-                                add(EDX, 1).addTo(codeBox)
+                                when (operator) {
+                                    is op_inc -> add(EDX, 1).addTo(codeBox)
+                                    is op_dec -> sub(EDX, 1).addTo(codeBox)
+                                }
                                 mov(Addr(EBP, variable.offset), EDX).addTo(codeBox)
                                 return Pair(IntType, codeBox)
                             } else TODO()
@@ -324,38 +327,15 @@ open class MyStatic(app: Application) : MyClass(app) {
                                 val variable = scope.findVariable(left.value.value)
                                 assert(variable.type is IntType)
                                 mov(EAX, Addr(EBP, variable.offset)).addTo(codeBox)
-                                add(EAX, 1).addTo(codeBox)
+                                when (operator) {
+                                    is op_inc -> add(EAX, 1).addTo(codeBox)
+                                    is op_dec -> sub(EAX, 1).addTo(codeBox)
+                                }
                                 mov(Addr(EBP, variable.offset), EAX).addTo(codeBox)
                                 return Pair(IntType, codeBox)
                             } else TODO()
                         }
                     }
-                    op_dec -> {
-                        if (left !is ASTVoid && right is ASTVoid) {
-//                            a--
-//                            val result = parseFunExpression(scope, left)
-                            if (left is ASTNodeWord) {
-                                val variable = scope.findVariable(left.value.value)
-                                assert(variable.type is IntType)
-                                mov(EAX, Addr(EBP, variable.offset)).addTo(codeBox)
-                                mov(EDX, EAX).addTo(codeBox)
-                                sub(EDX, 1).addTo(codeBox)
-                                mov(Addr(EBP, variable.offset), EDX).addTo(codeBox)
-                                return Pair(IntType, codeBox)
-                            } else TODO()
-                        } else if (left is ASTVoid && right !is ASTVoid) {
-//                            --a
-                            if (left is ASTNodeWord) {
-                                val variable = scope.findVariable(left.value.value)
-                                assert(variable.type is IntType)
-                                mov(EAX, Addr(EBP, variable.offset)).addTo(codeBox)
-                                sub(EAX, 1).addTo(codeBox)
-                                mov(Addr(EBP, variable.offset), EAX).addTo(codeBox)
-                                return Pair(IntType, codeBox)
-                            } else TODO()
-                        }
-                    }
-
                     else -> {
                         throw Exception("暂不支持的操作符${ast.op.operator.javaClass.simpleName}：${ast.op.operator.word}")
                     }
