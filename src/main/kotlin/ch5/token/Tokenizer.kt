@@ -1,7 +1,6 @@
 package ch5.token
 
 
-
 /**
  * Tokenizer
  * 分词器
@@ -420,6 +419,11 @@ class Tokenizer(var code: String) {
                 }
                 is Token_Double -> {
                     when (c) {
+                        '.' -> {
+                            index--
+                            token = Token_Int(token.number.toInt())
+                            return token
+                        }
                         in '0'..'9' -> {
                             token.pos *= 0.1
                             token.number += (c.toInt() - 48) * token.pos

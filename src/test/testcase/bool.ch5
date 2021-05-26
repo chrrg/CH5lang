@@ -15,6 +15,10 @@ main{
         "a==60是对的！" println
     else
         "都不是" println
-
+    val text string = if 1 == 1
+        "成功"
+    else
+        "失败"
+    text println // 输出成功
     "运行结束！" println
 }

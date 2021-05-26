@@ -25,6 +25,14 @@ fun ret(): CodeItem {
     return result
 }
 
+fun ret(value: Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0xC2)
+    result.word(value)
+    return result
+}
+
+
 /**
  * Push
  * 向段中插入参数所指定的地址的值。
@@ -265,6 +273,34 @@ fun add(register: Win32Register, register2: Win32Register): CodeItem {
     return result
 }
 
+fun add(addr: Addr, value: Int): CodeItem {
+    val result = CodeItem()
+    addr.register?.let {
+        if (addr.value == 0) {
+            result.byte(0x81)
+            if (it is EBP) {
+                result.byte(0x45)
+                result.byte(0x00)
+            } else
+                result.byte(0x00 + it.value)
+            if (it is ESP) result.byte(0x24)
+            result.dword(value)
+        } else {
+            result.byte(0x81)
+            result.byte(0x80 + it.value)
+            if (it is ESP) result.byte(0x24)
+            result.dword(addr.value)
+            result.dword(value)
+        }
+    } ?: run {
+        result.byte(0x81)
+        result.byte(0x05)
+        result.dword(addr.value)
+        result.dword(value)
+    }
+    return result
+}
+
 fun add(register: Win32Register, value: Int): CodeItem {
     val result = CodeItem()
     result.byte(0x81)
@@ -293,6 +329,7 @@ fun cmp(addr: Addr, register: Win32Register): CodeItem {
     addr.register?.let {
         result.byte(0x39)
         result.byte(0x80 + it.value + register.value * 8)
+        if (it is ESP) result.byte(0x24)
         result.dword(addr.value)
     } ?: run {
         result.byte(0x39)
@@ -420,6 +457,14 @@ fun jg(code: CodeBox): CodeBox {
     return codeBox
 }
 
+fun jg(fn: (Int, BuildStruct) -> Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x8F)
+    result.dword(0, fn)
+    return result
+}
+
 fun jg(code: CodeBox, code2: CodeBox): CodeBox {
     val codeBox = CodeBox()
     val result = CodeItem()
@@ -451,6 +496,14 @@ fun jge(code: CodeBox): CodeBox {
     result.addTo(codeBox)
     code.addTo(codeBox)
     return codeBox
+}
+
+fun jge(fn: (Int, BuildStruct) -> Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x8D)
+    result.dword(0, fn)
+    return result
 }
 
 fun jge(code: CodeBox, code2: CodeBox): CodeBox {
@@ -485,6 +538,13 @@ fun jmp(code: CodeBox): CodeBox {
     return codeBox
 }
 
+fun jmp(fn: (Int, BuildStruct) -> Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0xE9)
+    result.dword(0, fn)
+    return result
+}
+
 fun jl(code: CodeBox): CodeBox {
     val codeBox = CodeBox()
     val result = CodeItem()
@@ -495,6 +555,34 @@ fun jl(code: CodeBox): CodeBox {
     })
     result.addTo(codeBox)
     code.addTo(codeBox)
+    return codeBox
+}
+
+fun jl(fn: (Int, BuildStruct) -> Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x8C)
+    result.dword(0, fn)
+    return result
+}
+
+fun jl(code: CodeBox, code2: CodeBox): CodeBox {
+    val codeBox = CodeBox()
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x8C)
+    result.dword(0, fun(_, _): Int {
+        return code.getSize()
+    })
+    result.addTo(codeBox)
+    val result2 = CodeItem()
+    result2.byte(0xE9)
+    result2.dword(0, fun(_, _): Int {
+        return code2.getSize()
+    })
+    result2.addTo(code.getAfter())
+    code.addTo(codeBox)
+    code2.addTo(codeBox)
     return codeBox
 }
 
@@ -509,6 +597,14 @@ fun jle(code: CodeBox): CodeBox {
     result.addTo(codeBox)
     code.addTo(codeBox)
     return codeBox
+}
+
+fun jle(fn: (Int, BuildStruct) -> Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x8E)
+    result.dword(0, fn)
+    return result
 }
 
 /**
@@ -550,6 +646,14 @@ fun jz(code: CodeBox, code2: CodeBox): CodeBox {
     return codeBox
 }
 
+fun jz(fn: (Int, BuildStruct) -> Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x84)
+    result.dword(0, fn)
+    return result
+}
+
 /**
  * Jnz
  * 如果EAX值不为0，那么跳转。
@@ -564,5 +668,90 @@ fun jnz(code: CodeBox): CodeItem {
     result.fix(0, "jnz", fun(_, _): Int {
         return code.getSize() - 1
     })
+    return result
+}
+
+fun jnz(fn: (Int, BuildStruct) -> Int): CodeItem {
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x85)
+    result.dword(0, fn)
+    return result
+}
+
+/**
+ * Fld
+ * 浮点数push
+ * @param addr
+ */
+fun fld(addr: Addr): CodeItem {
+    val result = CodeItem()
+    result.byte(0xD9)
+    addr.register?.let {
+        if (it.value == 0) {
+            if (it is EBP) {
+                result.byte(0x45)
+                result.byte(0x00)
+            } else {
+                result.byte(0x00 + it.value)
+                if (it is ESP) result.byte(0x24)
+            }
+        } else {
+            result.byte(0x80 + it.value)
+            if (it is ESP) result.byte(0x24)
+            result.dword(addr.value)
+        }
+    } ?: run {
+        result.byte(0x05)
+        result.dword(addr.value)
+    }
+    return result
+}
+
+fun fstp(addr: Addr): CodeItem {
+    val result = CodeItem()
+    result.byte(0xD9)
+    addr.register?.let {
+        if (it.value == 0) {
+            if (it is EBP) {
+                result.byte(0x5D)
+                result.byte(0x00)
+            } else {
+                result.byte(0x18 + it.value)
+                if (it is ESP) result.byte(0x24)
+            }
+        } else {
+            result.byte(0x98 + it.value)
+            if (it is ESP) result.byte(0x24)
+            result.dword(addr.value)
+        }
+    } ?: run {
+        result.byte(0x1D)
+        result.dword(addr.value)
+    }
+    return result
+}
+
+fun fadd(addr: Addr): CodeItem {
+    val result = CodeItem()
+    result.byte(0xD8)
+    addr.register?.let {
+        if (it.value == 0) {
+            if (it is EBP) {
+                result.byte(0x45)
+                result.byte(0x00)
+            } else {
+                result.byte(0x00 + it.value)
+                if (it is ESP) result.byte(0x24)
+            }
+        } else {
+            result.byte(0x80 + it.value)
+            if (it is ESP) result.byte(0x24)
+            result.dword(addr.value)
+        }
+    } ?: run {
+        result.byte(0x05)
+        result.dword(addr.value)
+    }
     return result
 }

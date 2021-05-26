@@ -16,6 +16,11 @@ import java.io.FileInputStream
  */
 abstract class DataType {
     abstract fun getSize(): Int
+    fun getSize(minSize: Int): Int {
+        val size = getSize()
+        if (size < minSize) return minSize
+        return size
+    }
 
     override operator fun equals(other: Any?): Boolean {
         if (super.equals(other)) return true
@@ -49,6 +54,10 @@ object BoolType : PrimitiveType("bool") {
 }
 
 object IntType : PrimitiveType("int") {
+    override fun getSize() = 4
+}
+
+object FloatType : PrimitiveType("float") {
     override fun getSize() = 4
 }
 
@@ -188,7 +197,7 @@ class PreFile(app: Application, val file: File) : PreStatic(app) {
                     }
                 }
                 is ASTOuterVar -> {
-                    if(i.names.size != 1) TODO()
+                    if (i.names.size != 1) TODO()
                     val variable = DefVariable()
                     variable.ast = i
                     variable.name = i.names[0].name.value
@@ -214,16 +223,13 @@ class PreFile(app: Application, val file: File) : PreStatic(app) {
                         } else TODO()
                     }
                     i.type?.let {
-                        function.type=parseDataType(it)
+                        function.type = parseDataType(it)
                     }
                     var paramSize = 0
                     function.param.forEach {
-                        paramSize += it.type.getSize()
+                        paramSize += 4
                     }
-//                    function.func.setParamSize(paramSize)todo
-                    i.type?.let {
-                        function.type = parseDataType(it)
-                    }
+                    function.func.setParamSize(paramSize)
                     funList.add(function)
                 }
                 else -> {

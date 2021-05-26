@@ -78,7 +78,6 @@ open class ByteArraySection : Section {
     fun byte(value: Int) {
         byte.write(value)
     }
-
     override fun getByteArray(): ByteArray {
         if (!enable) return byteArrayOf()
         return byte.toByteArray()

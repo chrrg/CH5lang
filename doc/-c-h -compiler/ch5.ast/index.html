@@ -1,0 +1,617 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ch5.ast</title>
+<link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../";</script><script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async="async"></script><link href="../../styles/style.css" rel="Stylesheet"><link href="../../styles/logo-styles.css" rel="Stylesheet"><link href="../../styles/jetbrains-mono.css" rel="Stylesheet"><link href="../../styles/main.css" rel="Stylesheet"><script type="text/javascript" src="../../scripts/clipboard.js" async="async"></script><script type="text/javascript" src="../../scripts/navigation-loader.js" async="async"></script><script type="text/javascript" src="../../scripts/platform-content-handler.js" async="async"></script><script type="text/javascript" src="../../scripts/main.js" async="async"></script>  </head>
+  <body>
+    <div id="container">
+      <div id="leftColumn"><a href="../../index.html">
+          <div id="logo"></div>
+        </a>
+        <div id="paneSearch"></div>
+        <div id="sideMenu"></div>
+      </div>
+      <div id="main">
+        <div id="leftToggler"><span class="icon-toggler"></span></div>
+<script type="text/javascript" src="../../scripts/main.js"></script>        <div class="main-content" id="content" pageIds="CH Compiler::ch5.ast////PointingToDeclaration//769193423">
+          <div class="navigation-wrapper" id="navigation-wrapper">
+            <div class="breadcrumbs"><a href="../../index.html">CH Compiler</a>/<a href="index.html">ch5.ast</a></div>
+            <div class="pull-right d-flex">
+              <div id="searchBar"></div>
+            </div>
+          </div>
+          <div class="cover ">
+            <h1 class="cover"><span>Package ch5.</span><wbr></wbr><span>ast</span></h1>
+          </div>
+          <div class="tabbedcontent">
+            <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button></div>
+            <div class="tabs-section-body">
+              <h2 class="">Types</h2>
+              <div class="table" data-togglable="Types"><a data-name="1798299706%2FClasslikes%2F769193423" anchor-label="AST" id="1798299706%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t/index.html">AST</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1798299706%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t/index.html">AST</a>(tokens: <a href="../ch5.token/-tokenizer/index.html">Tokenizer</a>)<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="1798299706%2FClasslikes%2F769193423" anchor-label="AST" id="1798299706%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="1798299706%2FClasslikes%2F769193423" anchor-label="AST" id="1798299706%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>语法树 重构 by CH 20201222 文件转语法树 目前无语义 每条表达式需体现元组 输出文件的语法树容器</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1415039879%2FClasslikes%2F769193423" anchor-label="ASTBinary" id="-1415039879%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-binary/index.html">ASTBinary</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1415039879%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-binary/index.html">ASTBinary</a>(op: <a href="../ch5.token/-token_-operator/index.html">Token_Operator</a>, left: <a href="-a-s-t-expression/index.html">ASTExpression</a>, right: <a href="-a-s-t-expression/index.html">ASTExpression</a>) : <a href="-a-s-t-expression/index.html">ASTExpression</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="-1415039879%2FClasslikes%2F769193423" anchor-label="ASTBinary" id="-1415039879%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="-1415039879%2FClasslikes%2F769193423" anchor-label="ASTBinary" id="-1415039879%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast binary</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-556241156%2FClasslikes%2F769193423" anchor-label="ASTCall" id="-556241156%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-call/index.html">ASTCall</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-556241156%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-call/index.html">ASTCall</a>(caller: <a href="-a-s-t-expression/index.html">ASTExpression</a>, value: <a href="-a-s-t-expression/index.html">ASTExpression</a>) : <a href="-a-s-t-expression/index.html">ASTExpression</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="-556241156%2FClasslikes%2F769193423" anchor-label="ASTCall" id="-556241156%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="-556241156%2FClasslikes%2F769193423" anchor-label="ASTCall" id="-556241156%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast call 函数调用</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-167074960%2FClasslikes%2F769193423" anchor-label="ASTClass" id="-167074960%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-class/index.html">ASTClass</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-167074960%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-class/index.html">ASTClass</a>(name: <a href="../ch5.token/-token_-string/index.html">Token_String</a>) : <a href="-a-s-t-container/index.html">ASTContainer</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="-167074960%2FClasslikes%2F769193423" anchor-label="ASTClass" id="-167074960%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="-167074960%2FClasslikes%2F769193423" anchor-label="ASTClass" id="-167074960%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast class 类</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1856739591%2FClasslikes%2F769193423" anchor-label="ASTContainer" id="1856739591%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-container/index.html">ASTContainer</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1856739591%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">open class <a href="-a-s-t-container/index.html">ASTContainer</a> : <a href="-a-s-t-outer/index.html">ASTOuter</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="1856739591%2FClasslikes%2F769193423" anchor-label="ASTContainer" id="1856739591%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="1856739591%2FClasslikes%2F769193423" anchor-label="ASTContainer" id="1856739591%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast container 函数外使用的 包裹语句的容器</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1646544278%2FClasslikes%2F769193423" anchor-label="ASTDataType" id="1646544278%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-data-type/index.html">ASTDataType</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1646544278%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">open class <a href="-a-s-t-data-type/index.html">ASTDataType</a>(canNull: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>)<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="1646544278%2FClasslikes%2F769193423" anchor-label="ASTDataType" id="1646544278%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="1646544278%2FClasslikes%2F769193423" anchor-label="ASTDataType" id="1646544278%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast data type 数据类型的父类</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="2014558530%2FClasslikes%2F769193423" anchor-label="ASTExpression" id="2014558530%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-expression/index.html">ASTExpression</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2014558530%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">open class <a href="-a-s-t-expression/index.html">ASTExpression</a> : <a href="-a-s-t-inner/index.html">ASTInner</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="2014558530%2FClasslikes%2F769193423" anchor-label="ASTExpression" id="2014558530%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="2014558530%2FClasslikes%2F769193423" anchor-label="ASTExpression" id="2014558530%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast expression 所有函数内的表达式</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="341272831%2FClasslikes%2F769193423" anchor-label="ASTExpressionContainer" id="341272831%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-expression-container/index.html">ASTExpressionContainer</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="341272831%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-expression-container/index.html">ASTExpressionContainer</a> : <a href="-a-s-t-expression/index.html">ASTExpression</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="341272831%2FClasslikes%2F769193423" anchor-label="ASTExpressionContainer" id="341272831%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="341272831%2FClasslikes%2F769193423" anchor-label="ASTExpressionContainer" id="341272831%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>ASTExpressionContainer 一组函数内语句的集合</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="2069491455%2FClasslikes%2F769193423" anchor-label="ASTFor" id="2069491455%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-for/index.html">ASTFor</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2069491455%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-for/index.html">ASTFor</a>(condition: <a href="-a-s-t-expression/index.html">ASTExpression</a>, trueBranch: <a href="-a-s-t-expression/index.html">ASTExpression</a>?, falseBrach: <a href="-a-s-t-expression/index.html">ASTExpression</a>?) : <a href="-a-s-t-expression/index.html">ASTExpression</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="2069491455%2FClasslikes%2F769193423" anchor-label="ASTFor" id="2069491455%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="2069491455%2FClasslikes%2F769193423" anchor-label="ASTFor" id="2069491455%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Astfor</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1357993844%2FClasslikes%2F769193423" anchor-label="ASTFunParam" id="-1357993844%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-fun-param/index.html">ASTFunParam</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1357993844%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-fun-param/index.html">ASTFunParam</a>(name: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>, isArr: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>, type: <a href="-a-s-t-data-type/index.html">ASTDataType</a>) : <a href="-a-s-t-param/index.html">ASTParam</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="-1357993844%2FClasslikes%2F769193423" anchor-label="ASTFunParam" id="-1357993844%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="-1357993844%2FClasslikes%2F769193423" anchor-label="ASTFunParam" id="-1357993844%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast fun param 函数的一个参数</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-559955851%2FClasslikes%2F769193423" anchor-label="ASTFunParamDefault" id="-559955851%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-fun-param-default/index.html">ASTFunParamDefault</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-559955851%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-fun-param-default/index.html">ASTFunParamDefault</a>(name: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>, isArr: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>, default: <a href="-a-s-t-data-type/index.html">ASTDataType</a>) : <a href="-a-s-t-param/index.html">ASTParam</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="-559955851%2FClasslikes%2F769193423" anchor-label="ASTFunParamDefault" id="-559955851%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="-559955851%2FClasslikes%2F769193423" anchor-label="ASTFunParamDefault" id="-559955851%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast fun param default 函数的一个参数 带默认值</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1152018269%2FClasslikes%2F769193423" anchor-label="ASTIf" id="1152018269%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-if/index.html">ASTIf</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1152018269%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-if/index.html">ASTIf</a>(condition: <a href="-a-s-t-expression/index.html">ASTExpression</a>, trueBranch: <a href="-a-s-t-expression/index.html">ASTExpression</a>?, falseBrach: <a href="-a-s-t-expression/index.html">ASTExpression</a>?) : <a href="-a-s-t-expression/index.html">ASTExpression</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="1152018269%2FClasslikes%2F769193423" anchor-label="ASTIf" id="1152018269%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="1152018269%2FClasslikes%2F769193423" anchor-label="ASTIf" id="1152018269%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Astif</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1249383083%2FClasslikes%2F769193423" anchor-label="ASTImport" id="-1249383083%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-import/index.html">ASTImport</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1249383083%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-import/index.html">ASTImport</a> : <a href="-a-s-t-outer/index.html">ASTOuter</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="-1249383083%2FClasslikes%2F769193423" anchor-label="ASTImport" id="-1249383083%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="-1249383083%2FClasslikes%2F769193423" anchor-label="ASTImport" id="-1249383083%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast import 导入语句</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1661703250%2FClasslikes%2F769193423" anchor-label="ASTInner" id="1661703250%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-inner/index.html">ASTInner</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1661703250%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">open class <a href="-a-s-t-inner/index.html">ASTInner</a> : <a href="-a-s-t-syntax/index.html">ASTSyntax</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="1661703250%2FClasslikes%2F769193423" anchor-label="ASTInner" id="1661703250%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="1661703250%2FClasslikes%2F769193423" anchor-label="ASTInner" id="1661703250%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast inner 函数内使用的语法</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-300011703%2FClasslikes%2F769193423" anchor-label="ASTInnerVar" id="-300011703%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-inner-var/index.html">ASTInnerVar</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-300011703%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-inner-var/index.html">ASTInnerVar</a> : <a href="-a-s-t-expression/index.html">ASTExpression</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="-300011703%2FClasslikes%2F769193423" anchor-label="ASTInnerVar" id="-300011703%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="-300011703%2FClasslikes%2F769193423" anchor-label="ASTInnerVar" id="-300011703%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast inner var 函数内使用的var和val</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1788967879%2FClasslikes%2F769193423" anchor-label="ASTNodeDouble" id="1788967879%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-node-double/index.html">ASTNodeDouble</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1788967879%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-node-double/index.html">ASTNodeDouble</a>(value: <a href="../ch5.token/-token_-double/index.html">Token_Double</a>) : <a href="-a-s-t-expression/index.html">ASTExpression</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="1788967879%2FClasslikes%2F769193423" anchor-label="ASTNodeDouble" id="1788967879%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="1788967879%2FClasslikes%2F769193423" anchor-label="ASTNodeDouble" id="1788967879%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast node double 小数常量字面量节点</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1017418299%2FClasslikes%2F769193423" anchor-label="ASTNodeInt" id="1017418299%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-node-int/index.html">ASTNodeInt</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1017418299%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-node-int/index.html">ASTNodeInt</a>(value: <a href="../ch5.token/-token_-int/index.html">Token_Int</a>) : <a href="-a-s-t-expression/index.html">ASTExpression</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="1017418299%2FClasslikes%2F769193423" anchor-label="ASTNodeInt" id="1017418299%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="1017418299%2FClasslikes%2F769193423" anchor-label="ASTNodeInt" id="1017418299%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast node int 整数常量字面量节点</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="935387015%2FClasslikes%2F769193423" anchor-label="ASTNodeString" id="935387015%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-node-string/index.html">ASTNodeString</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="935387015%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-node-string/index.html">ASTNodeString</a>(value: <a href="../ch5.token/-token_-string/index.html">Token_String</a>) : <a href="-a-s-t-expression/index.html">ASTExpression</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="935387015%2FClasslikes%2F769193423" anchor-label="ASTNodeString" id="935387015%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="935387015%2FClasslikes%2F769193423" anchor-label="ASTNodeString" id="935387015%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast node string 字符串常量字面量节点</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-135694226%2FClasslikes%2F769193423" anchor-label="ASTNodeWord" id="-135694226%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-node-word/index.html">ASTNodeWord</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-135694226%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-node-word/index.html">ASTNodeWord</a>(value: <a href="../ch5.token/-token_-word/index.html">Token_Word</a>) : <a href="-a-s-t-expression/index.html">ASTExpression</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="-135694226%2FClasslikes%2F769193423" anchor-label="ASTNodeWord" id="-135694226%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="-135694226%2FClasslikes%2F769193423" anchor-label="ASTNodeWord" id="-135694226%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast node word 单词节点</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="757925325%2FClasslikes%2F769193423" anchor-label="ASTOuter" id="757925325%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-outer/index.html">ASTOuter</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="757925325%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">open class <a href="-a-s-t-outer/index.html">ASTOuter</a> : <a href="-a-s-t-syntax/index.html">ASTSyntax</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="757925325%2FClasslikes%2F769193423" anchor-label="ASTOuter" id="757925325%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="757925325%2FClasslikes%2F769193423" anchor-label="ASTOuter" id="757925325%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast outer 函数外使用的语法</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="2110952598%2FClasslikes%2F769193423" anchor-label="ASTOuterFun" id="2110952598%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-outer-fun/index.html">ASTOuterFun</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2110952598%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-outer-fun/index.html">ASTOuterFun</a> : <a href="-a-s-t-outer/index.html">ASTOuter</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="2110952598%2FClasslikes%2F769193423" anchor-label="ASTOuterFun" id="2110952598%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="2110952598%2FClasslikes%2F769193423" anchor-label="ASTOuterFun" id="2110952598%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast outer fun 定义在函数外面的函数</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="401803246%2FClasslikes%2F769193423" anchor-label="ASTOuterVar" id="401803246%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-outer-var/index.html">ASTOuterVar</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="401803246%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-outer-var/index.html">ASTOuterVar</a> : <a href="-a-s-t-outer/index.html">ASTOuter</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="401803246%2FClasslikes%2F769193423" anchor-label="ASTOuterVar" id="401803246%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="401803246%2FClasslikes%2F769193423" anchor-label="ASTOuterVar" id="401803246%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast outer var 函数外定义的变量</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="594994683%2FClasslikes%2F769193423" anchor-label="ASTParam" id="594994683%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-param/index.html">ASTParam</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="594994683%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">open class <a href="-a-s-t-param/index.html">ASTParam</a>(name: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>, isArr: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>)<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="594994683%2FClasslikes%2F769193423" anchor-label="ASTParam" id="594994683%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="594994683%2FClasslikes%2F769193423" anchor-label="ASTParam" id="594994683%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast param 定义的参数</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1334372692%2FClasslikes%2F769193423" anchor-label="ASTStatic" id="-1334372692%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-static/index.html">ASTStatic</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1334372692%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-static/index.html">ASTStatic</a>(name: <a href="../ch5.token/-token_-string/index.html">Token_String</a>) : <a href="-a-s-t-container/index.html">ASTContainer</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="-1334372692%2FClasslikes%2F769193423" anchor-label="ASTStatic" id="-1334372692%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="-1334372692%2FClasslikes%2F769193423" anchor-label="ASTStatic" id="-1334372692%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast static 静态对象</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="691033815%2FClasslikes%2F769193423" anchor-label="ASTSyntax" id="691033815%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-syntax/index.html">ASTSyntax</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="691033815%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">open class <a href="-a-s-t-syntax/index.html">ASTSyntax</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="691033815%2FClasslikes%2F769193423" anchor-label="ASTSyntax" id="691033815%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="691033815%2FClasslikes%2F769193423" anchor-label="ASTSyntax" id="691033815%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast syntax 语法 一行代码</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-428441824%2FClasslikes%2F769193423" anchor-label="ASTTuple" id="-428441824%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-tuple/index.html">ASTTuple</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-428441824%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-tuple/index.html">ASTTuple</a> : <a href="-a-s-t-expression/index.html">ASTExpression</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="-428441824%2FClasslikes%2F769193423" anchor-label="ASTTuple" id="-428441824%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="-428441824%2FClasslikes%2F769193423" anchor-label="ASTTuple" id="-428441824%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast tuple 元组</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-2011402231%2FClasslikes%2F769193423" anchor-label="ASTTypeArray" id="-2011402231%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-type-array/index.html">ASTTypeArray</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2011402231%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-type-array/index.html">ASTTypeArray</a>(word: <a href="-a-s-t-data-type/index.html">ASTDataType</a>, value: <a href="-a-s-t-expression/index.html">ASTExpression</a>) : <a href="-a-s-t-data-type/index.html">ASTDataType</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="-2011402231%2FClasslikes%2F769193423" anchor-label="ASTTypeArray" id="-2011402231%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="-2011402231%2FClasslikes%2F769193423" anchor-label="ASTTypeArray" id="-2011402231%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast type array 数组类型</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="728588811%2FClasslikes%2F769193423" anchor-label="ASTTypeGeneric" id="728588811%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-type-generic/index.html">ASTTypeGeneric</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="728588811%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-type-generic/index.html">ASTTypeGeneric</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="728588811%2FClasslikes%2F769193423" anchor-label="ASTTypeGeneric" id="728588811%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="728588811%2FClasslikes%2F769193423" anchor-label="ASTTypeGeneric" id="728588811%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast type generic 范型类型</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="935576118%2FClasslikes%2F769193423" anchor-label="ASTTypeWord" id="935576118%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-type-word/index.html">ASTTypeWord</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="935576118%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-type-word/index.html">ASTTypeWord</a>(value: <a href="-a-s-t-words/index.html">ASTWords</a>, generic: <a href="-a-s-t-type-generic/index.html">ASTTypeGeneric</a>) : <a href="-a-s-t-data-type/index.html">ASTDataType</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="935576118%2FClasslikes%2F769193423" anchor-label="ASTTypeWord" id="935576118%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="935576118%2FClasslikes%2F769193423" anchor-label="ASTTypeWord" id="935576118%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast type word 类型</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1352171858%2FClasslikes%2F769193423" anchor-label="ASTUnaryLeft" id="1352171858%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-unary-left/index.html">ASTUnaryLeft</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1352171858%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-unary-left/index.html">ASTUnaryLeft</a>(operator: <a href="../ch5.token/-token_-operator/index.html">Token_Operator</a>, value: <a href="-a-s-t-expression/index.html">ASTExpression</a>) : <a href="-a-s-t-expression/index.html">ASTExpression</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="1352171858%2FClasslikes%2F769193423" anchor-label="ASTUnaryLeft" id="1352171858%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="1352171858%2FClasslikes%2F769193423" anchor-label="ASTUnaryLeft" id="1352171858%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast unary left 左目运算</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1446310067%2FClasslikes%2F769193423" anchor-label="ASTUnaryRight" id="-1446310067%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-unary-right/index.html">ASTUnaryRight</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1446310067%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-unary-right/index.html">ASTUnaryRight</a>(operator: <a href="../ch5.token/-token_-operator/index.html">Token_Operator</a>, value: <a href="-a-s-t-expression/index.html">ASTExpression</a>) : <a href="-a-s-t-expression/index.html">ASTExpression</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="-1446310067%2FClasslikes%2F769193423" anchor-label="ASTUnaryRight" id="-1446310067%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="-1446310067%2FClasslikes%2F769193423" anchor-label="ASTUnaryRight" id="-1446310067%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast unary right 右目运算</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-348440042%2FClasslikes%2F769193423" anchor-label="ASTVarName" id="-348440042%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-var-name/index.html">ASTVarName</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-348440042%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-var-name/index.html">ASTVarName</a>(name: <a href="../ch5.token/-token_-word/index.html">Token_Word</a>, type: <a href="-a-s-t-data-type/index.html">ASTDataType</a>?)<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="-348440042%2FClasslikes%2F769193423" anchor-label="ASTVarName" id="-348440042%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="-348440042%2FClasslikes%2F769193423" anchor-label="ASTVarName" id="-348440042%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast var name 变量名和变量类型</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1618411654%2FClasslikes%2F769193423" anchor-label="ASTVoid" id="1618411654%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-void/index.html">ASTVoid</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1618411654%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">object <a href="-a-s-t-void/index.html">ASTVoid</a> : <a href="-a-s-t-expression/index.html">ASTExpression</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="1618411654%2FClasslikes%2F769193423" anchor-label="ASTVoid" id="1618411654%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="1618411654%2FClasslikes%2F769193423" anchor-label="ASTVoid" id="1618411654%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast void 空语句</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="563690335%2FClasslikes%2F769193423" anchor-label="ASTWords" id="563690335%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>
+                <div class="table-row" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="-a-s-t-words/index.html">ASTWords</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="563690335%2FClasslikes%2F769193423"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title"><div class="divergent-group" data-filterable-current=":dokkaHtml/main" data-filterable-set=":dokkaHtml/main"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":dokkaHtml/main"><div class="symbol monospace">class <a href="-a-s-t-words/index.html">ASTWords</a>(word: <a href="../ch5.token/-token_-word/index.html">Token_Word</a>)<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<a data-name="563690335%2FClasslikes%2F769193423" anchor-label="ASTWords" id="563690335%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a><div class="brief "><a data-name="563690335%2FClasslikes%2F769193423" anchor-label="ASTWords" id="563690335%2FClasslikes%2F769193423" data-filterable-set=":dokkaHtml/main"></a>Ast words 链式单词 如 a.b.</div></div>
+</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span class="go-to-top-icon"><a href="#content"></a></span><span>© 2021 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span></div>
+      </div>
+    </div>
+  </body>
+</html>
+

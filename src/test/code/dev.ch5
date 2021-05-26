@@ -1,24 +1,112 @@
 import printf "msvcrt.dll"
-fun printf a string
+import ansiToInt "msvcrt.dll/atoi"
+import exit "KERNEl32.dll/ExitProcess"
+fun exit code int
+//import Beep "kernel32.dll"
+//import wsprintf "user32.dll"
+//import wsprintf "user32.dll"
+import MessageBoxA "user32.dll/MessageBoxA"
+fun MessageBoxA hwnd int,text string,caption string,type int:int
+//fun Beep dwFreq int,dwDuration int
+
+fun printf a string,b string
+fun printf a string,b int
+fun printf a string,b float
+fun printf a string,b float,c float,c float,c float
+
+//fun intToAnsi a int:string
+fun ansiToInt a string:int
+fun print str string{
+    "%s",str printf
+}
 fun println str string{
-    str printf
-    "\n"printf
+    "%s\n",str printf
 }
-init{
-    "第一次加载这个文件时运行" println
+fun println num int{
+    "%d\n",num printf
 }
-main{
-    val a = 100 / 2 + 10
-    if a == 50
-        "a==50是对的" println
-    else if a == 60
-        "a==60是对的！" println
+fun println bool bool{
+    if bool
+        "True" println
     else
-        "都不是" println
-    val text string= if 1==1
-        "成功"
-    else
-        "失败"
-    text println // 输出成功
-    "运行结束！" println
+        "False" println
 }
+fun add num1 int,num2 int : int{
+    = num1 + num2
+}
+fun string a bool:string{
+    if a
+        = "True"
+    else
+        = "False"
+}
+
+fun int a string:int{
+    =a ansiToInt
+}
+
+//fun string a int:string{
+//    = a intToAnsi
+//}
+fun fibonacci num int:int{
+    if num<=1;=num
+    = (num - 1 fibonacci) + (num - 2 fibonacci)
+}
+
+main {
+//    "%f",  printf
+//
+//    1 fibonacci println
+//    2 fibonacci println
+//    3 fibonacci println
+//    4 fibonacci println
+//    5 fibonacci println
+//    6 fibonacci println
+////
+//    0 exit
+//
+//    "程序开始！" println
+//    -100 println
+//    ("-100" int)+20 println
+//
+////    0,"你好！","消息",3 MessageBoxA
+//    "1 + 1 = " print
+//    1,1 add println
+//    (1,1 add) == 1 string println
+//    (1,1 add) == 2 string println
+//    (if 100==50*2
+//        "ok"
+//    else
+//        "no") println
+//
+//    val a=100
+//    var b="Hello"
+//    var true bool= (0==0)
+//    var false bool= 1!=1
+//    if 1 == 1{
+//        "成功"
+//    }else {
+//        "失败"
+//    } println
+//
+    if 1==3;"成功";else if true;"失败1";else{
+    "失败2"}println
+//    true println
+//
+//    var c = true
+//    c println
+//
+//
+//    a println
+//    b println
+//
+//
+//    val a=100
+//    val b=1000
+//    for i = a .. b {//1 2 3 4 5
+//        i println
+//    }
+//    "你好" println
+
+}
+

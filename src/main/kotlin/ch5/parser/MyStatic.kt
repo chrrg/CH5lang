@@ -81,29 +81,18 @@ open class MyStatic(app: Application) : MyClass(app) {
     }
 
     //解析简单表达式 不能解析return
-    fun parse(ast: ASTExpression?): Pair<DataType, CodeBox> {//返回数据类型和代码盒子
-        var type: DataType = VoidType
-        val codeBox = CodeBox()
-        if (ast == null) return Pair(VoidType, codeBox)
-        when (ast) {
-            is ASTNodeInt -> {
-                type = IntType
-                mov(EAX, ast.value.number).addTo(codeBox)
-            }
-            is ASTExpressionContainer -> {
-                type = VoidType
-                ast.container.forEach {
-                    val result = parse(it)
-                    type = result.first
-                    codeBox.add(result.second)
-                }
-            }
-            else -> {
-                throw Exception("无法解析：" + ast.javaClass.simpleName)
-            }
-        }
-        return Pair(type, codeBox)
-    }
+//    fun parse(ast: ASTExpression?): Pair<DataType, CodeBox> {//返回数据类型和代码盒子
+//        var type: DataType = VoidType
+//        val codeBox = CodeBox()
+//        if (ast == null) return Pair(VoidType, codeBox)
+//        when (ast) {
+//
+//            else -> {
+//                throw Exception("无法解析：" + ast.javaClass.simpleName)
+//            }
+//        }
+//        return Pair(type, codeBox)
+//    }
 
     fun parseDataType(type: ASTDataType): DataType {
         if (type is ASTTypeWord) {
@@ -112,6 +101,8 @@ open class MyStatic(app: Application) : MyClass(app) {
                 "int" -> IntType
                 "string" -> StringType
                 "bool" -> BoolType
+                "float" -> FloatType
+                "void" -> VoidType
                 else -> throw java.lang.Exception("无法找到类型")
             }
         }
@@ -151,13 +142,115 @@ open class MyStatic(app: Application) : MyClass(app) {
                     Pair(VoidType, codeBox)
                 }
             }
+            is ASTFor -> {
+                val condition = ast.condition
+                if (condition is ASTBinary) {
+                    val op = condition.op
+                    if (op.operator == op_assign) {//=
+                        val variable = DefLocalVariable()
+
+                        val left = condition.left
+                        if (left is ASTNodeWord) {
+                            val right = condition.right
+                            if (right is ASTBinary && (right.op.operator == op_dotdot || right.op.operator == op_dotdotdot)) {
+//                                right.left//初始值
+//                                right.right//初始值
+                                val result = parseFunExpression(scope, right.left)
+                                if (result.first == IntType) {
+                                    val result2 = parseFunExpression(scope, right.right)
+                                    if (result2.first == IntType) {
+                                        //这里确定了要进行优化
+                                        variable.name = left.value.value
+                                        variable.type = IntType
+                                        val forEndVariable = DefLocalVariable()//for 循环内部
+                                        forEndVariable.type = IntType//unuse
+                                        val forScope = LightScope(scope.func, scope)
+                                        variable.offset = function.func.allocStack(IntType.getSize(4))
+                                        forEndVariable.offset = function.func.allocStack(IntType.getSize(4))
+                                        forScope.varList.add(variable)
+                                        forScope.varList.add(forEndVariable)
+                                        result.second.addTo(codeBox)
+                                        mov(Addr(EBP, variable.offset), EAX).addTo(codeBox)//存到for循环的变量
+                                        result2.second.addTo(codeBox)
+                                        mov(Addr(EBP, forEndVariable.offset), EAX).addTo(codeBox)//存到for循环的结束条件变量
+                                        mov(EAX, Addr(EBP, forEndVariable.offset)).addTo(codeBox)//读取结束条件变量
+                                        cmp(Addr(EBP, variable.offset), EAX).addTo(codeBox)
+                                        val code1 = CodeBox()
+                                        val code2 = CodeBox()
+                                        val symbol1 = CodeBox()
+                                        val trueBranch = parseFunExpression(forScope, ast.trueBranch)
+                                        trueBranch.second.addTo(code1)
+                                        push(EAX).addTo(code1)
+                                        mov(EAX, Addr(EBP, variable.offset)).addTo(code1)
+                                        add(EAX, 1).addTo(code1)//将变量+1
+                                        mov(Addr(EBP, variable.offset), EAX).addTo(code1)
+
+                                        cmp(Addr(EBP, forEndVariable.offset), EAX).addTo(code1)//循环变量和最终值比较
+                                        pop(EAX).addTo(code1)
+                                        val symbol = CodeBox()
+                                        val fn = fun(_: Int, buildStruct: BuildStruct): Int {
+                                            return buildStruct.codeSection.offset(
+                                                symbol1
+                                            ) - buildStruct.codeSection.offset(
+                                                symbol
+                                            )//如果符合就跳出 跳出的地址
+                                        }
+                                        if (right.op.operator == op_dotdot)
+                                            jle(fn).addTo(code1)//如果不符合条件了那就跳出 否则跳到前面继续循环
+                                        else
+                                            jl(fn).addTo(code1)//如果不符合条件了那就跳出 否则跳到前面继续循环
+
+
+                                        symbol.addTo(code1)
+
+                                        val symbol0 = CodeBox()
+                                        jmp(fun(_, buildStruct: BuildStruct): Int {
+                                            return buildStruct.codeSection.offset(
+                                                code1
+                                            ) - buildStruct.codeSection.offset(
+                                                symbol0
+                                            )//跳回去
+                                        }).addTo(code1)
+                                        symbol0.addTo(code1)
+
+                                        val falseBranch = parseFunExpression(scope, ast.falseBrach)
+                                        falseBranch.second.addTo(code2)//如果一次循环都没有就执行
+                                        if (right.op.operator == op_dotdot)
+                                            jge(code1, code2).addTo(codeBox)
+                                        else
+                                            jg(code1, code2).addTo(codeBox)
+
+                                        symbol1.addTo(codeBox)
+                                        return Pair(VoidType, codeBox)
+                                    }
+
+
+//                                    for (i in 1..5 - 3) {
+//                                        println(i)
+//                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                TODO()
+//                println(ast)
+            }
             is ASTNodeString -> {
                 val str = app.buildStruct.dataSection.add(GBKByteArray(ast.value.value))
                 lea(EAX, AddrSection(str, app.buildStruct.dataSection)).addTo(codeBox)
                 return Pair(StringType, codeBox)
             }
             is ASTNodeWord -> {
-                val variable = parseVariable(scope, ast.value.value)
+                val name = ast.value.value
+                if (name == "true") {
+                    mov(EAX, 1).addTo(codeBox)
+                    return Pair(BoolType, codeBox)
+                } else if (name == "false") {
+                    mov(EAX, 0).addTo(codeBox)
+                    return Pair(BoolType, codeBox)
+                }
+                val variable = parseVariable(scope, name)
                 mov(EAX, variable.second).addTo(codeBox)
                 return Pair(variable.first, codeBox)
             }
@@ -182,7 +275,7 @@ open class MyStatic(app: Application) : MyClass(app) {
                 }
                 if (type == VoidType) throw Exception("变量${variable.name}需要指定类型")
                 variable.type = type
-                variable.offset = function.func.allocStack(type.getSize())
+                variable.offset = function.func.allocStack(type.getSize(4))
                 mov(Addr(EBP, variable.offset), EAX).addTo(codeBox)//然后赋值到栈中
                 scope.varList.add(variable)
                 return Pair(type, codeBox)
@@ -190,6 +283,7 @@ open class MyStatic(app: Application) : MyClass(app) {
             is ASTExpressionContainer -> {
                 ast.container.forEach {
                     val result = parseFunExpression(scope, it)
+                    type = result.first
                     codeBox.add(result.second)
                 }
                 return Pair(type, codeBox)
@@ -220,11 +314,17 @@ open class MyStatic(app: Application) : MyClass(app) {
                         //return todo 需要验证类型是否匹配
                         if (left == ASTVoid) {
                             //return
-                            TODO()
+                            val result = parseFunExpression(scope, right)
+                            result.second.addTo(codeBox)
+                            leave().addTo(codeBox)
+                            ret(scope.func.func.getParamSize()).addTo(codeBox)
+                            if (result.first != scope.func.type) throw Exception("函数的返回类型不匹配！")
+                            type = result.first
+                            return Pair(type, codeBox)
                         } else {
                             //赋值
                             val result = parseFunExpression(scope, right)
-                            codeBox.add(result.second)
+                            result.second.addTo(codeBox)
                             if (left is ASTNodeWord) {
                                 val variable = parseVariable(scope, left.value.value)
                                 if (variable.first != result.first) {
@@ -232,29 +332,48 @@ open class MyStatic(app: Application) : MyClass(app) {
                                     throw Exception("赋值变量" + left.value.value + "类型不匹配！")
                                 }
                                 mov(variable.second, EAX).addTo(codeBox)
+                                type = variable.first
                             } else TODO()
                             return Pair(type, codeBox)
                         }
                     }
                     op_add -> {
                         val result1 = parseFunExpression(scope, left)
-                        result1.second.addTo(codeBox)
-                        push(EAX).addTo(codeBox)
                         val result2 = parseFunExpression(scope, right)
-                        result2.second.addTo(codeBox)
+
                         if (result1.first == IntType && result2.first == IntType) {
+                            result1.second.addTo(codeBox)
+                            push(EAX).addTo(codeBox)
+                            result2.second.addTo(codeBox)
                             pop(EDX).addTo(codeBox)
                             add(EAX, EDX).addTo(codeBox)
                             return Pair(IntType, codeBox)
+                        } else if (result1.first == FloatType && result2.first == FloatType) {
+                            result1.second.addTo(codeBox)
+                            push(EAX).addTo(codeBox)
+                            fld(Addr(ESP)).addTo(codeBox)
+                            pop(EAX).addTo(codeBox)
+                            result2.second.addTo(codeBox)
+                            push(EAX).addTo(codeBox)
+                            fadd(Addr(ESP)).addTo(codeBox)
+                            fstp(Addr(ESP)).addTo(codeBox)
+                            pop(EAX).addTo(codeBox)
+                            return Pair(FloatType, codeBox)
                         } else TODO()
                     }
                     op_minus -> {
-                        val result1 = parseFunExpression(scope, left)
-                        result1.second.addTo(codeBox)
+                        if (left is ASTVoid) {
+                            type = IntType
+                            mov(EAX, 0).addTo(codeBox)
+                        } else {
+                            val result1 = parseFunExpression(scope, left)
+                            type = result1.first
+                            result1.second.addTo(codeBox)
+                        }
                         push(EAX).addTo(codeBox)
                         val result2 = parseFunExpression(scope, right)
                         result2.second.addTo(codeBox)
-                        if (result1.first == IntType && result2.first == IntType) {
+                        if (type == IntType && result2.first == IntType) {
                             push(EAX).addTo(codeBox)
                             pop(EDX).addTo(codeBox)
                             pop(EAX).addTo(codeBox)
@@ -428,8 +547,18 @@ open class MyStatic(app: Application) : MyClass(app) {
                     return Pair(func.type, codeBox)
                 } else TODO()
             }
+            is ASTNodeInt -> {
+                type = IntType
+                mov(EAX, ast.value.number).addTo(codeBox)
+                return Pair(type, codeBox)
+            }
+            is ASTNodeDouble -> {
+                type = FloatType
+                mov(EAX, java.lang.Float.floatToIntBits(ast.value.number.toFloat())).addTo(codeBox)
+                return Pair(type, codeBox)
+            }
         }
-        return parse(ast)
+        throw Exception("无法解析语法：" + ast.javaClass.simpleName)
     }
 
     override fun build() {
@@ -474,13 +603,13 @@ open class MyStatic(app: Application) : MyClass(app) {
 //        }
 
         varList.forEach {
-            val result = parse(it.ast?.expr)
+            val result = parseFunExpression(LightScope(funList.find { it.name == "init" }!!), it.ast?.expr)
             it.type = result.first
             it.initCode = result.second
         }
         funList.forEach {
             val result = parseFunExpression(LightScope(it), it.ast?.exprbody)
-            it.type = result.first//todo
+            if (it.type == VoidType) it.type = result.first//todo
             it.func.code.add(result.second)
         }
         //到这里就解析完了

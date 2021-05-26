@@ -16,7 +16,11 @@ class AST(private val tokens: Tokenizer) {
     companion object {
         fun OperateType(node: Token_Operator): Int {
             when (node.operator.word) {
-                "+", "-", "*", "/", "%", ".", ",", "=", "/=", "*=", "%=", "+=", "-=", "<<=", ">>=", "&=", "^=", "|=", "=>", "/=>", "*=>", "%=>", "+=>", "-=>", "<<=>", ">>=>", "&=>", "^=>", "|=>", "||", "&&", "|", "&", "==", "!=", "^", ">", "<", ">=", "<=", ">>", "<<" -> return 2 //双目运算符
+                "+", "-", "*", "/", "%", ".", ",",
+                "=", "/=", "*=", "%=", "+=", "-=", "<<=", ">>=", "&=", "^=", "|=",
+                "=>", "/=>", "*=>", "%=>", "+=>", "-=>", "<<=>", ">>=>", "&=>", "^=>", "|=>",
+                "||", "&&", "|", "&", "==", "!=", "^", ">", "<", ">=", "<=",
+                ">>", "<<", "..", "..." -> return 2 //双目运算符
                 "++", "--" -> return 4 //两边都可以的单目运算符
                 "!" -> return 5 //单目运算符仅右目
 //                "?" -> return 3 //三目运算符
@@ -37,7 +41,7 @@ class AST(private val tokens: Tokenizer) {
                 "&" -> 8
                 "==", "!=" -> 7
                 ">", ">=", "<", "<=" -> 6
-                "<<", ">>" -> 5
+                "<<", ">>", "..", "..." -> 5
                 "+", "-" -> 4
                 "*", "/", "%" -> 3
                 "!" -> 2
@@ -231,15 +235,14 @@ class AST(private val tokens: Tokenizer) {
         token ?: return ASTVoid
         var result: ASTExpression
         if (token is Token_Word) {
-            if (token.value == "var" || token.value == "val") {
-                tokens.prev()
-                return parseInnerVar()
-            }
-            if (token.value == "if") {
-                return parseIf()
-            }
-            if (token.value == "for") {
-                return parseFor()
+            when (token.value) {
+                "var", "val" -> {
+                    tokens.prev()
+                    return parseInnerVar()
+                }
+                "for" -> {
+                    return parseFor()
+                }
             }
         }
 
@@ -263,7 +266,11 @@ class AST(private val tokens: Tokenizer) {
                 result = ASTNodeDouble(token)
             }
             is Token_Word -> {
-                result = ASTNodeWord(token)
+                if (token.value == "if") {
+                    result = parseIf()
+                } else {
+                    result = ASTNodeWord(token)
+                }
             }
             is Token_Operator -> {//++i +5+6
                 when (token.operator) {
@@ -312,8 +319,7 @@ class AST(private val tokens: Tokenizer) {
             }
         }
         while (true) {
-            val next = if (result is ASTUnaryRight) tokens.next(true) else tokens.next()
-            if (next == null) return result
+            val next = (if (result is ASTUnaryRight) tokens.next(true) else tokens.next()) ?: return result
             when (next) {
                 is Token_Operator -> {
                     when (next.operator) {
@@ -413,6 +419,7 @@ class AST(private val tokens: Tokenizer) {
         if (token2 is Token_Word && token2.value == "else") {
             falseBrach = parseExpression()
         } else {
+            tokens.prev()
             tokens.prev()
         }
         return ASTIf(condition, trueBranch, falseBrach)
