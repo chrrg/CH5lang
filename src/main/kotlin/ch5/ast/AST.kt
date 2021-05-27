@@ -388,7 +388,7 @@ class AST(private val tokens: Tokenizer) {
                         tokens.prev();return result
                     }
                     tokens.prev();
-                    result = ASTCall(parseExpression(15, abort_symbol)!!, result)
+                    result = ASTCall(parseExpression(1, abort_symbol)!!, result)
                 }
                 is Token_Crlf, is Token_Comment -> {
                     tokens.prev()

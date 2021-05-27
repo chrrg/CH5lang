@@ -36,7 +36,7 @@ main{
     }else{
         "判断失败！" println
     }
-    ("-123.456" ansiToInt)+100 println
+    "-123" ansiToInt + 100 println
     0 exit
     "这里不会运行" println
 }

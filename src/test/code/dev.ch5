@@ -61,7 +61,7 @@ fun fibonacci num int:int{
 }
 
 main {
-    "-123.456" ansiToInt + 100 println
+//    "-123" ansiToInt + 100 println
 //    0<0 println
 //    0<=0 println
 //    1<1 println
