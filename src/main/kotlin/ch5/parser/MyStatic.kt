@@ -9,7 +9,7 @@ import ch5.token.*
  * 轻量作用域，用于在函数内的轻作用域
  * @constructor Create empty Light scope
  */
-class LightScope(val func: DefFunction, var parent: LightScope? = null) {
+open class LightScope(val func: DefFunction, var parent: LightScope? = null) {
     val varList = arrayListOf<DefLocalVariable>()
     fun findVariable(name: String): DefLocalVariable? {
         varList.find { it.name == name }?.let {
@@ -37,6 +37,11 @@ class LightScope(val func: DefFunction, var parent: LightScope? = null) {
         }
         throw java.lang.Exception("未定义的方法：$name")
     }
+}
+
+open class ForScope(func: DefFunction, parent: LightScope? = null) : LightScope(func, parent) {
+    val continueSymbol = CodeBox()
+    val breakSymbol = CodeBox()
 }
 
 /**
@@ -164,7 +169,7 @@ open class MyStatic(app: Application) : MyClass(app) {
                                         variable.type = IntType
                                         val forEndVariable = DefLocalVariable()//for 循环内部
                                         forEndVariable.type = IntType//unuse
-                                        val forScope = LightScope(scope.func, scope)
+                                        val forScope = ForScope(scope.func, scope)
                                         variable.offset = function.func.allocStack(IntType.getSize(4))
                                         forEndVariable.offset = function.func.allocStack(IntType.getSize(4))
                                         forScope.varList.add(variable)
@@ -177,9 +182,10 @@ open class MyStatic(app: Application) : MyClass(app) {
                                         cmp(Addr(EBP, variable.offset), EAX).addTo(codeBox)
                                         val code1 = CodeBox()
                                         val code2 = CodeBox()
-                                        val symbol1 = CodeBox()
+                                        val symbol1 = forScope.breakSymbol
                                         val trueBranch = parseFunExpression(forScope, ast.trueBranch)
                                         trueBranch.second.addTo(code1)
+                                        forScope.continueSymbol.addTo(code1)
                                         push(EAX).addTo(code1)
                                         mov(EAX, Addr(EBP, variable.offset)).addTo(code1)
                                         add(EAX, 1).addTo(code1)//将变量+1
@@ -219,7 +225,6 @@ open class MyStatic(app: Application) : MyClass(app) {
                                             jge(code1, code2).addTo(codeBox)
                                         else
                                             jg(code1, code2).addTo(codeBox)
-
                                         symbol1.addTo(codeBox)
                                         return Pair(VoidType, codeBox)
                                     }
@@ -232,6 +237,55 @@ open class MyStatic(app: Application) : MyClass(app) {
                             }
                         }
                     }
+                }
+                if (ast.condition is ASTVoid) {
+                    //死循环
+                    val forScope = ForScope(function, scope)
+//                    if (ast.falseBrach!=null)throw Exception("Warning: for死循环不应该有else分支！")//不配拥有else分支
+                    val continueSymbol = forScope.continueSymbol
+                    continueSymbol.addTo(codeBox)
+                    val result = parseFunExpression(forScope, ast.trueBranch)
+                    result.second.addTo(codeBox)
+                    val breakSymbol = forScope.breakSymbol
+                    jmp(fun(_, build: BuildStruct): Int {
+                        return build.codeSection.offset(continueSymbol) - build.codeSection.offset(breakSymbol)
+                    }).addTo(codeBox)
+                    breakSymbol.addTo(codeBox)
+                    return Pair(VoidType, codeBox)
+                }
+                val result = parseFunExpression(scope, ast.condition)
+                if (result.first is BoolType) {
+                    //while循环
+                    val breakSymbol = CodeBox()
+
+                    result.second.addTo(codeBox)
+                    cmp(EAX, 0).addTo(codeBox)
+                    val code1 = CodeBox()
+                    val code2 = CodeBox()
+                    val trueBranch = parseFunExpression(scope, ast.trueBranch)
+                    trueBranch.second.addTo(code2)//用户的循环体
+                    val results = parseFunExpression(scope, ast.condition)//todo 这里待解决不应该重复解析同一个代码
+                    results.second.addTo(code2)
+                    cmp(EAX, 0).addTo(code2)
+                    val symbol1 = CodeBox()
+                    jz(fun(_, buildStruct: BuildStruct): Int {
+                        return buildStruct.codeSection.offset(breakSymbol) - buildStruct.codeSection.offset(symbol1)//跳出去
+                    }).addTo(code2)
+                    symbol1.addTo(code2)
+
+                    val symbol2 = CodeBox()
+                    jmp(fun(_, buildStruct: BuildStruct): Int {
+                        return buildStruct.codeSection.offset(code2) - buildStruct.codeSection.offset(symbol2)//跳回去
+                    }).addTo(code2)
+                    symbol2.addTo(code2)
+
+
+                    val falseBranch = parseFunExpression(scope, ast.falseBrach)
+                    falseBranch.second.addTo(code1)
+                    jz(code2, code1).addTo(codeBox)
+                    breakSymbol.addTo(codeBox)
+                    return Pair(VoidType, codeBox)
+
                 }
                 TODO()
 //                println(ast)
@@ -295,11 +349,57 @@ open class MyStatic(app: Application) : MyClass(app) {
                     return Pair(result.first, result.second)
                 } else TODO()
             }
+            is ASTUnaryRight -> {
+                val value = ast.value
+                when (val operator = ast.operator.operator) {
+                    op_inc, op_dec -> {
+//                            a++
+                        if (value is ASTNodeWord) {
+                            val variable = parseVariable(scope, value.value.value)
+                            if (variable.first !is IntType) TODO()
+                            mov(EAX, variable.second).addTo(codeBox)
+
+                            when (operator) {
+                                is op_inc -> {
+                                    inc(EAX).addTo(codeBox)
+                                    mov(variable.second, EAX).addTo(codeBox)
+                                    dec(EAX).addTo(codeBox)
+                                }
+                                is op_dec -> {
+                                    dec(EAX).addTo(codeBox)
+                                    mov(variable.second, EAX).addTo(codeBox)
+                                    inc(EAX).addTo(codeBox)
+                                }
+                            }
+                            return Pair(IntType, codeBox)
+                        } else TODO()
+                    }
+
+                }
+            }
+            is ASTUnaryLeft -> {
+                val value = ast.value
+                when (val operator = ast.operator.operator) {
+                    op_inc, op_dec -> {
+//                            ++a
+                        if (value is ASTNodeWord) {
+                            val variable = parseVariable(scope, value.value.value)
+                            if (variable.first !is IntType) TODO()
+                            mov(EAX, variable.second).addTo(codeBox)
+                            when (operator) {
+                                is op_inc -> inc(EAX).addTo(codeBox)
+                                is op_dec -> dec(EAX).addTo(codeBox)
+                            }
+                            mov(variable.second, EAX).addTo(codeBox)
+                            return Pair(IntType, codeBox)
+                        } else TODO()
+                    }
+                }
+            }
             is ASTBinary -> {
                 val left = ast.left
                 val right = ast.right
-                val operator = ast.op.operator
-                when (operator) {
+                when (val operator = ast.op.operator) {
                     op_dot -> {
                         if (left == ASTVoid) {
                             if (right is ASTNodeWord) {
@@ -478,42 +578,13 @@ open class MyStatic(app: Application) : MyClass(app) {
                                 }
                             }
                             when (operator) {
-                                is op_greater, op_less -> jg(code1, code2).addTo(codeBox)
-                                is op_greaterEqual, op_lessEqual -> jge(code1, code2).addTo(codeBox)
+                                op_greater -> jge(code1, code2).addTo(codeBox)
+                                op_less -> jg(code1, code2).addTo(codeBox)
+                                op_greaterEqual -> jg(code1, code2).addTo(codeBox)
+                                op_lessEqual -> jge(code1, code2).addTo(codeBox)
                             }
 
                             return Pair(BoolType, codeBox)
-                        } else TODO()
-                    }
-                    op_inc, op_dec -> {
-                        if (left !is ASTVoid && right is ASTVoid) {
-//                            a++
-//                            val result = parseFunExpression(scope, left)
-                            if (left is ASTNodeWord) {
-                                val variable = parseVariable(scope, left.value.value)
-                                if (variable.first !is IntType) TODO()
-                                mov(EAX, variable.second).addTo(codeBox)
-                                mov(EDX, EAX).addTo(codeBox)
-                                when (operator) {
-                                    is op_inc -> add(EDX, 1).addTo(codeBox)
-                                    is op_dec -> sub(EDX, 1).addTo(codeBox)
-                                }
-                                mov(variable.second, EDX).addTo(codeBox)
-                                return Pair(IntType, codeBox)
-                            } else TODO()
-                        } else if (left is ASTVoid && right !is ASTVoid) {
-//                            ++a
-                            if (left is ASTNodeWord) {
-                                val variable = parseVariable(scope, left.value.value)
-                                if (variable.first !is IntType) TODO()
-                                mov(EAX, variable.second).addTo(codeBox)
-                                when (operator) {
-                                    is op_inc -> add(EAX, 1).addTo(codeBox)
-                                    is op_dec -> sub(EAX, 1).addTo(codeBox)
-                                }
-                                mov(variable.second, EAX).addTo(codeBox)
-                                return Pair(IntType, codeBox)
-                            } else TODO()
                         } else TODO()
                     }
                     else -> {
@@ -556,6 +627,46 @@ open class MyStatic(app: Application) : MyClass(app) {
                 type = FloatType
                 mov(EAX, java.lang.Float.floatToIntBits(ast.value.number.toFloat())).addTo(codeBox)
                 return Pair(type, codeBox)
+            }
+            is ASTContinue -> {
+                var count = ast.value
+                var scope1 = scope
+                while (true) {
+                    if (scope1 is ForScope) {
+                        count -= 1
+                        if (count <= 0) {
+                            break
+                        }
+                    }
+                    scope1 = scope1.parent!!
+                }
+                val result = scope1 as ForScope
+                val symbol = CodeBox()
+                jmp(fun(_, buildStruct: BuildStruct): Int {
+                    return buildStruct.codeSection.offset(result.continueSymbol) - buildStruct.codeSection.offset(symbol)
+                }).addTo(codeBox)
+                symbol.addTo(codeBox)
+                return Pair(VoidType, codeBox)
+            }
+            is ASTBreak -> {
+                var count = ast.value
+                var scope1 = scope
+                while (true) {
+                    if (scope1 is ForScope) {
+                        count -= 1
+                        if (count <= 0) {
+                            break
+                        }
+                    }
+                    scope1 = scope1.parent!!
+                }
+                val result = scope1 as ForScope
+                val symbol = CodeBox()
+                jmp(fun(_, buildStruct: BuildStruct): Int {
+                    return buildStruct.codeSection.offset(result.breakSymbol) - buildStruct.codeSection.offset(symbol)
+                }).addTo(codeBox)
+                symbol.addTo(codeBox)
+                return Pair(VoidType, codeBox)
             }
         }
         throw Exception("无法解析语法：" + ast.javaClass.simpleName)

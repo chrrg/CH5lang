@@ -54,25 +54,58 @@ fun main(args: Array<String>) {
         println("开发人：曹鸿")
         println("毕业院校：桂林理工大学 信息科学与工程学院")
         println("毕业年份：2021年")
-
+        println("")
         println("使用方法：")
         println("java -jar ch5.jar -c 1.ch5 1.exe")
-        println("-c inputFile outputFile")
-        println("inputFile 源代码文件路径，一般以ch5后缀")
-        println("outputFile 输出可执行文件的路径，一般以exe后缀")
+        println("java -jar ch5.jar -c 1")
+        println("-c inputFile [outputFile]")
+        println("inputFile 源代码文件路径，以ch5后缀 可省略后缀")
+        println("outputFile 输出可执行文件的路径，以exe后缀 可省略后缀 默认为源代码的文件名")
 
         return
-    }
-    if (args[0] == "-c") {
-        if (args.size != 3) {
-            println("命令需要3个参数！")
-            return
+    } else if (args[0] == "-c") {
+        when (args.size) {
+            1 -> {
+                println("参数数量不够 两个或三个参数！")
+                return
+            }
+            2 -> {
+                var input = File(args[1])
+                if (!input.exists() || input.isDirectory) {
+                    input = File(args[1] + ".ch5")
+                    if (!input.exists() || input.isDirectory) {
+                        println("代码文件：${input.absoluteFile}不存在！")
+                        return
+                    }
+                }
+                val offset = input.name.lastIndexOf(".")
+                var output = if (offset != -1 && input.name.substring(offset) == ".ch5") {
+                    input.name.substring(0, offset)
+                } else {
+                    input.name
+                }
+                if (!output.endsWith(".exe")) output += ".exe"
+                Compiler.compile(input, File(output))
+                println("CH5 Compiler: 编译完成！")
+            }
+            3 -> {
+                var input = File(args[1])
+                if (!input.exists() || input.isDirectory) {
+                    input = File(args[1] + ".ch5")
+                    if (!input.exists() || input.isDirectory) {
+                        println("代码文件：${input.absoluteFile}不存在！")
+                        return
+                    }
+                }
+                var output = args[2]
+                if (!output.endsWith(".exe")) output += ".exe"
+                Compiler.compile(input, File(output))
+                println("CH5 Compiler: 编译完成！")
+            }
+            else -> {
+                println("参数数量不匹配！")
+                return
+            }
         }
-        val input = File(args[1])
-        if (!input.exists()) {
-            println("${input.absoluteFile}文件不存在！")
-            return
-        }
-        Compiler.compile(input, File(args[2]))
     }
 }

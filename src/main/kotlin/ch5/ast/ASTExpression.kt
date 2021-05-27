@@ -241,3 +241,15 @@ class ASTCall(val caller: ASTExpression, val value: ASTExpression) : ASTExpressi
         return "$value $caller"
     }
 }
+
+class ASTBreak(val value: Int=1) : ASTExpression() {
+    override fun toString(): String {
+        return "break $value"
+    }
+}
+
+class ASTContinue(val value: Int=1) : ASTExpression() {
+    override fun toString(): String {
+        return "continue $value"
+    }
+}

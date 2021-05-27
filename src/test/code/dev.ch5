@@ -1,6 +1,8 @@
 import printf "msvcrt.dll"
 import ansiToInt "msvcrt.dll/atoi"
 import exit "KERNEl32.dll/ExitProcess"
+import GetTickCount "kernel32.dll"
+fun GetTickCount:int
 fun exit code int
 //import Beep "kernel32.dll"
 //import wsprintf "user32.dll"
@@ -16,6 +18,9 @@ fun printf a string,b float,c float,c float,c float
 
 //fun intToAnsi a int:string
 fun ansiToInt a string:int
+fun print num int{
+    "%d",num printf
+}
 fun print str string{
     "%s",str printf
 }
@@ -49,11 +54,38 @@ fun int a string:int{
 //    = a intToAnsi
 //}
 fun fibonacci num int:int{
-    if num<=1;=num
-    = (num - 1 fibonacci) + (num - 2 fibonacci)
+    = if num <= 1
+        1
+    else
+        (num - 1 fibonacci) + (num - 2 fibonacci)
 }
 
 main {
+    "-123.456" ansiToInt + 100 println
+//    0<0 println
+//    0<=0 println
+//    1<1 println
+//    1<=1 println
+//    0>0 println
+//    0>=0 println
+//    1>1 println
+//    1>=1 println
+//    0<1 println
+//    0<=1 println
+//    1<0 println
+//    1<=0 println
+
+//    for i = 1...9{
+//        for j = 1...9{
+//            if i == 5 | j == 5
+//                continue
+//            i print
+//            " * " print
+//            j print
+//            " = " print
+//            i * j println
+//        }
+//    }
 //    "%f",  printf
 //
 //    1 fibonacci println
@@ -89,8 +121,46 @@ main {
 //        "失败"
 //    } println
 //
-    if 1==3;"成功";else if true;"失败1";else{
-    "失败2"}println
+//    if 1==3;"成功";else if true;"失败1";else{
+//    "失败2"}println
+//    val a=1
+//    for a++<=10
+//        a println
+//    var time=.GetTickCount
+//    for i=0...400000000{
+////        i fibonacci println
+//    }
+//    var i=100
+//    for i++<10{
+//        i println
+//    }else{
+//        "ok" println
+//    }
+//    for i=0...99{
+//        i println
+//        i++
+//    }
+//    var time2=.GetTickCount
+//    "总耗时：" println
+//    time2-time println
+//    "ms" println
+
+
+
+
+
+
+//    val i=1
+//    ++i println
+////    (for) println
+//
+//    for i=1..10{
+////        if i==5
+////            continue
+//        i println
+//    }
+
+
 //    true println
 //
 //    var c = true

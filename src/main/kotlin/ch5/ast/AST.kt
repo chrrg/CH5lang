@@ -6,11 +6,8 @@ import ch5.token.*
 
 /**
  * 语法树
- * 重构 by CH 20201222
- * 文件转语法树
- * 目前无语义
- * 每条表达式需体现元组
- * 输出文件的语法树容器
+ * 文件转抽象语法树
+ * 输出 文件的语法树容器
  */
 class AST(private val tokens: Tokenizer) {
     companion object {
@@ -240,6 +237,24 @@ class AST(private val tokens: Tokenizer) {
                     tokens.prev()
                     return parseInnerVar()
                 }
+                "break" -> {
+                    tokens.next()?.let {
+                        if (it is Token_Int) {
+                            return ASTBreak(it.number)
+                        }
+                        tokens.prev()
+                    }
+                    return ASTBreak(1)
+                }
+                "continue" -> {
+                    tokens.next()?.let {
+                        if (it is Token_Int) {
+                            return ASTContinue(it.number)
+                        }
+                        tokens.prev()
+                    }
+                    return ASTContinue(1)
+                }
                 "for" -> {
                     return parseFor()
                 }
@@ -319,7 +334,10 @@ class AST(private val tokens: Tokenizer) {
             }
         }
         while (true) {
-            val next = (if (result is ASTUnaryRight) tokens.next(true) else tokens.next()) ?: return result
+            val next =
+                (if (result is ASTUnaryRight && tokens.getNextChar() == result.operator.operator.word.last()) tokens.next(
+                    true
+                ) else tokens.next()) ?: return result
             when (next) {
                 is Token_Operator -> {
                     when (next.operator) {

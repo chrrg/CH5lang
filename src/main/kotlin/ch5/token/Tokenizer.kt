@@ -33,6 +33,16 @@ class Tokenizer(var code: String) {
     }
 
     /**
+     * Get next char
+     * 获取下一个字符 但是不改变索引
+     * @return
+     */
+    fun getNextChar(): Char? {
+        if (index >= code.length) return null
+        return code[index]
+    }
+
+    /**
      * Is blank
      * 是否是空的
      * @param c
@@ -437,8 +447,7 @@ class Tokenizer(var code: String) {
                     if (token.operator is op_division && c == '/') {//说明是单行注释
                         token = Token_Comment(1)
                     } else {
-                        val op = getOperator(token.operator.word + c)
-                        if (op == null) return token
+                        val op = getOperator(token.operator.word + c) ?: return token
                         token.operator = op
                     }
                 }
@@ -449,8 +458,7 @@ class Tokenizer(var code: String) {
                         }
                     } else {//双引号
                         if (c == '*') {//
-                            val verify = fetchChar()
-                            if (verify == null) throw Exception("err")
+                            val verify = fetchChar() ?: throw Exception("err")
                             if (verify == '/') {
                                 index++;return token
                             }
@@ -469,8 +477,7 @@ class Tokenizer(var code: String) {
                             index++;return token
                         }
                         if (c == '\\') {
-                            val cc = fetchChar()
-                            if (cc == null) throw Exception("err")
+                            val cc = fetchChar() ?: throw Exception("err")
                             c = when (cc) {
                                 '0' -> 0.toChar()
                                 'r' -> '\r'

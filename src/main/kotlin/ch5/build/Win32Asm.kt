@@ -258,6 +258,16 @@ fun pop(register: Win32Register): CodeItem {
     result.byte(0x58 + register.value)
     return result
 }
+fun inc(register: Win32Register): CodeItem {
+    val result = CodeItem()
+    result.byte(0x40 + register.value)
+    return result
+}
+fun dec(register: Win32Register): CodeItem {
+    val result = CodeItem()
+    result.byte(0x48 + register.value)
+    return result
+}
 
 /**
  * Add
@@ -596,6 +606,26 @@ fun jle(code: CodeBox): CodeBox {
     })
     result.addTo(codeBox)
     code.addTo(codeBox)
+    return codeBox
+}
+
+fun jle(code: CodeBox, code2: CodeBox): CodeBox {
+    val codeBox = CodeBox()
+    val result = CodeItem()
+    result.byte(0x0F)
+    result.byte(0x8E)
+    result.dword(0, fun(_, _): Int {
+        return code.getSize()
+    })
+    result.addTo(codeBox)
+    val result2 = CodeItem()
+    result2.byte(0xE9)//jmp
+    result2.dword(0, fun(_, _): Int {
+        return code2.getSize()
+    })
+    result2.addTo(code.getAfter())
+    code.addTo(codeBox)
+    code2.addTo(codeBox)
     return codeBox
 }
 
