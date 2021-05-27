@@ -57,11 +57,15 @@ fun fibonacci num int:int{
     = if num <= 1
         1
     else
-        (num - 1 fibonacci) + (num - 2 fibonacci)
+        num - 1 fibonacci + (num - 2 fibonacci)
 }
 
 main {
-//    "-123" ansiToInt + 100 println
+    "-200" ansiToInt + 100 println
+
+    for i = 0...10 {
+        i fibonacci * -1 println
+    }
 //    0<0 println
 //    0<=0 println
 //    1<1 println
@@ -88,13 +92,6 @@ main {
 //    }
 //    "%f",  printf
 //
-//    1 fibonacci println
-//    2 fibonacci println
-//    3 fibonacci println
-//    4 fibonacci println
-//    5 fibonacci println
-//    6 fibonacci println
-////
 //    0 exit
 //
 //    "程序开始！" println

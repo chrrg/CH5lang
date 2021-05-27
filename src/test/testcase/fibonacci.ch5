@@ -15,7 +15,7 @@ fun fibonacci num int:int{
     = if num <= 1
         1
     else
-        (num - 1 fibonacci) + (num - 2 fibonacci)
+        num - 1 fibonacci + (num - 2 fibonacci)
 }
 main{
     "开始计算斐波那契数列：" println
