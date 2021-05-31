@@ -446,6 +446,8 @@ class Tokenizer(var code: String) {
                 is Token_Operator -> {
                     if (token.operator is op_division && c == '/') {//说明是单行注释
                         token = Token_Comment(1)
+                    } else if (token.operator is op_division && c == '*') {//说明是多行注释
+                        token = Token_Comment(2)
                     } else {
                         val op = getOperator(token.operator.word + c) ?: return token
                         token.operator = op

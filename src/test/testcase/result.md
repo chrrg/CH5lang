@@ -1,37 +1,5 @@
 # CH编译器 测试用例报告
 ## 测试用例1
-用例：`src\test\testcase\1.ch5`  
-
-```
-import printf "msvcrt.dll"
-fun printf a string
-
-main{
-    "你好，世界！" printf
-}
-```
-> 编译结果  
-
-编译成功！ 
-> 编译性能测试  
-
-
-|测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
-| ------ | ------ | ------ | ------ |
-|1次|2.193ms|2.193ms|15698KB|
-|10次|1.092ms|1.702ms|11512KB|
-|100次|0.971ms|2.273ms|11145KB|
-> 运行结果测试  
-
-测试用例运行输出：  
-
-```
-你好，世界！
-```
-测试通过  
-测试完成！  
----
-## 测试用例2
 用例：`src\test\testcase\app.ch5`  
 
 ```
@@ -70,9 +38,9 @@ main {
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|1.926ms|1.926ms|10465KB|
-|10次|1.570ms|2.199ms|12558KB|
-|100次|1.188ms|2.661ms|11145KB|
+|1次|2.946ms|2.946ms|5233KB|
+|10次|1.672ms|2.179ms|13604KB|
+|100次|1.327ms|3.325ms|11564KB|
 > 运行结果测试  
 
 测试用例运行输出：  
@@ -81,6 +49,81 @@ main {
 你很好啊！
 666666
 666程序结束！
+
+```
+测试通过  
+测试完成！  
+---
+## 测试用例2
+用例：`src\test\testcase\basic.ch5`  
+
+```
+import printf "msvcrt.dll"
+import ansiToInt "msvcrt.dll/atoi"
+import exit "KERNEl32.dll/ExitProcess"
+
+fun printf a string,b string
+fun printf a string,b int
+fun ansiToInt a string:int
+fun exit code int
+
+fun print num int{
+    "%d",num printf
+}
+fun print str string{
+    "%s",str printf
+}
+fun println str string{
+    "%s\n",str printf
+}
+fun println num int{
+    "%d\n",num printf
+}
+fun println bool bool{
+    if bool
+        "True" println
+    else
+        "False" println
+}
+
+
+init{
+    "初始化时运行" println
+}
+main{
+    //单行注释
+    if 100<200 {
+        "判断成功！" println
+    }else{
+        "判断失败！" println
+    }
+    /*
+    多行注释
+    */
+    "-123" ansiToInt + 100 println
+    0 exit
+    "这里不会运行" println
+}
+```
+> 编译结果  
+
+编译成功！ 
+> 编译性能测试  
+
+
+|测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
+| ------ | ------ | ------ | ------ |
+|1次|3.532ms|3.532ms|10465KB|
+|10次|1.520ms|1.979ms|11511KB|
+|100次|1.129ms|1.998ms|10622KB|
+> 运行结果测试  
+
+测试用例运行输出：  
+
+```
+初始化时运行
+判断成功！
+-23
 
 ```
 测试通过  
@@ -143,9 +186,9 @@ main{
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|3.677ms|3.677ms|10465KB|
-|10次|2.269ms|3.011ms|10988KB|
-|100次|1.971ms|3.207ms|10517KB|
+|1次|2.636ms|2.636ms|10465KB|
+|10次|1.933ms|2.582ms|10465KB|
+|100次|1.375ms|3.296ms|10569KB|
 > 运行结果测试  
 
 测试用例运行输出：  
@@ -193,7 +236,7 @@ fun fibonacci num int:int{
     = if num <= 1
         1
     else
-        (num - 1 fibonacci) + (num - 2 fibonacci)
+        num - 1 fibonacci + (num - 2 fibonacci)
 }
 main{
     "开始计算斐波那契数列：" println
@@ -215,9 +258,9 @@ main{
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|1.922ms|1.922ms|10465KB|
-|10次|1.678ms|1.911ms|10465KB|
-|100次|1.352ms|3.411ms|10517KB|
+|1次|1.770ms|1.770ms|10465KB|
+|10次|1.417ms|1.702ms|10465KB|
+|100次|1.086ms|2.718ms|10465KB|
 > 运行结果测试  
 
 测试用例运行输出：  
@@ -312,7 +355,7 @@ main {
             i * j println
         }
     }
-
+    "for 循环的变量不会影响外层变量：" println
     i println
     "测试完成" println
 }
@@ -325,9 +368,9 @@ main {
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|2.890ms|2.890ms|10465KB|
-|10次|2.914ms|4.937ms|10465KB|
-|100次|1.962ms|3.071ms|10517KB|
+|1次|2.288ms|2.288ms|10465KB|
+|10次|2.277ms|4.107ms|10465KB|
+|100次|1.851ms|3.107ms|10465KB|
 > 运行结果测试  
 
 测试用例运行输出：  
@@ -394,10 +437,12 @@ for-each输出1 2 3 4 8 9 10
 5 * 2 = 10
 5 * 3 = 15
 5 * 4 = 20
+for 循环的变量不会影响外层变量：
 6
 测试完成
 
 ```
+测试通过  
 测试完成！  
 ---
 ## 测试用例6
@@ -419,9 +464,9 @@ main{
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|1.283ms|1.283ms|10465KB|
-|10次|0.730ms|0.786ms|10465KB|
-|100次|0.578ms|0.849ms|10465KB|
+|1次|0.606ms|0.606ms|10465KB|
+|10次|0.643ms|0.785ms|10465KB|
+|100次|0.537ms|0.763ms|10465KB|
 > 运行结果测试  
 
 测试用例运行输出：  
@@ -438,11 +483,14 @@ Hello,world!
 ```
 import printf "msvcrt.dll"
 fun printf a string
-fun printf num1 int,num2 int{
-
+fun printf a string,b int
+fun println num int{
+    "%d",num printf
 }
 main{
-    "你好，世界！" printf
+    var a int = 1
+    var b = 2
+    a + b * 3 + -4 println
 }
 ```
 > 编译结果  
@@ -453,15 +501,15 @@ main{
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|0.767ms|0.767ms|10465KB|
-|10次|0.717ms|0.860ms|10465KB|
-|100次|0.617ms|0.847ms|10465KB|
+|1次|0.760ms|0.760ms|10465KB|
+|10次|0.772ms|0.942ms|10465KB|
+|100次|0.625ms|1.617ms|10465KB|
 > 运行结果测试  
 
 测试用例运行输出：  
 
 ```
-你好，世界！
+3
 ```
 测试通过  
 测试完成！  

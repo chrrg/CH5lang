@@ -1,8 +1,11 @@
 import printf "msvcrt.dll"
 fun printf a string
-fun printf num1 int,num2 int{
-
+fun printf a string,b int
+fun println num int{
+    "%d",num printf
 }
 main{
-    "你好，世界！" printf
+    var a int = 1
+    var b = 2
+    a + b * 3 + -4 println
 }

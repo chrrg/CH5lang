@@ -3,6 +3,7 @@ package ch5.parser
 import ch5.ast.*
 import ch5.build.CodeBox
 import ch5.build.Fun
+import ch5.build.GBKByteArray
 import ch5.build.ImportLibraryItem
 import ch5.token.Tokenizer
 import java.io.BufferedInputStream
@@ -135,8 +136,18 @@ class DefFunction {
     var ast: ASTOuterFun? = null
     var type: DataType = VoidType//返回类型
     var space: MyClass? = null
+    var isUsed = false
+    var stringList = arrayListOf<GBKByteArray>()
+    val refFunctionList = arrayListOf<DefFunction>()
     fun use() {
+        isUsed = true
         space?.use()
+    }
+
+    fun addString(value: String): GBKByteArray {
+        val str = GBKByteArray(value)
+        stringList.add(str)
+        return str
     }
 }
 
@@ -200,7 +211,13 @@ class PreFile(app: Application, val file: File) : PreStatic(app) {
                     if (i.names.size != 1) TODO()
                     val variable = DefVariable()
                     variable.ast = i
+
                     variable.name = i.names[0].name.value
+                    if (isIdentName(variable.name)) throw Exception("变量名" + variable.name + "不合法！不能是关键字或保留字!")
+
+                    varList.find { it.name == variable.name }?.let {
+                        throw Exception("变量" + it.name + "重复定义！")
+                    }
                     i.names[0].type?.let {
                         variable.type = parseDataType(it)
                     }
@@ -215,6 +232,7 @@ class PreFile(app: Application, val file: File) : PreStatic(app) {
                     val function = DefFunction()
                     function.ast = i
                     function.name = i.name.getName()
+                    if (isIdentName(function.name)) throw Exception("函数名" + function.name + "不合法！不能是关键字或保留字！")
                     function.space = this
                     i.param.forEach {
                         if (it is ASTFunParam) {
@@ -226,7 +244,7 @@ class PreFile(app: Application, val file: File) : PreStatic(app) {
                         function.type = parseDataType(it)
                     }
                     var paramSize = 0
-                    function.param.forEach {
+                    repeat(function.param.size) {
                         paramSize += 4
                     }
                     function.func.setParamSize(paramSize)
@@ -240,6 +258,24 @@ class PreFile(app: Application, val file: File) : PreStatic(app) {
 //        预解析完成
 
 
+    }
+
+    private fun isIdentName(name: String): Boolean {
+        //检查是否是关键字或保留字，不允许定义为变量或函数的名称
+        return arrayOf(
+            "",
+            "if",
+            "for",
+            "var",
+            "val",
+            "class",
+            "static",
+            "break",
+            "continue",
+            "is",
+            "in",
+            "type"
+        ).contains(name)
     }
 
 

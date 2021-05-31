@@ -1,6 +1,0 @@
-import printf "msvcrt.dll"
-fun printf a string
-
-main{
-    "你好，世界！" printf
-}

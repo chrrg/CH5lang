@@ -75,11 +75,28 @@ open class MyStatic(app: Application) : MyClass(app) {
         Call(app.alloc).addTo(initStaticCode.code) // 调用分配函数 会消耗掉上面压栈的dword
         mov(entryAddr, EAX).addTo(initStaticCode.code) // 将eax存入对象的地址
         funList.find { it.name == "init" }?.let {
+            it.use()
             Call(it.func).addTo(initStaticCode.code)//调用init函数
         }
         //到这里完成了初始化
         code.add(initStaticCode)
-        funList.forEach {
+        //下面开始按需写入函数体
+        while (true) {
+            var effect = false
+            funList.filter { it.isUsed }.forEach {
+                it.refFunctionList.forEach { func ->
+                    if (!func.isUsed) {
+                        effect = true
+                        func.use()
+                    }
+                }
+            }
+            if (!effect) break
+        }
+        funList.filter { it.isUsed }.forEach {
+            it.stringList.forEach { str ->
+                app.buildStruct.dataSection.add(str)
+            }
             Call(initStaticCode).addTo(it.func.code.getBefore())
             code.add(it.func)
         }
@@ -291,7 +308,9 @@ open class MyStatic(app: Application) : MyClass(app) {
 //                println(ast)
             }
             is ASTNodeString -> {
-                val str = app.buildStruct.dataSection.add(GBKByteArray(ast.value.value))
+                val str = function.addString(ast.value.value)
+//                val str = app.buildStruct.dataSection.add(GBKByteArray(ast.value.value))
+//                lea(EAX, AddrSection(str, app.buildStruct.dataSection)).addTo(codeBox)
                 lea(EAX, AddrSection(str, app.buildStruct.dataSection)).addTo(codeBox)
                 return Pair(StringType, codeBox)
             }
@@ -405,6 +424,7 @@ open class MyStatic(app: Application) : MyClass(app) {
                             if (right is ASTNodeWord) {
                                 //调用当前作用域（static或者class）的方法
                                 val func = scope.findFunction(right.value.value, arrayListOf())
+                                function.refFunctionList.add(func)
                                 Call(func.func).addTo(codeBox)
                                 return Pair(func.type, codeBox)
                             }
@@ -418,7 +438,7 @@ open class MyStatic(app: Application) : MyClass(app) {
                             result.second.addTo(codeBox)
                             leave().addTo(codeBox)
                             ret(scope.func.func.getParamSize()).addTo(codeBox)
-                            if (result.first != scope.func.type) throw Exception("函数的返回类型不匹配！")
+                            if (scope.func.type != VoidType && scope.func.type != result.first) throw Exception("函数的返回类型不匹配！")
                             type = result.first
                             return Pair(type, codeBox)
                         } else {
@@ -614,6 +634,7 @@ open class MyStatic(app: Application) : MyClass(app) {
                         typeArray.add(result.first)
                     }
                     val func = scope.findFunction(caller.value.value, typeArray)
+                    function.refFunctionList.add(func)
                     Call(func.func).addTo(codeBox)
                     return Pair(func.type, codeBox)
                 } else TODO()
@@ -713,14 +734,29 @@ open class MyStatic(app: Application) : MyClass(app) {
 //            }
 //        }
 
+        //解析对象里面所有的变量的表达式
         varList.forEach {
             val result = parseFunExpression(LightScope(funList.find { it.name == "init" }!!), it.ast?.expr)
-            it.type = result.first
+            if (it.type == VoidType) {
+                it.type = result.first
+            } else if (it.type != result.first) {
+                throw java.lang.Exception("定义的变量${it.name}类型不匹配！")
+            }
+            if (it.type == VoidType) {
+                throw java.lang.Exception("变量${it.name}类型不允许是void！")
+            }
             it.initCode = result.second
         }
-        funList.forEach {
+        //对象里面的每一个函数都进行解析成汇编代码
+        funList.filter { it.ast?.exprbody != null }.forEach {
             val result = parseFunExpression(LightScope(it), it.ast?.exprbody)
-            if (it.type == VoidType) it.type = result.first//todo
+            if (it.ast?.exprbody !is ASTExpressionContainer) {
+                if (it.type == VoidType)
+                    it.type = result.first//todo
+                else if (it.type != result.first) {
+                    throw java.lang.Exception("函数${it.name}返回类型不匹配！")
+                }
+            }
             it.func.code.add(result.second)
         }
         //到这里就解析完了

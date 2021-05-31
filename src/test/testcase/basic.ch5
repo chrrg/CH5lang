@@ -31,11 +31,15 @@ init{
     "初始化时运行" println
 }
 main{
+    //单行注释
     if 100<200 {
         "判断成功！" println
     }else{
         "判断失败！" println
     }
+    /*
+    多行注释
+    */
     "-123" ansiToInt + 100 println
     0 exit
     "这里不会运行" println

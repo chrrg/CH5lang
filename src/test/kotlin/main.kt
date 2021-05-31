@@ -16,8 +16,6 @@ fun performance(block: () -> Unit): Pair<Long, Long> {
     val endMem = r.freeMemory() // 末尾Memory
     val end = System.nanoTime() //末尾Time
     return Pair(end - start, startMem - endMem)
-//    println("代码运行时间: " + (end - start).toString() + "ms")
-//    println("内存消耗: " + ((startMem - endMem) / 1024).toString() + "KB")
 }
 
 fun run(cmd: File): Pair<BufferedReader, BufferedReader>? {
@@ -51,13 +49,6 @@ fun main(args: Array<String>) {
     val dir = File("src/test/testcase/")
     val fs = dir.listFiles() ?: throw Exception("目录获取失败！") //遍历path下的文件和目录，放在File数组中
     //jvm 预热环境
-//    if (fs.isEmpty()) {
-//        println("没有测试用例！")
-//        return
-//    }
-//    repeat(10) {
-//        Compiler.compile(fs[0].path, "jit.cache")
-//    }
     result.append("# CH编译器 测试用例报告\n")
     var num = 0
     fs.filter { it.isFile && it.name.endsWith(".ch5") }.forEach { file ->
@@ -83,7 +74,6 @@ fun main(args: Array<String>) {
                 result.append("\n```\n")
                 return@forEach
             }
-
 
             result.append("> 编译性能测试  \n\n")
 
