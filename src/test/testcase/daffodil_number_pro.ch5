@@ -30,6 +30,6 @@ main{
     }
     val time2=.GetTickCount
     "计算完成，耗时：" print
-    time2-time1 println
+    time2-time1 print
     "ms完成" println
 }
