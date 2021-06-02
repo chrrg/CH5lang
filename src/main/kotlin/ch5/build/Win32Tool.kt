@@ -5,7 +5,7 @@ object DOSHeader : ByteArraySection() {
         dword(0x805A4D)
         dword(0x1)
         dword(0x100004)
-        dword(0xFFFF)
+        dword(0xFFFFFFFF.toInt())
         dword(0x140)
         dword(0x0)
         dword(0x40)
@@ -82,7 +82,7 @@ class PEHeader : FixableSection() {
         word(0x4)                         //MajorSubSystemVersion
         word(0x0)                         //MinorSubSystemVersion
         dword(0x0)                        //Win32VersionValue
-        dword(0, "SizeOfImage")         //SizeOfImage
+        dword(0, "SizeOfImage")         //SizeOfImage offset: 0xD0
         dword(0, "SizeOfHeaders")       //SizeOfHeaders
         dword(0x0)                        //CheckSum
         word(3)//AppType               //SubSystem = 2:GUI; 3:CUI
@@ -97,7 +97,7 @@ class PEHeader : FixableSection() {
         dword(0, "ExportTable.Entry")
         dword(0, "ExportTable.Size")
 
-        dword(0, "ImportTable.Entry")
+        dword(0, "ImportTable.Entry")//offset: 0x100
         dword(0, "ImportTable.Size")
 
         dword(0, "ResourceTable.Entry")

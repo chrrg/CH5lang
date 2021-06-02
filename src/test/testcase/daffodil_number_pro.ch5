@@ -1,0 +1,35 @@
+import printf "msvcrt.dll"
+import GetTickCount "kernel32.dll"
+fun GetTickCount:int
+fun printf a string,b string
+fun printf a string,b int
+fun print num int="%d",num printf
+fun print str string="%s",str printf
+fun println str string="%s\n",str printf
+fun println num int="%d\n",num printf
+
+fun pow num int,p int:int{
+    var result = 1
+    for i = 0 .. p
+        result = result * num
+    = result
+}
+main{
+    val time1=.GetTickCount
+    for level = 3...7{
+        "开始计算" print
+        level print
+        "位数的水仙花数" println
+        for i = 10,level-1 pow .. (10,level pow) {
+            var sum = 0
+            for j = 0 .. level
+                sum += i / (10,j pow) % 10,level pow
+            if sum == i
+                i println
+        }
+    }
+    val time2=.GetTickCount
+    "计算完成，耗时：" print
+    time2-time1 println
+    "ms完成" println
+}

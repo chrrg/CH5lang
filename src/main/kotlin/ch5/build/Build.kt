@@ -85,13 +85,16 @@ object Build {
             i.fix(i.getSectionBody().getRawSize(), "VirtualSize")
             i.fix(sizeOfAllSectionsBefore, "VirtualAddress")
             i.fix(sizeOfAllSectionsBeforeRaw, "PointerToRawData")
-            i.fix(i.getSectionBody().getSize(), "SizeOfRawData")//PhysicalSize
-            sizeOfAllSectionsBefore += i.getSize(0x1000)
-            sizeOfAllSectionsBeforeRaw += i.getSectionBody().getSize()
+            val physicalSize = i.getSectionBody().getSize()
+            i.fix(physicalSize, "SizeOfRawData")//PhysicalSize
+            sizeOfAllSectionsBefore += i.getSectionBody().getSize(0x1000)
+            sizeOfAllSectionsBeforeRaw += physicalSize
+//            if (physicalSize % 0x1000 == 0) sizeOfAllSectionsBefore -= 0x1000
         }
         peHeader.fix(numberOfSections, "NumberOfSections")
         peHeader.fix(
-            0x1000 + dataSection.getSize(0x1000) + codeSection.getSize(0x1000) + idataSection.getSize(0x1000),
+            sizeOfAllSectionsBefore,
+//            0x1000 + dataSection.getSize(0x1000) + codeSection.getSize(0x1000) + idataSection.getSize(0x1000),
             "SizeOfImage"
         )
         root.doFix(app)

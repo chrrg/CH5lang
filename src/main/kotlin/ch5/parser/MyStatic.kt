@@ -143,7 +143,233 @@ open class MyStatic(app: Application) : MyClass(app) {
         }
         throw Exception("未定义变量：$name")
     }
+    fun parseOperator(scope: LightScope,left:ASTExpression,operator: operateSymbol,right:ASTExpression): Pair<DataType, CodeBox>{
+        val function=scope.func
+        var type: DataType = VoidType
+        val codeBox = CodeBox()
+        when (operator) {
+            op_dot -> {
+                if (left == ASTVoid) {
+                    if (right is ASTNodeWord) {
+                        //调用当前作用域（static或者class）的方法
+                        val func = scope.findFunction(right.value.value, arrayListOf())
+                        function.refFunctionList.add(func)
+                        Call(func.func).addTo(codeBox)
+                        return Pair(func.type, codeBox)
+                    }
+                } else TODO()
+            }
+            op_addEqual->{
+                val expr=ASTBinary(Token_Operator(op_add),left,right)
+                return parseOperator(scope,left,op_assign,expr)
+            }
+            op_assign -> {
+                //return todo 需要验证类型是否匹配
+                if (left == ASTVoid) {
+//                    if (operator!=op_assign) throw Exception("语法错误！")
+//                    when(operator){
+//                        op_addEqual->{
+//                            val result=parseOperator(scope,left,op_add,right)
+//                            result.second.addTo(codeBox)
+//                            type=result.first
+//                        }
+//                    }
+                    //return
+                    val result = parseFunExpression(scope, right)
+                    result.second.addTo(codeBox)
+                    leave().addTo(codeBox)
+                    ret(scope.func.func.getParamSize()).addTo(codeBox)
+                    if (scope.func.type != VoidType && scope.func.type != result.first) throw Exception("函数的返回类型不匹配！")
+                    type = result.first
+                    return Pair(type, codeBox)
+                } else {
+                    //赋值
+                    val result = parseFunExpression(scope, right)
+                    result.second.addTo(codeBox)
+                    if (left is ASTNodeWord) {
+                        val variable = parseVariable(scope, left.value.value)
+                        if (variable.first != result.first) {
+                            //赋值两边变量类型要相等
+                            throw Exception("赋值变量" + left.value.value + "类型不匹配！")
+                        }
+                        mov(variable.second, EAX).addTo(codeBox)
+                        type = variable.first
+                    } else TODO()
+                    return Pair(type, codeBox)
+                }
+            }
+            op_add -> {
+                val result1 = parseFunExpression(scope, left)
+                val result2 = parseFunExpression(scope, right)
 
+                if (result1.first == IntType && result2.first == IntType) {
+                    result1.second.addTo(codeBox)
+                    push(EAX).addTo(codeBox)
+                    result2.second.addTo(codeBox)
+                    pop(EDX).addTo(codeBox)
+                    add(EAX, EDX).addTo(codeBox)
+                    return Pair(IntType, codeBox)
+                } else if (result1.first == FloatType && result2.first == FloatType) {
+                    result1.second.addTo(codeBox)
+                    push(EAX).addTo(codeBox)
+                    fld(Addr(ESP)).addTo(codeBox)
+                    pop(EAX).addTo(codeBox)
+                    result2.second.addTo(codeBox)
+                    push(EAX).addTo(codeBox)
+                    fadd(Addr(ESP)).addTo(codeBox)
+                    fstp(Addr(ESP)).addTo(codeBox)
+                    pop(EAX).addTo(codeBox)
+                    return Pair(FloatType, codeBox)
+                } else TODO()
+            }
+            op_minus -> {
+                if (left is ASTVoid) {
+                    type = IntType
+                    mov(EAX, 0).addTo(codeBox)
+                } else {
+                    val result1 = parseFunExpression(scope, left)
+                    type = result1.first
+                    result1.second.addTo(codeBox)
+                }
+                push(EAX).addTo(codeBox)
+                val result2 = parseFunExpression(scope, right)
+                result2.second.addTo(codeBox)
+                if (type == IntType && result2.first == IntType) {
+                    push(EAX).addTo(codeBox)
+                    pop(EDX).addTo(codeBox)
+                    pop(EAX).addTo(codeBox)
+                    sub(EAX, EDX).addTo(codeBox)
+                    return Pair(IntType, codeBox)
+                } else TODO()
+            }
+            op_mutil -> {
+                val result1 = parseFunExpression(scope, left)
+                result1.second.addTo(codeBox)
+                push(EAX).addTo(codeBox)
+                val result2 = parseFunExpression(scope, right)
+                result2.second.addTo(codeBox)
+                if (result1.first == IntType && result2.first == IntType) {
+                    pop(EDX).addTo(codeBox)
+                    mul(EDX).addTo(codeBox)
+                    return Pair(IntType, codeBox)
+                } else TODO()
+            }
+            op_division -> {
+                val result1 = parseFunExpression(scope, left)
+                result1.second.addTo(codeBox)
+                push(EAX).addTo(codeBox)
+                val result2 = parseFunExpression(scope, right)
+                result2.second.addTo(codeBox)
+                if (result1.first == IntType && result2.first == IntType) {
+                    push(EAX).addTo(codeBox)
+                    pop(EBX).addTo(codeBox)
+                    pop(EAX).addTo(codeBox)
+                    mov(EDX, 0).addTo(codeBox)
+                    div(EBX).addTo(codeBox)
+                    return Pair(IntType, codeBox)
+                } else TODO()
+            }
+            op_equal, op_notEqual -> {
+                val result1 = parseFunExpression(scope, left)
+                result1.second.addTo(codeBox)
+                push(EAX).addTo(codeBox)
+                val result2 = parseFunExpression(scope, right)
+                result2.second.addTo(codeBox)
+                if ((result1.first == IntType && result2.first == IntType) || result1.first == BoolType && result2.first == BoolType) {
+                    pop(EDX).addTo(codeBox)
+                    cmp(EAX, EDX).addTo(codeBox)
+                    lahf().addTo(codeBox)
+                    shr(EAX, 0x0E).addTo(codeBox)
+                    if (operator is op_notEqual) xor(EAX, 1).addTo(codeBox)
+                    and(EAX, 1).addTo(codeBox)
+                    return Pair(BoolType, codeBox)
+                } else TODO()
+            }
+            op_and, op_or -> {
+                val result1 = parseFunExpression(scope, left)
+                result1.second.addTo(codeBox)
+                push(EAX).addTo(codeBox)
+                val result2 = parseFunExpression(scope, right)
+                result2.second.addTo(codeBox)
+                if ((result1.first == IntType && result2.first == IntType) || result1.first == BoolType && result2.first == BoolType) {
+                    pop(EDX).addTo(codeBox)
+                    if (operator is op_and)
+                        and(EAX, EDX).addTo(codeBox)
+                    else
+                        or(EAX, EDX).addTo(codeBox)
+                    return Pair(BoolType, codeBox)
+                } else TODO()
+            }
+            op_left, op_right -> {
+                val result1 = parseFunExpression(scope, left)
+                result1.second.addTo(codeBox)
+                push(EAX).addTo(codeBox)
+                val result2 = parseFunExpression(scope, right)
+                result2.second.addTo(codeBox)
+                push(EAX).addTo(codeBox)
+                if ((result1.first == IntType && result2.first == IntType) || result1.first == BoolType && result2.first == BoolType) {
+                    pop(ECX).addTo(codeBox)
+                    pop(EAX).addTo(codeBox)
+                    if (operator is op_left)
+                        shl(EAX, CL).addTo(codeBox)
+                    else
+                        shr(EAX, CL).addTo(codeBox)
+                    return Pair(BoolType, codeBox)
+                } else TODO()
+            }
+            op_greater, op_greaterEqual, op_less, op_lessEqual -> {
+                val result1 = parseFunExpression(scope, left)
+                result1.second.addTo(codeBox)
+                push(EAX).addTo(codeBox)
+                val result2 = parseFunExpression(scope, right)
+                result2.second.addTo(codeBox)
+                if (result1.first == IntType && result2.first == IntType) {
+                    pop(EDX).addTo(codeBox)//EAX 大于符号右边的值 EDX:第一个值 左边的值
+                    cmp(EAX, EDX).addTo(codeBox)
+                    val code1 = CodeBox()
+                    val code2 = CodeBox()
+                    when (operator) {
+                        is op_greater, op_greaterEqual -> {
+                            mov(EAX, 1).addTo(code1)
+                            mov(EAX, 0).addTo(code2)
+                        }
+                        is op_less, op_lessEqual -> {
+                            mov(EAX, 0).addTo(code1)
+                            mov(EAX, 1).addTo(code2)
+                        }
+                    }
+                    when (operator) {
+                        op_greater -> jge(code1, code2).addTo(codeBox)
+                        op_less -> jg(code1, code2).addTo(codeBox)
+                        op_greaterEqual -> jg(code1, code2).addTo(codeBox)
+                        op_lessEqual -> jge(code1, code2).addTo(codeBox)
+                    }
+
+                    return Pair(BoolType, codeBox)
+                } else TODO()
+            }
+            op_mod -> {
+                val result1 = parseFunExpression(scope, left)
+                result1.second.addTo(codeBox)
+                push(EAX).addTo(codeBox)
+                val result2 = parseFunExpression(scope, right)
+                result2.second.addTo(codeBox)
+                if (result1.first == IntType && result2.first == IntType) {
+                    push(EAX).addTo(codeBox)
+                    pop(EBX).addTo(codeBox)
+                    pop(EAX).addTo(codeBox)
+                    mov(EDX, 0).addTo(codeBox)
+                    div(EBX).addTo(codeBox)
+                    mov(EAX, EDX).addTo(codeBox)
+                    return Pair(IntType, codeBox)
+                } else TODO()
+            }
+            else -> {
+                throw Exception("暂不支持的操作符${operator.javaClass.simpleName}：${operator.word}")
+            }
+        }
+        return Pair(type, codeBox)
+    }
     fun parseFunExpression(scope: LightScope, ast: ASTExpression?): Pair<DataType, CodeBox> {
         val function = scope.func
         var type: DataType = VoidType
@@ -416,201 +642,7 @@ open class MyStatic(app: Application) : MyClass(app) {
                 }
             }
             is ASTBinary -> {
-                val left = ast.left
-                val right = ast.right
-                when (val operator = ast.op.operator) {
-                    op_dot -> {
-                        if (left == ASTVoid) {
-                            if (right is ASTNodeWord) {
-                                //调用当前作用域（static或者class）的方法
-                                val func = scope.findFunction(right.value.value, arrayListOf())
-                                function.refFunctionList.add(func)
-                                Call(func.func).addTo(codeBox)
-                                return Pair(func.type, codeBox)
-                            }
-                        } else TODO()
-                    }
-                    op_assign -> {
-                        //return todo 需要验证类型是否匹配
-                        if (left == ASTVoid) {
-                            //return
-                            val result = parseFunExpression(scope, right)
-                            result.second.addTo(codeBox)
-                            leave().addTo(codeBox)
-                            ret(scope.func.func.getParamSize()).addTo(codeBox)
-                            if (scope.func.type != VoidType && scope.func.type != result.first) throw Exception("函数的返回类型不匹配！")
-                            type = result.first
-                            return Pair(type, codeBox)
-                        } else {
-                            //赋值
-                            val result = parseFunExpression(scope, right)
-                            result.second.addTo(codeBox)
-                            if (left is ASTNodeWord) {
-                                val variable = parseVariable(scope, left.value.value)
-                                if (variable.first != result.first) {
-                                    //赋值两边变量类型要相等
-                                    throw Exception("赋值变量" + left.value.value + "类型不匹配！")
-                                }
-                                mov(variable.second, EAX).addTo(codeBox)
-                                type = variable.first
-                            } else TODO()
-                            return Pair(type, codeBox)
-                        }
-                    }
-                    op_add -> {
-                        val result1 = parseFunExpression(scope, left)
-                        val result2 = parseFunExpression(scope, right)
-
-                        if (result1.first == IntType && result2.first == IntType) {
-                            result1.second.addTo(codeBox)
-                            push(EAX).addTo(codeBox)
-                            result2.second.addTo(codeBox)
-                            pop(EDX).addTo(codeBox)
-                            add(EAX, EDX).addTo(codeBox)
-                            return Pair(IntType, codeBox)
-                        } else if (result1.first == FloatType && result2.first == FloatType) {
-                            result1.second.addTo(codeBox)
-                            push(EAX).addTo(codeBox)
-                            fld(Addr(ESP)).addTo(codeBox)
-                            pop(EAX).addTo(codeBox)
-                            result2.second.addTo(codeBox)
-                            push(EAX).addTo(codeBox)
-                            fadd(Addr(ESP)).addTo(codeBox)
-                            fstp(Addr(ESP)).addTo(codeBox)
-                            pop(EAX).addTo(codeBox)
-                            return Pair(FloatType, codeBox)
-                        } else TODO()
-                    }
-                    op_minus -> {
-                        if (left is ASTVoid) {
-                            type = IntType
-                            mov(EAX, 0).addTo(codeBox)
-                        } else {
-                            val result1 = parseFunExpression(scope, left)
-                            type = result1.first
-                            result1.second.addTo(codeBox)
-                        }
-                        push(EAX).addTo(codeBox)
-                        val result2 = parseFunExpression(scope, right)
-                        result2.second.addTo(codeBox)
-                        if (type == IntType && result2.first == IntType) {
-                            push(EAX).addTo(codeBox)
-                            pop(EDX).addTo(codeBox)
-                            pop(EAX).addTo(codeBox)
-                            sub(EAX, EDX).addTo(codeBox)
-                            return Pair(IntType, codeBox)
-                        } else TODO()
-                    }
-                    op_mutil -> {
-                        val result1 = parseFunExpression(scope, left)
-                        result1.second.addTo(codeBox)
-                        push(EAX).addTo(codeBox)
-                        val result2 = parseFunExpression(scope, right)
-                        result2.second.addTo(codeBox)
-                        if (result1.first == IntType && result2.first == IntType) {
-                            pop(EDX).addTo(codeBox)
-                            mul(EDX).addTo(codeBox)
-                            return Pair(IntType, codeBox)
-                        } else TODO()
-                    }
-                    op_division -> {
-                        val result1 = parseFunExpression(scope, left)
-                        result1.second.addTo(codeBox)
-                        push(EAX).addTo(codeBox)
-                        val result2 = parseFunExpression(scope, right)
-                        result2.second.addTo(codeBox)
-                        if (result1.first == IntType && result2.first == IntType) {
-                            push(EAX).addTo(codeBox)
-                            pop(EBX).addTo(codeBox)
-                            pop(EAX).addTo(codeBox)
-                            mov(EDX, 0).addTo(codeBox)
-                            div(EBX).addTo(codeBox)
-                            return Pair(IntType, codeBox)
-                        } else TODO()
-                    }
-                    op_equal, op_notEqual -> {
-                        val result1 = parseFunExpression(scope, left)
-                        result1.second.addTo(codeBox)
-                        push(EAX).addTo(codeBox)
-                        val result2 = parseFunExpression(scope, right)
-                        result2.second.addTo(codeBox)
-                        if ((result1.first == IntType && result2.first == IntType) || result1.first == BoolType && result2.first == BoolType) {
-                            pop(EDX).addTo(codeBox)
-                            cmp(EAX, EDX).addTo(codeBox)
-                            lahf().addTo(codeBox)
-                            shr(EAX, 0x0E).addTo(codeBox)
-                            if (operator is op_notEqual) xor(EAX, 1).addTo(codeBox)
-                            and(EAX, 1).addTo(codeBox)
-                            return Pair(BoolType, codeBox)
-                        } else TODO()
-                    }
-                    is op_and, op_or -> {
-                        val result1 = parseFunExpression(scope, left)
-                        result1.second.addTo(codeBox)
-                        push(EAX).addTo(codeBox)
-                        val result2 = parseFunExpression(scope, right)
-                        result2.second.addTo(codeBox)
-                        if ((result1.first == IntType && result2.first == IntType) || result1.first == BoolType && result2.first == BoolType) {
-                            pop(EDX).addTo(codeBox)
-                            if (operator is op_and)
-                                and(EAX, EDX).addTo(codeBox)
-                            else
-                                or(EAX, EDX).addTo(codeBox)
-                            return Pair(BoolType, codeBox)
-                        } else TODO()
-                    }
-                    is op_left, op_right -> {
-                        val result1 = parseFunExpression(scope, left)
-                        result1.second.addTo(codeBox)
-                        push(EAX).addTo(codeBox)
-                        val result2 = parseFunExpression(scope, right)
-                        result2.second.addTo(codeBox)
-                        push(EAX).addTo(codeBox)
-                        if ((result1.first == IntType && result2.first == IntType) || result1.first == BoolType && result2.first == BoolType) {
-                            pop(ECX).addTo(codeBox)
-                            pop(EAX).addTo(codeBox)
-                            if (operator is op_left)
-                                shl(EAX, CL).addTo(codeBox)
-                            else
-                                shr(EAX, CL).addTo(codeBox)
-                            return Pair(BoolType, codeBox)
-                        } else TODO()
-                    }
-                    op_greater, op_greaterEqual, op_less, op_lessEqual -> {
-                        val result1 = parseFunExpression(scope, left)
-                        result1.second.addTo(codeBox)
-                        push(EAX).addTo(codeBox)
-                        val result2 = parseFunExpression(scope, right)
-                        result2.second.addTo(codeBox)
-                        if (result1.first == IntType && result2.first == IntType) {
-                            pop(EDX).addTo(codeBox)//EAX 大于符号右边的值 EDX:第一个值 左边的值
-                            cmp(EAX, EDX).addTo(codeBox)
-                            val code1 = CodeBox()
-                            val code2 = CodeBox()
-                            when (operator) {
-                                is op_greater, op_greaterEqual -> {
-                                    mov(EAX, 1).addTo(code1)
-                                    mov(EAX, 0).addTo(code2)
-                                }
-                                is op_less, op_lessEqual -> {
-                                    mov(EAX, 0).addTo(code1)
-                                    mov(EAX, 1).addTo(code2)
-                                }
-                            }
-                            when (operator) {
-                                op_greater -> jge(code1, code2).addTo(codeBox)
-                                op_less -> jg(code1, code2).addTo(codeBox)
-                                op_greaterEqual -> jg(code1, code2).addTo(codeBox)
-                                op_lessEqual -> jge(code1, code2).addTo(codeBox)
-                            }
-
-                            return Pair(BoolType, codeBox)
-                        } else TODO()
-                    }
-                    else -> {
-                        throw Exception("暂不支持的操作符${ast.op.operator.javaClass.simpleName}：${ast.op.operator.word}")
-                    }
-                }
+                return parseOperator(scope, ast.left, ast.op.operator, ast.right)
             }
             is ASTCall -> {
                 val caller = ast.caller

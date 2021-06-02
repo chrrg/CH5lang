@@ -196,6 +196,13 @@ object op_bracket1 : operateSymbol("[")
 object op_bracket2 : operateSymbol("]")
 object op_tinybracket1 : operateSymbol("(")
 object op_tinybracket2 : operateSymbol(")")
+object op_addEqual : operateSymbol("+=")
+object op_decEqual : operateSymbol("-=")
+object op_mulEqual : operateSymbol("*=")
+object op_divEqual : operateSymbol("/=")
+object op_modEqual : operateSymbol("%=")
+object op_andEqual : operateSymbol("&=")
+object op_orEqual : operateSymbol("|=")
 
 object Operator_Symbol {
     var op_list = arrayOf(
@@ -236,7 +243,14 @@ object Operator_Symbol {
         op_bracket1,
         op_bracket2,
         op_tinybracket1,
-        op_tinybracket2
+        op_tinybracket2,
+        op_addEqual,
+        op_decEqual,
+        op_mulEqual,
+        op_divEqual,
+        op_modEqual,
+        op_andEqual,
+        op_orEqual
     )
 
     fun get(op: String): operateSymbol? {
