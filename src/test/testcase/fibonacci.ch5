@@ -1,30 +1,24 @@
 import GetTickCount "kernel32.dll"
 import printf "msvcrt.dll"
-
+fun printf a string, b string
+fun printf a string, b int
+fun print a int="%d",a printf
+fun println str string = "%s\n", str printf
+fun println num int = "%d\n", num printf
 fun GetTickCount:int
-fun printf a string
-fun printf a string,a int
-fun println num int{
-    "%d\n",num printf
-}
-fun println str string{
-    str printf
-    "\n"printf
-}
-fun fibonacci num int:int{
+fun fibonacci num int:int {
     = if num <= 1
         1
     else
         num - 1 fibonacci + (num - 2 fibonacci)
 }
 main{
-    "开始计算斐波那契数列：" println
+    "开始计算30个斐波那契数列：" println
     var time = .GetTickCount
-    for i = 0...30 {
+    for i = 0 .. 30
         i fibonacci println
-    }
     var time2 = .GetTickCount
     "总耗时：" println
-    time2 - time println
+    time2 - time print
     "ms" println
 }

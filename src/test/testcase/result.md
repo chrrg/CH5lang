@@ -38,9 +38,9 @@ main {
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|2.712ms|2.712ms|15698KB|
-|10次|1.901ms|2.391ms|14128KB|
-|100次|1.382ms|3.105ms|11564KB|
+|1次|2.409ms|2.409ms|15698KB|
+|10次|1.842ms|2.572ms|13604KB|
+|100次|1.309ms|3.129ms|11564KB|
 > 运行结果测试  
 
 测试用例运行输出：  
@@ -113,9 +113,9 @@ main{
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|2.989ms|2.989ms|10465KB|
-|10次|1.718ms|2.637ms|11511KB|
-|100次|1.360ms|2.357ms|10622KB|
+|1次|3.165ms|3.165ms|10465KB|
+|10次|1.578ms|2.513ms|11511KB|
+|100次|1.245ms|2.022ms|10622KB|
 > 运行结果测试  
 
 测试用例运行输出：  
@@ -186,9 +186,9 @@ main{
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|1.959ms|1.959ms|10465KB|
-|10次|2.151ms|3.723ms|10465KB|
-|100次|1.663ms|2.276ms|10569KB|
+|1次|2.461ms|2.461ms|10465KB|
+|10次|2.147ms|3.246ms|10465KB|
+|100次|1.707ms|2.668ms|10569KB|
 > 运行结果测试  
 
 测试用例运行输出：  
@@ -220,20 +220,15 @@ False
 
 ```
 import printf "msvcrt.dll"
-import GetTickCount "kernel32.dll"
-fun GetTickCount:int
-fun printf a string,b string
-fun printf a string,b int
-fun print str string="%s",str printf
-fun println str string="%s\n",str printf
-fun println num int="%d\n",num printf
-
+fun printf a string, b string
+fun printf a string, b int
+fun println str string = "%s\n", str printf
+fun println num int = "%d\n", num printf
 fun pow3 num int = num * num * num
-fun sum num1 int,num2 int,num3 int=num1+num2+num3
-main{
+main {
     "开始计算三位数的水仙花数" println
     for i = 100 .. 1000
-        if (i/100%10 pow3)+(i/10%10 pow3)+(i%10 pow3) == i
+        if (i / 100 % 10 pow3) + (i / 10 % 10 pow3) + (i % 10 pow3) == i
             i println
     "完成" println
 }
@@ -246,9 +241,9 @@ main{
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|2.680ms|2.680ms|10465KB|
-|10次|1.690ms|2.355ms|10465KB|
-|100次|1.231ms|2.362ms|10465KB|
+|1次|1.666ms|1.666ms|10465KB|
+|10次|1.418ms|1.633ms|10465KB|
+|100次|1.134ms|2.210ms|10465KB|
 > 运行结果测试  
 
 测试用例运行输出：  
@@ -313,12 +308,40 @@ main{
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|3.408ms|3.408ms|10465KB|
-|10次|2.188ms|3.829ms|10465KB|
-|100次|1.761ms|2.683ms|10465KB|
+|1次|2.980ms|2.980ms|10465KB|
+|10次|2.651ms|4.050ms|10465KB|
+|100次|2.019ms|3.199ms|10465KB|
 > 运行结果测试  
 
 测试用例运行输出：  
+
+```
+开始计算3位数的水仙花数
+153
+370
+371
+407
+开始计算4位数的水仙花数
+1634
+8208
+9474
+开始计算5位数的水仙花数
+54748
+92727
+93084
+开始计算6位数的水仙花数
+548834
+开始计算7位数的水仙花数
+1741725
+4210818
+9800817
+9926315
+计算完成，耗时：2422ms完成
+
+```
+测试不通过  
+
+期待结果：  
 
 ```
 开始计算3位数的水仙花数
@@ -352,32 +375,26 @@ main{
 ```
 import GetTickCount "kernel32.dll"
 import printf "msvcrt.dll"
-
+fun printf a string, b string
+fun printf a string, b int
+fun print a int="%d",a printf
+fun println str string = "%s\n", str printf
+fun println num int = "%d\n", num printf
 fun GetTickCount:int
-fun printf a string
-fun printf a string,a int
-fun println num int{
-    "%d\n",num printf
-}
-fun println str string{
-    str printf
-    "\n"printf
-}
-fun fibonacci num int:int{
+fun fibonacci num int:int {
     = if num <= 1
         1
     else
         num - 1 fibonacci + (num - 2 fibonacci)
 }
 main{
-    "开始计算斐波那契数列：" println
+    "开始计算30个斐波那契数列：" println
     var time = .GetTickCount
-    for i = 0...30 {
+    for i = 0 .. 30
         i fibonacci println
-    }
     var time2 = .GetTickCount
     "总耗时：" println
-    time2 - time println
+    time2 - time print
     "ms" println
 }
 ```
@@ -389,15 +406,15 @@ main{
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|1.146ms|1.146ms|10465KB|
-|10次|1.133ms|1.237ms|10465KB|
-|100次|1.006ms|1.318ms|10465KB|
+|1次|1.317ms|1.317ms|10465KB|
+|10次|1.202ms|1.327ms|10465KB|
+|100次|1.078ms|1.525ms|10465KB|
 > 运行结果测试  
 
 测试用例运行输出：  
 
 ```
-开始计算斐波那契数列：
+开始计算30个斐波那契数列：
 1
 1
 2
@@ -428,52 +445,8 @@ main{
 317811
 514229
 832040
-1346269
 总耗时：
-31
-ms
-
-```
-测试不通过  
-
-期待结果：  
-
-```
-开始计算斐波那契数列：
-1
-1
-2
-3
-5
-8
-13
-21
-34
-55
-89
-144
-233
-377
-610
-987
-1597
-2584
-4181
-6765
-10946
-17711
-28657
-46368
-75025
-121393
-196418
-317811
-514229
-832040
-1346269
-总耗时：
-47
-ms
+32ms
 
 ```
 测试完成！  
@@ -499,16 +472,15 @@ fun print num int{
     "%d",num printf
 }
 main {
-    "for 输出0 1 2 3 4" println
+    "for-while输出 1 2 3 4 5"println
     var i = 0
+    for i++ < 5
+        i println
+    "for 输出0 1 2 3 4" println
+    i = 0
     for {
         if i >= 5;break
         i++ println
-    }
-    "for-while输出 1 2 3 4 5"println
-    i = 0
-    for i++ < 5 {
-        i println
     }
     "for-each输出1 2 3 4 8 9 10" println
     for i = 1 ... 10 {
@@ -540,26 +512,26 @@ main {
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|2.207ms|2.207ms|10465KB|
-|10次|2.215ms|2.718ms|10465KB|
-|100次|1.962ms|3.333ms|10517KB|
+|1次|2.208ms|2.208ms|10465KB|
+|10次|2.058ms|2.798ms|10465KB|
+|100次|1.996ms|3.016ms|10517KB|
 > 运行结果测试  
 
 测试用例运行输出：  
 
 ```
-for 输出0 1 2 3 4
-0
-1
-2
-3
-4
 for-while输出 1 2 3 4 5
 1
 2
 3
 4
 5
+for 输出0 1 2 3 4
+0
+1
+2
+3
+4
 for-each输出1 2 3 4 8 9 10
 1
 2
@@ -610,7 +582,7 @@ for-each输出1 2 3 4 8 9 10
 5 * 3 = 15
 5 * 4 = 20
 for 循环的变量不会影响外层变量：
-6
+5
 测试完成
 
 ```
@@ -624,7 +596,7 @@ for 循环的变量不会影响外层变量：
 import printf "msvcrt.dll"
 fun printf a string
 
-main{
+main {
     "Hello,world!" printf
 }
 ```
@@ -636,9 +608,9 @@ main{
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|0.738ms|0.738ms|10465KB|
-|10次|0.696ms|0.795ms|10465KB|
-|100次|0.596ms|0.843ms|10465KB|
+|1次|0.696ms|0.696ms|10465KB|
+|10次|0.778ms|1.670ms|10465KB|
+|100次|0.690ms|1.040ms|10465KB|
 > 运行结果测试  
 
 测试用例运行输出：  
@@ -650,6 +622,63 @@ Hello,world!
 测试完成！  
 ---
 ## 测试用例9
+用例：`src\test\testcase\if.ch5`  
+
+```
+import printf "msvcrt.dll"
+fun printf a int
+fun printf a string,b string
+fun printf a string,b int
+fun print str string="%s",str printf
+fun println str string="%s\n",str printf
+fun println num int="%d\n",num printf
+
+fun main1{
+    if 100 > 50 {
+        "ok" println
+    } else if 100 == 50 {
+         "no1" println
+    } else {
+         "no2" println
+    }
+}
+fun main2{
+    (if 100 > 50
+        "ok"
+    else if 100 == 50
+         "no1"
+    else
+         "no2") println
+}
+main{
+    .main1
+    .main2
+}
+```
+> 编译结果  
+
+编译成功！ 
+> 编译性能测试  
+
+
+|测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
+| ------ | ------ | ------ | ------ |
+|1次|0.875ms|0.875ms|10465KB|
+|10次|0.929ms|1.172ms|10465KB|
+|100次|0.812ms|2.102ms|10465KB|
+> 运行结果测试  
+
+测试用例运行输出：  
+
+```
+ok
+ok
+
+```
+测试通过  
+测试完成！  
+---
+## 测试用例10
 用例：`src\test\testcase\int.ch5`  
 
 ```
@@ -673,9 +702,9 @@ main{
 
 |测试次数|平均编译速度 ms|编译最长耗时|平均内存消耗|
 | ------ | ------ | ------ | ------ |
-|1次|0.864ms|0.864ms|10465KB|
-|10次|0.804ms|0.951ms|10465KB|
-|100次|0.659ms|1.160ms|10465KB|
+|1次|0.806ms|0.806ms|10465KB|
+|10次|0.814ms|0.951ms|10465KB|
+|100次|0.602ms|1.270ms|10465KB|
 > 运行结果测试  
 
 测试用例运行输出：  

@@ -16,13 +16,12 @@ fun main1{
     }
 }
 fun main2{
-    if 100 > 50
+    (if 100 > 50
         "ok"
     else if 100 == 50
          "no1"
     else
-         "no2"
-    println
+         "no2") println
 }
 main{
     .main1
