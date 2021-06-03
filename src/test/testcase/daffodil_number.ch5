@@ -1,6 +1,6 @@
 import printf "msvcrt.dll"
-fun printf a string,b string
-fun printf a string,b int
+fun printf a string, b string
+fun printf a string, b int
 fun println str string = "%s\n", str printf
 fun println num int = "%d\n", num printf
 fun pow3 num int = num * num * num
