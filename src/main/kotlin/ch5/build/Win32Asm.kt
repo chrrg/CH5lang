@@ -258,11 +258,13 @@ fun pop(register: Win32Register): CodeItem {
     result.byte(0x58 + register.value)
     return result
 }
+
 fun inc(register: Win32Register): CodeItem {
     val result = CodeItem()
     result.byte(0x40 + register.value)
     return result
 }
+
 fun dec(register: Win32Register): CodeItem {
     val result = CodeItem()
     result.byte(0x48 + register.value)
