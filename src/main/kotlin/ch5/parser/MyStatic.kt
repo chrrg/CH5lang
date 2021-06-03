@@ -141,10 +141,20 @@ open class MyStatic(app: Application) : MyClass(app) {
             if (it.name != name) continue
             return Pair(it.type, Addr(EBP, (scope.func.param.size - i) * 4 + 4))//scope.func.param.indexOf(it) * 4
         }
+        scope.func.space!!.varList.find { it.name == name }?.let {
+            TODO()
+//            return Pair(it.type!!, Addr(null,0x400000+it.offset ))
+        }
         throw Exception("未定义变量：$name")
     }
-    fun parseOperator(scope: LightScope,left:ASTExpression,operator: operateSymbol,right:ASTExpression): Pair<DataType, CodeBox>{
-        val function=scope.func
+
+    fun parseOperator(
+        scope: LightScope,
+        left: ASTExpression,
+        operator: operateSymbol,
+        right: ASTExpression
+    ): Pair<DataType, CodeBox> {
+        val function = scope.func
         var type: DataType = VoidType
         val codeBox = CodeBox()
         when (operator) {
@@ -159,9 +169,9 @@ open class MyStatic(app: Application) : MyClass(app) {
                     }
                 } else TODO()
             }
-            op_addEqual->{
-                val expr=ASTBinary(Token_Operator(op_add),left,right)
-                return parseOperator(scope,left,op_assign,expr)
+            op_addEqual -> {
+                val expr = ASTBinary(Token_Operator(op_add), left, right)
+                return parseOperator(scope, left, op_assign, expr)
             }
             op_assign -> {
                 //return todo 需要验证类型是否匹配
@@ -370,6 +380,7 @@ open class MyStatic(app: Application) : MyClass(app) {
         }
         return Pair(type, codeBox)
     }
+
     fun parseFunExpression(scope: LightScope, ast: ASTExpression?): Pair<DataType, CodeBox> {
         val function = scope.func
         var type: DataType = VoidType
@@ -769,7 +780,7 @@ open class MyStatic(app: Application) : MyClass(app) {
         //解析对象里面所有的变量的表达式
         varList.forEach {
             val result = parseFunExpression(LightScope(funList.find { it.name == "init" }!!), it.ast?.expr)
-            if (it.type == VoidType) {
+            if (it.type == null || it.type == VoidType) {
                 it.type = result.first
             } else if (it.type != result.first) {
                 throw java.lang.Exception("定义的变量${it.name}类型不匹配！")

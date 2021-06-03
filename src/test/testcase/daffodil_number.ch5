@@ -1,18 +1,16 @@
 import printf "msvcrt.dll"
-import GetTickCount "kernel32.dll"
-fun GetTickCount:int
 fun printf a string,b string
 fun printf a string,b int
-fun print str string="%s",str printf
-fun println str string="%s\n",str printf
-fun println num int="%d\n",num printf
+fun print str string = "%s", str printf
+fun println str string = "%s\n", str printf
+fun println num int = "%d\n", num printf
 
 fun pow3 num int = num * num * num
-fun sum num1 int,num2 int,num3 int=num1+num2+num3
+fun sum num1 int, num2 int, num3 int = num1 + num2 + num3
 main{
     "开始计算三位数的水仙花数" println
     for i = 100 .. 1000
-        if (i/100%10 pow3)+(i/10%10 pow3)+(i%10 pow3) == i
+        if (i / 100 % 10 pow3) + (i / 10 % 10 pow3) + (i % 10 pow3) == i
             i println
     "完成" println
 }

@@ -106,6 +106,7 @@ class DefVariable {
     var initCode: CodeBox? = null
     var ast: ASTOuterVar? = null
     var space: Space? = null
+    var offset = 0//偏移地址
     fun use() {
         space?.use()
     }
