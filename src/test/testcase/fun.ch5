@@ -1,0 +1,18 @@
+import printf "msvcrt.dll"
+import ExitProcess "kernel32.dll"
+fun ExitProcess code int
+fun printf a string,b int
+fun println num int="%d\n",num printf
+
+fun 乘以2 num int = num * 2
+fun 加5 num int = num + 5
+fun 输出 num int = num println
+fun 退出程序 = 0 ExitProcess
+
+main{
+    val 要处理的数据 = 5
+    要处理的数据 输出
+    要处理的数据 乘以2 加5 乘以2 输出
+    .退出程序
+    123 输出
+}
