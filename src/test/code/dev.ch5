@@ -1,57 +1,18 @@
 import printf "msvcrt.dll"
-import ansiToInt "msvcrt.dll/atoi"
-import exit "KERNEl32.dll/ExitProcess"
-import app "app.ch5"
-
-fun printf a string,b string
+import ExitProcess "kernel32.dll"
+fun ExitProcess code int
 fun printf a string,b int
-fun ansiToInt a string:int
-fun exit code int
-fun print num int{
-    "%d",num printf
-}
-fun print str string{
-    "%s",str printf
-}
-fun println str string{
-    "%s\n",str printf
-}
-fun println num int{
-    "%d\n",num printf
-}
-fun println bool bool{
-    if bool
-        "True" println
-    else
-        "False" println
-}
+fun println num int="%d\n",num printf
 
-fun calc=1+1 println
-init{
-    "初始化时运行" println
-}
-fun add a int,b int:int{
-    =a+b
-}
+fun 乘以2 num int = num * 2
+fun 加5 num int = num + 5
+fun 输出 num int = num println
+fun 退出程序 = 0 ExitProcess
+
 main{
-    123 println
-    "end" println
-//    .exit
-    1,2 add,3 add println
-
-//    true println
-//    .calc println
-    //单行注释
-//    if 100 < 200 {
-//        "判断成功！" println
-//    }else{
-//        "判断失败！" println
-//    }
-//    /*
-//    多行注释
-//
-//    */
-//    "-123" ansiToInt + 100 println
-//    0 exit
-//    "这里不会运行" println
+    val 要处理的数据 = 5
+    要处理的数据 输出
+    要处理的数据 乘以2 加5 乘以2 输出
+    .退出程序
+    123 输出
 }
