@@ -1,4 +1,4 @@
-<p align="center"><span style="font-size: xx-large; ">CH 语言</span></p>
+<p align="center"><font size="7">CH 语言</font></p>
 <p align="center">CH语言编译器是一个完全使用kotlin语言开发</p>
 <p align="center">强类型语法、平台无关的通用型编译器</p>
 
